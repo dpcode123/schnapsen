@@ -1,0 +1,22 @@
+{
+  "name": "schnaps",
+  "version": "1.0.0",
+  "description": "Node Schnaps",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "author": "DP",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}
