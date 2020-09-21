@@ -41,13 +41,9 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
     // check if leading and response cards are trumps
     if(leadingCard.suit === game.trumpSuit){leadTrump = true;}
     else{leadTrump = false;}
+    
     if(responseCard.suit === game.trumpSuit){respTrump = true;}
     else{respTrump = false;}
-
-    console.log(game.trumpSuit);
-    console.log("AAA: " + leadingCard.suit + " <-> " + responseCard.suit);
-    console.log("leadTrump: " + leadTrump + " <-> " + respTrump);
-
 
     //### Lead NOT trump
     if(!leadTrump){
@@ -61,11 +57,9 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
                 // {compare values}
                 if(leadingCard.points > responseCard.points){
                     winner = leadingPlay.playerId;
-                    console.log("Winner je: "+ winner +" - Same suits, no trumps - lead je veci od responsa");
                 }
                 else{
                     winner = responsePlay.playerId;
-                    console.log("Winner je: "+ winner +" - Same suits, no trumps - lead nije veci od responsa");
                 }
             }
 
@@ -73,7 +67,6 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
             else{
                 //{L win}
                 winner = leadingPlay.playerId;
-                console.log("Winner je: "+ winner +" - Different suits, no trumps");
             }
         }
 
@@ -81,7 +74,6 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
         else if(respTrump){
             //{R win}
             winner = responsePlay.playerId;
-            console.log("Winner je: "+ winner +" - lead nije trump, response je TRUMP");
         }
 
     }
@@ -93,7 +85,6 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
         if(!respTrump){
             // {L win}
             winner = leadingPlay.playerId;
-            console.log("Winner je: "+ winner +" - lead je TRUMP, response nije");
         }
 
         //### Response TRUMP
@@ -101,11 +92,9 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
             // {compare values}
             if(leadingCard.points > responseCard.points){
                 winner = leadingPlay.playerId;
-                console.log("Winner je: "+ winner +" - Both trumps - lead je veci od responsa");
             }
             else{
                 winner = responsePlay.playerId;
-                console.log("Winner je: "+ winner +" - Both trumps - lead nije veci od responsa");
             }
         }
     }

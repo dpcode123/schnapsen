@@ -192,8 +192,6 @@ io.on('connection', socket => {
                         // add marriage points (as marriages can be called only on lead)
                         let marriagePoints = checkPlayedCardMarriagePoints(card, playSession.game.marriagesInHand[playerIndex]);
                         if(marriagePoints > 0){ playSession.game.addPointsToPlayer(playerIndex, marriagePoints); }
-                        
-                        console.log(marriagePoints);
     
                         // change player on turn; increase moveNum
                         playSession.game.changePlayerOnTurn();
@@ -262,8 +260,6 @@ io.on('connection', socket => {
                             
                             // check if bummerl is over(player has 7+ game points)
                             let bummerlOver  = playSession.bummerl.bummerlOver(trickWinnerIndex);
-                            console.log("bummerlOver");
-                            console.log(bummerlOver);
 
                             if(bummerlOver){
                                 // start next bummerl; update clients
@@ -281,21 +277,31 @@ io.on('connection', socket => {
 
                         }
                         else{
-                            // start new trick
-                            playSession.game.startNextTrick(trickWinnerIndex);
-                                                    
-                            // deal 1 card to each player
-                            playSession.game.dealCardsToPlayers(trickWinnerIndex, 1);
 
-                            // close deck if there are no cards left in it
-                            if(playSession.game.deck.length === 0){ playSession.game.deckClosed = true; }
-
-                            // sort cards in hands; check for marriages; update clients
-                            for(let i=0; i<2; i++){
-                                playSession.game.sortCardsByPointsAndSuit(playSession.game.cardsInHand[i]);
-                                playSession.game.marriagesInHand[i] = checkForMarriagesInHand(playSession.game.cardsInHand[i], playSession.game.trumpSuit);
-                                io.to(getUsersByRoom(room)[i].id).emit('gameStateUpdateAfterTrick', new GameStateDTO(playSession.game, i));
+                            // if this is last trick and no player is out yet
+                            if(trick.num === 10){
+                                // to implement: last trick's winner is game winner
                             }
+                            else{
+                                // start new trick
+                                playSession.game.startNextTrick(trickWinnerIndex);
+                                                        
+                                // deal 1 card to each player
+                                playSession.game.dealCardsToPlayers(trickWinnerIndex, 1);
+
+                                // close deck if there are no cards left in it
+                                if(playSession.game.deck.length === 0){ playSession.game.deckClosed = true; }
+
+                                // sort cards in hands; check for marriages; update clients
+                                for(let i=0; i<2; i++){
+                                    playSession.game.sortCardsByPointsAndSuit(playSession.game.cardsInHand[i]);
+                                    playSession.game.marriagesInHand[i] = checkForMarriagesInHand(playSession.game.cardsInHand[i], playSession.game.trumpSuit);
+                                    io.to(getUsersByRoom(room)[i].id).emit('gameStateUpdateAfterTrick', new GameStateDTO(playSession.game, i));
+                                }
+
+                            }
+
+                            
                         }
     
                     }

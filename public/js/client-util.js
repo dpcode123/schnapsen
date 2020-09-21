@@ -1,13 +1,4 @@
 // delay miliseconds
-// delay(5000).then(() => console.log("dileja"));
-/*
-delay(1200).then(
-    () => {
-        hideElement(cardPlayedByPlayer);
-        hideElement(cardPlayedByOpponent);
-        updateAllCardsInHand(currentGame.cardsInHand);
-    }
-);*/
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

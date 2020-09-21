@@ -3,13 +3,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('username');
 const room = urlParams.get('room');
 
-console.log(room);
-
-if(room){
-    console.log("ima");
-}
-else{console.log("nema");}
-
 const socket = io();
 
 // Session, Bummerl, Game objects
@@ -36,8 +29,6 @@ socket.on('gameStateUpdate', gameStateDTO => {
 // Game state update - after trick
 socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
     updateClientGameState(gameStateDTO);
-
-    console.log(game.playerWonCards);
 
     delay(1200).then(
         () => {
@@ -123,16 +114,12 @@ socket.on('gameStart', gameStateDTO => {
 
 // Player's move confirmation/validation from server
 socket.on('moveValid', isMoveValid => {
-    console.log("move valid");
-    console.log(isMoveValid);
-    
-    //updateClientGameState(moveConfirmation.gameStateDTO);
-   // setPlayerOnTurnIndicator(game.thisPlayerOnTurn);
+    //console.log("move valid");
 });
 
 // Player's move ERROR from server
 socket.on('moveInvalidError', moveInvalidError => {
-    console.log("move NOT valid");
+    //console.log("move NOT valid");
 });
 
 
@@ -144,8 +131,6 @@ socket.on('opponentMove', opponentMoveDTO => {
     // throw card on the table 
     putCardInElement(cardPlayedByOpponent, opponentMoveDTO.cardName);
     showElement(cardPlayedByOpponent);
-
-    // console.log(opponentMoveDTO.validResponseCards);
 
     // disable/overlay unavailable(forbidden) response cards
     disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validResponseCards);
@@ -167,7 +152,7 @@ function setupGameScreenStarted(){
     hideElement(cardPlayedByOpponent);
     hideElement(textPoints);
     hideElements(forbiddenCardOverlay);
-    hideElements(marriagesIndicator);
+    //hideElements(marriagesIndicator);
     hideElements(wonCardsFirstTrick);
     hideElements(wonCardsOtherTricksCardbacks);
     hideElements(wonCardsAllTricksDisplayed);
@@ -328,23 +313,15 @@ function getCardPositionInHandByName(cardName, playerHand){
 
 
 function disableForbiddenCards(cardsInHand, validResponseCards) {
-    //console.log(cardsInHand);
-    //console.log(validResponseCards);
-/*
-    cardsInHand = ["a", "b", "c", "D"];
-    validResponseCards = ["b", "c"];
-*/
     // for each card in hand array, check if it's in valid responses array
     // if it is not, disable that card
     cardsInHand.forEach(cardInHand => {
         let cardAvailable = validResponseCards.some(responseCard => responseCard.name === cardInHand.name);
         
         if(cardAvailable) {
-            console.log("valid");
             // card is valid; do nothing
         }
         else{
-            console.log("nije valid");
             let cardIndex = getCardPositionInHandByName(cardInHand.name, cardsInHand);
             showElement(forbiddenCardOverlay[cardIndex]);
         }
