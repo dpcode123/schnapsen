@@ -141,7 +141,7 @@ module.exports = function (num, openingPlayer) {
         // player get 1,2 or 3 game points
         let gamePoints = 0;
 
-        let playerOut = this.playerPoints[pIndex] >= 10;
+        let playerOut = this.playerPoints[pIndex] >= 66;
 
         if(playerOut){
             // opponent has 0 points
