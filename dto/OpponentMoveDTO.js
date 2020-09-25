@@ -5,9 +5,9 @@
  * @param {number} moveNum - 0...n(11)
  * @param {string} cardName 
  * @param {number} marriagePoints - 0, 20 or 40
- * @param {array} validResponseCards - array of cards
+ * @param {array} validRespondingCards - array of cards
  */
-module.exports = function(moveType, trickNum, moveNum, cardName, marriagePoints, validResponseCards) {
+module.exports = function(moveType, trickNum, moveNum, cardName, marriagePoints, validRespondingCards) {
 
     const dto = {
         moveType: moveType,
@@ -15,7 +15,7 @@ module.exports = function(moveType, trickNum, moveNum, cardName, marriagePoints,
         moveNum: moveNum,
         cardName: cardName,
         marriagePoints: marriagePoints,
-        validResponseCards: validResponseCards
+        validRespondingCards: validRespondingCards
     };
 
     return dto;

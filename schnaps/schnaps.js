@@ -9,9 +9,9 @@ const {
 
 /**
  * @description CALCULATES TRICK WINNER
- * @param {object} game- Game object
- * @param {object} leadingPlay - first play in trick
- * @param {object} responsePlay - second play in trick
+ * @param {Object} trumpSuit - trump suit in current game
+ * @param {Object} leadingPlay - first play in trick
+ * @param {Object} respondingPlay - second play in trick
  * @returns {string} - winner id
  * 
  * - Lead NOT trump
@@ -30,63 +30,52 @@ const {
  *              ===> {compare values}
  * 
  */
-function calculateTrickWinner(game, leadingPlay, responsePlay){
-
+function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
     let leadingCard = getCardByName(leadingPlay.cardName);
-    let responseCard = getCardByName(responsePlay.cardName);
+    let responseCard = getCardByName(respondingPlay.cardName);
 
     let leadTrump, respTrump;
     let winner;
 
     // check if leading and response cards are trumps
-    if(leadingCard.suit === game.trumpSuit){leadTrump = true;}
+    if(leadingCard.suit === trumpSuit){leadTrump = true;}
     else{leadTrump = false;}
-    
-    if(responseCard.suit === game.trumpSuit){respTrump = true;}
+    if(responseCard.suit === trumpSuit){respTrump = true;}
     else{respTrump = false;}
 
     //### Lead NOT trump
     if(!leadTrump){
-
         //### Response NOT trump
         if(!respTrump){
-
             //### Same suits
             if(leadingCard.suit === responseCard.suit){
-
                 // {compare values}
                 if(leadingCard.points > responseCard.points){
                     winner = leadingPlay.playerId;
                 }
                 else{
-                    winner = responsePlay.playerId;
+                    winner = respondingPlay.playerId;
                 }
             }
-
             //### Diff suits
             else{
                 //{L win}
                 winner = leadingPlay.playerId;
             }
         }
-
         //### Response TRUMP
         else if(respTrump){
             //{R win}
-            winner = responsePlay.playerId;
+            winner = respondingPlay.playerId;
         }
-
     }
-
     //### Lead TRUMP
     else if(leadTrump){
-
         //### Response NOT
         if(!respTrump){
             // {L win}
             winner = leadingPlay.playerId;
         }
-
         //### Response TRUMP
         else if(respTrump){
             // {compare values}
@@ -94,7 +83,7 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
                 winner = leadingPlay.playerId;
             }
             else{
-                winner = responsePlay.playerId;
+                winner = respondingPlay.playerId;
             }
         }
     }
@@ -107,13 +96,13 @@ function calculateTrickWinner(game, leadingPlay, responsePlay){
  * CALCULATES TRICK POINTS
  * 
  * @param leadingPlay - first play in trick
- * @param responsePlay - second play in trick
+ * @param respondingPlay - second play in trick
  * 
  */
-function calculateTrickPoints(leadingPlay, responsePlay){
+function calculateTrickPoints(leadingPlay, respondingPlay){
 
     let leadingCard = getCardByName(leadingPlay.cardName);
-    let responseCard = getCardByName(responsePlay.cardName);
+    let responseCard = getCardByName(respondingPlay.cardName);
 
     let points = leadingCard.points + responseCard.points;
 
@@ -204,7 +193,12 @@ function checkPlayedCardMarriagePoints(card, marriagesInHand){
 
 
 /**
- * Calculates valid RESPONSE cards
+ * @description CALCULATES VALID RESPONDING CARDS
+ * @param {Object} leadingCard - First(leading) card in trick
+ * @param {Object[]} cardsInRespondingHand - Cards in other player's hand
+ * @param {string} trumpSuit - trump suit in current game
+ * @param {boolean} isDeckClosed - is deck in current game closed
+ * @returns {Object[]} validRespondingCards - Cards that player is allowed to play
  * 
  * # Deck CLOSED(or out of cards)
  * 
@@ -224,51 +218,51 @@ function checkPlayedCardMarriagePoints(card, marriagesInHand){
  *      ===> {play any card}
  * 
  */
-function calculateValidResponseCards(leadingCard, cardsInResponseHand, trumpSuit, deckIsClosed){
-    let validResponseCards = [];
+function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trumpSuit, isDeckClosed){
+    let validRespondingCards = [];
 
     // responding player has same suit card in hand
-    let hasSameSuit = cardsInResponseHand.some(c => c.suit === leadingCard.suit);
+    let hasSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit);
     // cards of same suit in player's hand
-    let sameSuitCards = cardsInResponseHand.filter(c => c.suit === leadingCard.suit);
+    let sameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit);
 
     // responding player has stronger same suit card in hand
-    let hasStrongerSameSuit = cardsInResponseHand.some(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    let hasStrongerSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
     // stronger cards of same suit in player's hand
-    let strongerSameSuitCards = cardsInResponseHand.filter(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    let strongerSameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
 
     // responding player has trump in hand
-    let hasTrump = cardsInResponseHand.some(c => c.suit === trumpSuit);
+    let hasTrump = cardsInRespondingHand.some(c => c.suit === trumpSuit);
     // trump cards in player's hand
-    let trumpCards = cardsInResponseHand.filter(c => c.suit === trumpSuit);
+    let trumpCards = cardsInRespondingHand.filter(c => c.suit === trumpSuit);
 
-    if(deckIsClosed){
+    if(isDeckClosed){
         if(hasSameSuit){
             if(hasStrongerSameSuit){
                 // ===> {play stronger same suit card}
-                validResponseCards = strongerSameSuitCards;
+                validRespondingCards = strongerSameSuitCards;
             }
             else{
                 // ===> {play weaker same suit card}
-                validResponseCards = sameSuitCards;
+                validRespondingCards = sameSuitCards;
             }
         }
         else{
             if(hasTrump){
                 // ===> {play any trump}
-                validResponseCards = trumpCards;
+                validRespondingCards = trumpCards;
             }
             else{
                 // ===> {play any card}
-                validResponseCards = cardsInResponseHand;
+                validRespondingCards = cardsInRespondingHand;
             }
         }
     }
     else{
         // ===> {play any card}
-        validResponseCards = cardsInResponseHand;
+        validRespondingCards = cardsInRespondingHand;
     }
-    return validResponseCards;
+    return validRespondingCards;
 }
 
 
@@ -277,5 +271,5 @@ module.exports = {
     calculateTrickPoints,
     checkForMarriagesInHand,
     checkPlayedCardMarriagePoints,
-    calculateValidResponseCards
+    calculateValidRespondingCards
 }

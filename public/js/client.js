@@ -133,7 +133,7 @@ socket.on('opponentMove', opponentMoveDTO => {
     showElement(cardPlayedByOpponent);
 
     // disable/overlay unavailable(forbidden) response cards
-    disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validResponseCards);
+    disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
 });
 
 
@@ -312,11 +312,11 @@ function getCardPositionInHandByName(cardName, playerHand){
 }
 
 
-function disableForbiddenCards(cardsInHand, validResponseCards) {
+function disableForbiddenCards(cardsInHand, validRespondingCards) {
     // for each card in hand array, check if it's in valid responses array
     // if it is not, disable that card
     cardsInHand.forEach(cardInHand => {
-        let cardAvailable = validResponseCards.some(responseCard => responseCard.name === cardInHand.name);
+        let cardAvailable = validRespondingCards.some(responseCard => responseCard.name === cardInHand.name);
         
         if(cardAvailable) {
             // card is valid; do nothing

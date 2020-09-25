@@ -52,6 +52,9 @@ const MARRIAGES_FONT_COLOR = "#52514e";
 // player name; game points(0-7)
 const PLAYER_NAME_AND_POINTS_FONT_SIZE = "28px"
 
+// card images folder
+const CARD_IMG_FOLDER = '../img/schnaps-custom';
+
 
 // CARD PATTERNS
 // ********************************************************************************
@@ -83,7 +86,7 @@ cardPatterns.forEach(card => {
     pattern.setAttributeNS(null, "width", 1);
     pattern.setAttributeNS(null, "height", 1);
 
-    image.setAttributeNS(null, "href", `../img/img-schnapps/${card}.png`);
+    image.setAttributeNS(null, "href", `${CARD_IMG_FOLDER}/${card}.png`);
     image.setAttributeNS(null, "x", 0);
     image.setAttributeNS(null, "y", 0);
     image.setAttributeNS(null, "width", CARD_WIDTH);
@@ -202,8 +205,8 @@ cardPlayedByOpponent.setAttributeNS(null, "visibility", "hidden");
 
 // Trump card under the deck
 trumpCard = document.createElementNS(XMLNS, "rect");
-trumpCard.setAttributeNS(null, "x", 254);
-trumpCard.setAttributeNS(null, "y", -784);
+trumpCard.setAttributeNS(null, "x", -400);
+trumpCard.setAttributeNS(null, "y", 560);
 trumpCard.setAttributeNS(null, "rx", CARD_ROUND);
 trumpCard.setAttributeNS(null, "ry", CARD_ROUND);
 trumpCard.setAttributeNS(null, "width",  CARD_WIDTH);
@@ -212,7 +215,7 @@ trumpCard.setAttributeNS(null, "stroke", "black");
 trumpCard.setAttributeNS(null, "stroke-width", CARD_STROKE_WIDTH);
 trumpCard.setAttributeNS(null, "stroke-opacity", CARD_STROKE_OPACITY);
 trumpCard.setAttributeNS(null, "fill", "url(#cardback)");
-trumpCard.setAttributeNS(null, "transform", "rotate(90)");
+trumpCard.setAttributeNS(null, "transform", "rotate(270)");
 trumpCard.setAttributeNS(null, "visibility", "hidden");
 
 // Deck
@@ -330,8 +333,8 @@ for(let i=10;i<16;i++){
 
 // Won cards - first trick - shown - OPPONENT
 opponentWonCardsFirstTrick[0] = document.createElementNS(XMLNS, "rect");
-opponentWonCardsFirstTrick[0].setAttributeNS(null, "x", 855);
-opponentWonCardsFirstTrick[0].setAttributeNS(null, "y", 280);
+opponentWonCardsFirstTrick[0].setAttributeNS(null, "x", -992);
+opponentWonCardsFirstTrick[0].setAttributeNS(null, "y", -505);
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "rx", CARD_ROUND);
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "ry", CARD_ROUND);
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "width",  CARD_WIDTH);
@@ -340,12 +343,12 @@ opponentWonCardsFirstTrick[0].setAttributeNS(null, "stroke", "black");
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "stroke-width", CARD_STROKE_WIDTH);
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "stroke-opacity", CARD_STROKE_OPACITY);
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "fill", "url(#cardback)");
-opponentWonCardsFirstTrick[0].setAttributeNS(null, "transform", "rotate(-15)");
+opponentWonCardsFirstTrick[0].setAttributeNS(null, "transform", "rotate(165)");
 opponentWonCardsFirstTrick[0].setAttributeNS(null, "visibility", "hidden");
 
 opponentWonCardsFirstTrick[1] = document.createElementNS(XMLNS, "rect");
-opponentWonCardsFirstTrick[1].setAttributeNS(null, "x", 865);
-opponentWonCardsFirstTrick[1].setAttributeNS(null, "y", -220);
+opponentWonCardsFirstTrick[1].setAttributeNS(null, "x", -992);
+opponentWonCardsFirstTrick[1].setAttributeNS(null, "y", -12);
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "rx", CARD_ROUND);
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "ry", CARD_ROUND);
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "width",  CARD_WIDTH);
@@ -354,7 +357,7 @@ opponentWonCardsFirstTrick[1].setAttributeNS(null, "stroke", "black");
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "stroke-width", CARD_STROKE_WIDTH);
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "stroke-opacity", CARD_STROKE_OPACITY);
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "fill", "url(#cardback)");
-opponentWonCardsFirstTrick[1].setAttributeNS(null, "transform", "rotate(15)");
+opponentWonCardsFirstTrick[1].setAttributeNS(null, "transform", "rotate(195)");
 opponentWonCardsFirstTrick[1].setAttributeNS(null, "visibility", "hidden");
 
 

@@ -16,7 +16,7 @@ const {
     calculateTrickPoints,
     checkForMarriagesInHand,
     checkPlayedCardMarriagePoints,
-    calculateValidResponseCards,
+    calculateValidRespondingCards,
 } = require('./schnaps/schnaps');
 
 const PlaySession = require('./model/PlaySession');
@@ -165,23 +165,23 @@ io.on('connection', socket => {
                     );
                     
                     // available cards
-                    let validResponseCards;
+                    let validRespondingCards;
 
                     // if card/move is lead calculate valid responses
                     if(playSession.game.cardBuffer.lead && !playSession.game.cardBuffer.response){
-                        validResponseCards = calculateValidResponseCards(
+                        validRespondingCards = calculateValidRespondingCards(
                             card, playSession.game.cardsInHand[otherPlayer(playerIndex)],
                             playSession.game.trumpSuit, playSession.game.deckClosed);
                     }
                     // if card/move is not lead, all cards in hand are valid
                     else{
-                        validResponseCards = playSession.game.cardsInHand[otherPlayer(playerIndex)];
+                        validRespondingCards = playSession.game.cardsInHand[otherPlayer(playerIndex)];
                     }
 
                     // create opponent's move DTO
                     let opponentMoveDTO = new OpponentMoveDTO(
                         move.moveType, move.trickNum, move.moveNum, 
-                        move.cardName, move.marriagePoints, validResponseCards);
+                        move.cardName, move.marriagePoints, validRespondingCards);
     
                     // send opponent's move to other player
                     io.to(getUsersByRoom(room)[otherPlayer(playerIndex)].id).emit('opponentMove', opponentMoveDTO);
@@ -212,7 +212,7 @@ io.on('connection', socket => {
                         playSession.game.increaseMoveNumber();
     
                         // Calculate trick winner
-                        let trickWinnerId = calculateTrickWinner(playSession.game, playSession.game.cardBuffer.lead, playSession.game.cardBuffer.response);
+                        let trickWinnerId = calculateTrickWinner(playSession.game.trumpSuit, playSession.game.cardBuffer.lead, playSession.game.cardBuffer.response);
     
                         // Calculate trick points
                         let trickPoints = calculateTrickPoints(playSession.game.cardBuffer.lead, playSession.game.cardBuffer.response);
