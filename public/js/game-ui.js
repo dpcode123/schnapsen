@@ -1,6 +1,7 @@
 /** UI ELEMENTS ON THE GAME SCREEN
  * 
- * - Main svg element, positions and sizes constants
+ * - Main svg element
+ * - Constants - namespace, positions, sizes
  * - Cards, Card patterns
  * - Gui element constants and variables
  * - Create SVG elements and style them
@@ -10,12 +11,17 @@
  * - Add event listener to elements
  */
 
-
-// MAIN SVG ELEMENT, POSITIONS AND SIZES
+// MAIN SVG ELEMENT
 // ********************************************************************************
 
 // main svg element
 const svg = document.getElementById('svg_content');
+
+
+// CONSTANTS - Namespace, positions, sizes
+// ********************************************************************************
+
+// XML namespace
 const XMLNS = "http://www.w3.org/2000/svg";
 
 // card design
@@ -58,11 +64,12 @@ const CARD_IMG_FOLDER = '../img/schnaps-custom';
 
 // CARD PATTERNS
 // ********************************************************************************
+
 // card suits and tiers
 const cardSuits = ['herc', 'karo', 'pik', 'tref'];
 const cardTiers = ['j', 'q', 'k', 'x', 'a'];
 
-// all cards in "{tier}-{suit}" format, and cardback pattern
+// strings of all cards in "{tier}-{suit}" format, and cardback pattern
 const cardPatterns = [];
 
 // card patterns
@@ -121,7 +128,7 @@ const wonCardsAllTricksDisplayed = [];
 // 1st won trick(2 cards), always shown - OPPONENT
 const opponentWonCardsFirstTrick = [];
 // other won tricks (max. 7 tricks/14 cards), hidden - OPPONENT
-const opponentwonCardsOtherTricksCardbacks = [];
+const opponentWonCardsOtherTricksCardbacks = [];
 
 // Marriages(20,40) in player's hand
 const marriagesIndicator = [];
@@ -363,19 +370,19 @@ opponentWonCardsFirstTrick[1].setAttributeNS(null, "visibility", "hidden");
 
 // Won cards - other tricks - hidden - OPPONENT
 for(let i=0; i<14; i++){
-    opponentwonCardsOtherTricksCardbacks[i] = document.createElementNS(XMLNS, "rect");
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "x", OPPONENT_WON_TRICK_CARDS_HIDDEN_X_POSITION-(i*5));
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "y", OPPONENT_WON_TRICK_CARDS_HIDDEN_Y_POSITION);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "rx", CARD_ROUND);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "ry", CARD_ROUND);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "width",  CARD_WIDTH);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "height", CARD_HEIGHT);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "stroke", "black");
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "stroke-width", CARD_STROKE_WIDTH);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "stroke-opacity", CARD_STROKE_OPACITY);
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "fill", "url(#cardback)");
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "transform", "rotate(90)");
-    opponentwonCardsOtherTricksCardbacks[i].setAttributeNS(null, "visibility", "hidden");
+    opponentWonCardsOtherTricksCardbacks[i] = document.createElementNS(XMLNS, "rect");
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "x", OPPONENT_WON_TRICK_CARDS_HIDDEN_X_POSITION-(i*5));
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "y", OPPONENT_WON_TRICK_CARDS_HIDDEN_Y_POSITION);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "rx", CARD_ROUND);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "ry", CARD_ROUND);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "width",  CARD_WIDTH);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "height", CARD_HEIGHT);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "stroke", "black");
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "stroke-width", CARD_STROKE_WIDTH);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "stroke-opacity", CARD_STROKE_OPACITY);
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "fill", "url(#cardback)");
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "transform", "rotate(90)");
+    opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, "visibility", "hidden");
 }
 
 
@@ -538,7 +545,7 @@ opponentWonCardsFirstTrick.forEach(card => {
 });
 
 // won tricks - opponent - other tricks
-opponentwonCardsOtherTricksCardbacks.forEach(card => {
+opponentWonCardsOtherTricksCardbacks.forEach(card => {
     allGuiElements.push(card);
 });
 
@@ -583,7 +590,7 @@ allGuiElements.forEach(element => {
 function putCardInElement(cardElement, cardName){
     //cardElement.setAttributeNS(null, "fill", "url(#"+cardElement.getAttribute('data-card')+")");
     cardElement.setAttributeNS(null, "data-card", cardName);
-    cardElement.setAttributeNS(null, "fill", "url(#"+cardName+")");
+    cardElement.setAttributeNS(null, "fill", `url(#${cardName})`);
 }
 
 // Removes card from element
@@ -661,9 +668,6 @@ function updatePlayerWonOtherTricks(cards){
     for(let i=0; i<lengthWithoutFirstTrick; i++){
         showElement(wonCardsOtherTricksCardbacks[i]);
     }
-
-    
-    
 }
 
 // Updates cards in tricks won by OPPONENT - 1st trick
@@ -679,10 +683,9 @@ function updateOpponentWonOtherTricks(totalNumberOfWonCards){
     let num = totalNumberOfWonCards - 2;
         
     for(let i=0; i<num; i++){
-        showElement(opponentwonCardsOtherTricksCardbacks[i]);
+        showElement(opponentWonCardsOtherTricksCardbacks[i]);
     }
 }
-
 
 // Removes(hides) cards from deck stack (when players draw a card)
 function removeCardsStackedInDeck(numberOfCardsInDeck){

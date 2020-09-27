@@ -9,7 +9,7 @@ const {
 
 /**
  * @description CALCULATES TRICK WINNER
- * @param {Object} trumpSuit - trump suit in current game
+ * @param {string} trumpSuit - trump suit in current game
  * @param {Object} leadingPlay - first play in trick
  * @param {Object} respondingPlay - second play in trick
  * @returns {string} - winner id

@@ -152,12 +152,11 @@ function setupGameScreenStarted(){
     hideElement(cardPlayedByOpponent);
     hideElement(textPoints);
     hideElements(forbiddenCardOverlay);
-    //hideElements(marriagesIndicator);
     hideElements(wonCardsFirstTrick);
     hideElements(wonCardsOtherTricksCardbacks);
     hideElements(wonCardsAllTricksDisplayed);
     hideElements(opponentWonCardsFirstTrick);
-    hideElements(opponentwonCardsOtherTricksCardbacks);
+    hideElements(opponentWonCardsOtherTricksCardbacks);
 
     showElements(cardsInHand);
     showElements(opponentCardsInHand);
@@ -169,7 +168,6 @@ function setupGameScreenStarted(){
     showElement(textPlayerGamePoints);
     showElement(textOpponentGamePoints);
 
-    //setPlayerOnTurnIndicator(game.thisPlayerOnTurn);
     updateClientScreen();
 }
 

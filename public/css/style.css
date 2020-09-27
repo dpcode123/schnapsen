@@ -83,8 +83,22 @@ body {
 }
 
 
-/* Game */
-.game_container{
+/* Game page */
+.svg-container{
+	/*
     width: 1080px;
-    height: 760px;
+	height: 760px;*/
+	position: relative; 
+	height: 0; 
+	width: 100%; 
+	padding: 0;
+	padding-bottom: 70% 	/* 100% x 760/1080 */
+}
+
+.svg-content {
+	position: absolute; 
+	height: 100%; 
+	width: 100%; 
+	left: 0; 
+	top: 0;
 }
