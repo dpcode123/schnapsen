@@ -15,7 +15,7 @@
 // ********************************************************************************
 
 // main svg element
-const svg = document.getElementById('svg_content');
+const svg = document.getElementById('svg-content');
 
 
 // CONSTANTS - Namespace, positions, sizes
