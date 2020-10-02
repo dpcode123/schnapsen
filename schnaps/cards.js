@@ -2,32 +2,32 @@ const Card = require('../model/Card.js');
 const CARDS = [];
 
 // Herc
-CARDS.push(new Card("J", "Herc", 2, "j-herc"));
-CARDS.push(new Card("Q", "Herc", 3, "q-herc"));
-CARDS.push(new Card("K", "Herc", 4, "k-herc"));
-CARDS.push(new Card("X", "Herc", 10, "x-herc"));
-CARDS.push(new Card("A", "Herc", 11, "a-herc"));
+CARDS.push(new Card('J', 'herc', 2, 'j-herc'));
+CARDS.push(new Card('Q', 'herc', 3, 'q-herc'));
+CARDS.push(new Card('K', 'herc', 4, 'k-herc'));
+CARDS.push(new Card('X', 'herc', 10, 'x-herc'));
+CARDS.push(new Card('A', 'herc', 11, 'a-herc'));
 
 // Karo
-CARDS.push(new Card("J", "Karo", 2, "j-karo"));
-CARDS.push(new Card("Q", "Karo", 3, "q-karo"));
-CARDS.push(new Card("K", "Karo", 4, "k-karo"));
-CARDS.push(new Card("X", "Karo", 10, "x-karo"));
-CARDS.push(new Card("A", "Karo", 11, "a-karo"));
+CARDS.push(new Card('J', 'karo', 2, 'j-karo'));
+CARDS.push(new Card('Q', 'karo', 3, 'q-karo'));
+CARDS.push(new Card('K', 'karo', 4, 'k-karo'));
+CARDS.push(new Card('X', 'karo', 10, 'x-karo'));
+CARDS.push(new Card('A', 'karo', 11, 'a-karo'));
 
 // Pik
-CARDS.push(new Card("J", "Pik", 2, "j-pik"));
-CARDS.push(new Card("Q", "Pik", 3, "q-pik"));
-CARDS.push(new Card("K", "Pik", 4, "k-pik"));
-CARDS.push(new Card("X", "Pik", 10, "x-pik"));
-CARDS.push(new Card("A", "Pik", 11, "a-pik"));
+CARDS.push(new Card('J', 'pik', 2, 'j-pik'));
+CARDS.push(new Card('Q', 'pik', 3, 'q-pik'));
+CARDS.push(new Card('K', 'pik', 4, 'k-pik'));
+CARDS.push(new Card('X', 'pik', 10, 'x-pik'));
+CARDS.push(new Card('A', 'pik', 11, 'a-pik'));
 
 // Tref
-CARDS.push(new Card("J", "Tref", 2, "j-tref"));
-CARDS.push(new Card("Q", "Tref", 3, "q-tref"));
-CARDS.push(new Card("K", "Tref", 4, "k-tref"));
-CARDS.push(new Card("X", "Tref", 10, "x-tref"));
-CARDS.push(new Card("A", "Tref", 11, "a-tref"));
+CARDS.push(new Card('J', 'tref', 2, 'j-tref'));
+CARDS.push(new Card('Q', 'tref', 3, 'q-tref'));
+CARDS.push(new Card('K', 'tref', 4, 'k-tref'));
+CARDS.push(new Card('X', 'tref', 10, 'x-tref'));
+CARDS.push(new Card('A', 'tref', 11, 'a-tref'));
 
 
 // Gets all 20 cards
@@ -62,12 +62,6 @@ function getCardPositionInHandByName(cardName, playerHand){
     let position = playerHand.findIndex(object => object.name === cardName);
     return position;
 }
-
-
-
-
-
-
 
 
 module.exports = {

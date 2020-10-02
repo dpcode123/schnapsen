@@ -19,7 +19,7 @@ module.exports = function (room, player1, player2) {
     this.room = room;
 
     // status (starting, started, finished)
-    this.status = "starting";
+    this.status = 'starting';
 
     // players
     this.players = [];

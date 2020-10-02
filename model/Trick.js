@@ -5,7 +5,7 @@
  * @param {number}respondingPlayer - 0 or 1; player that played second(response) card
  * @param {Card} leadingCard - first(leading) card
  * @param {Card} responseCard - second(response) card
- * @param {number}trickWinnerId - id of player that has won the trick
+ * @param {string}trickWinnerId - id of player that has won the trick
  * @param {number}trickWinnerIndex - 0 or 1; player that has won the trick 
  * @param {number}trickPoints - 4-22; total points in trick
  */

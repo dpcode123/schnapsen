@@ -4,7 +4,7 @@ module.exports = function (num) {
     this.num = num;
     
     // status (started, finished)
-    this.status = "started";
+    this.status = 'started';
 
     // Game points - (0...9)
     // bummerl is played until player reach 7 game points

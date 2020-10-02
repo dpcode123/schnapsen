@@ -24,10 +24,13 @@ socket.on('gameStateUpdate', gameStateDTO => {
     updateClientScreen();
     updatePoints(game.playerPoints);
     updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+    updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
 });
 
 // Game state update - after trick
 socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
+    toggleHideAllTricks();
+    
     updateClientGameState(gameStateDTO);
 
     delay(1200).then(
@@ -36,6 +39,7 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             hideElement(cardPlayedByPlayer);
             hideElement(cardPlayedByOpponent);
             hideElements(forbiddenCardOverlay);
+            putCardInElement(trumpCard, game.trumpCard.name);
             updateAllCardsInHand(game.cardsInHand);
             updateOpponentCards(game.cardsInHand.length);
             removeCardsStackedInDeck(game.deckSize);
@@ -43,6 +47,32 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             updatePlayerTricks(game.playerWonCards); 
             updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+        }
+    );
+});
+
+// Game state update - after exchanging trump
+socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
+    //toggleHideAllTricks();
+    
+    updateClientGameState(gameStateDTO);
+
+    delay(300).then(
+        () => {
+            updateClientScreen();
+            hideElement(cardPlayedByPlayer);
+            hideElement(cardPlayedByOpponent);
+            hideElements(forbiddenCardOverlay);
+            putCardInElement(trumpCard, game.trumpCard.name);
+            updateAllCardsInHand(game.cardsInHand);
+            updateOpponentCards(game.cardsInHand.length);
+            removeCardsStackedInDeck(game.deckSize);
+            updatePoints(game.playerPoints);
+            updatePlayerTricks(game.playerWonCards); 
+            updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
+            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
         }
     );
 });
@@ -52,12 +82,12 @@ socket.on('gameOverDTO', gameOverDTO => {
     // add game points
     if(gameOverDTO.isWinner){
         bummerl.gamePointsPlayer += gameOverDTO.gamePoints;
-        textAlert.textContent = `You won! ${gameOverDTO.gamePoints} points`;
+        textAlert.textContent = `You won! ( ${gameOverDTO.gamePoints} )`;
         updatePoints(gameOverDTO.playerPointsAtEndOfGame);
     }
     else{
         bummerl.gamePointsOpponent += gameOverDTO.gamePoints;
-        textAlert.textContent = `Lost! Opponent gets ${gameOverDTO.gamePoints} points`;
+        textAlert.textContent = `You lost! ( ${gameOverDTO.gamePoints} )`;
     }
     showElement(textAlert);
     updatePlayerAndOpponentGamePoints();
@@ -66,13 +96,13 @@ socket.on('gameOverDTO', gameOverDTO => {
 // Session starting
 socket.on('sessionStarting', gameRoomId => {
     showElement(textAlert);
-    textAlert.textContent = "Waiting for other player...";
+    textAlert.textContent = 'Waiting for other player...';
     textRoomId.textContent = `#${gameRoomId}`;
 });
 
 // Session status update
 socket.on('sessionStateUpdate', playSessionDTO => {
-    if(playSessionDTO.status === "started"){
+    if(playSessionDTO.status === 'started'){
         playSession = new PlaySession(playSessionDTO);
         textPlayerName.textContent = playSession.playerName;
         textOpponentName.textContent = playSession.opponentName;
@@ -82,7 +112,7 @@ socket.on('sessionStateUpdate', playSessionDTO => {
 // Session - END
 socket.on('sessionEnd', s => {
     showElement(textAlert);
-    textAlert.textContent = "Opponent left the game.";
+    textAlert.textContent = 'Opponent left the game.';
 });
 
 // Bummerl status
@@ -105,6 +135,7 @@ socket.on('gameStart', gameStateDTO => {
             setupGameScreenStarted();
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
         }
     );
     
@@ -114,12 +145,10 @@ socket.on('gameStart', gameStateDTO => {
 
 // Player's move confirmation/validation from server
 socket.on('moveValid', isMoveValid => {
-    //console.log("move valid");
 });
 
 // Player's move ERROR from server
 socket.on('moveInvalidError', moveInvalidError => {
-    //console.log("move NOT valid");
 });
 
 
@@ -210,14 +239,28 @@ function updateClientScreen(){
 function cardHover(cardPlace){
     if(game.thisPlayerOnTurn){
         cardPlace.style.opacity = 0.9;
-        cardPlace.style.cursor = "grab";
+        cardPlace.style.cursor = 'grab';
     }    
 }
 function cardHoverOut(cardPlace){
     if(game.thisPlayerOnTurn){
         cardPlace.style.opacity = 1;
-        cardPlace.style.cursor = "default";
+        cardPlace.style.cursor = 'default';
     }
+}
+
+// exchange trump card button - hover
+function buttonHover(button){
+    if(game.thisPlayerOnTurn){
+        button.style.opacity = 1;
+        button.style.cursor = 'grab';
+    }    
+}
+function buttonHoverOut(button){
+    if(game.thisPlayerOnTurn){
+        button.style.opacity = 0.3;
+        button.style.cursor = 'default';
+    }    
 }
 
 // show all won tricks
@@ -251,14 +294,14 @@ function toggleHideAllTricks() {
     hideElements(wonCardsAllTricksDisplayed);
 }
 
+
+// play card
 function playCard(cardPlace){
 
     // get card(name) from selected card place
     let cardName = cardPlace.getAttribute('data-card');
 
-    // only if player is on turn
     if(game.thisPlayerOnTurn){
-
         // empty place in players hand
         emptyPlaceInHand(cardPlace);
 
@@ -266,7 +309,7 @@ function playCard(cardPlace){
         throwCardOnTheTable(cardName);
         
         // create PlayerMove object
-        playerMove = new PlayerMove(room, socket.id, game.moveNum, "card", 
+        playerMove = new PlayerMove(room, socket.id, game.moveNum, 'card', 
                                     game.trickNum, game.leadOrResponse, cardName);
         
         // send move to server
@@ -274,13 +317,62 @@ function playCard(cardPlace){
 
         // return opacity back to normal
         cardPlace.style.opacity = 1;
+
     }
+}
+
+// exchange trump card with jack
+function exchangeTrumpCard(){
+    if(game.thisPlayerOnTurn){
+
+        // create PlayerMove object
+        playerMove = new PlayerMove(room, socket.id, game.moveNum, 'exchangeTrumpCard', 
+                                    game.trickNum, game.leadOrResponse, null);
+        
+        // send move to server
+        sendMove(playerMove);
+
+        console.log("AAA");
+
+    }
+}
+// Shows trump card exchange button
+function updateExchangeTrumpButton(playerHand, trumpSuit) {
+
+    // if on turn and leading play and trump card not jack(already changed)
+    if(game.thisPlayerOnTurn && 
+        game.leadOrResponse && 
+        game.trumpCard.tier !== "J" &&
+        game.deckSize > 0){
+
+        // jack-trump card name
+        const jackTrumpCardName = `j-${trumpSuit}`;
+
+        // Jack's position in hand (0-4)
+        jackPositionInHand = playerHand.findIndex(card => card.name === jackTrumpCardName);
+
+        console.log(jackPositionInHand);
+
+        if(jackPositionInHand !== -1){
+            console.log("imaaaaaaaaaaa");
+            exchangeTrumpCardRect.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+32);
+            exchangeTrumpCardRect.setAttributeNS(null, 'y', parseInt((cardsInHand[jackPositionInHand].getAttribute('y')), 10)-30);
+            exchangeTrumpCardText.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+38);
+            exchangeTrumpCardText.setAttributeNS(null, 'y', parseInt((cardsInHand[jackPositionInHand].getAttribute('y')), 10)+2);
+            exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'visible');
+        }
+        
+    }
+    else{
+        exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'hidden');
+    }
+    
 }
 
 // empty card place
 function emptyPlaceInHand(cardPlace){
-    cardPlace.setAttributeNS(null, "data-card", "none");
-    cardPlace.setAttributeNS(null, "fill", "none");
+    cardPlace.setAttributeNS(null, 'data-card', 'none');
+    cardPlace.setAttributeNS(null, 'fill', 'none');
 }
 
 // sends player move to server
@@ -292,7 +384,7 @@ function sendMove(playerMove){
 // player plays a card (throws it in the middle of the table)
 function throwCardOnTheTable(cardName){
     // update card image
-    cardPlayedByPlayer.setAttributeNS(null, "fill", "url(#"+cardName+")");
+    cardPlayedByPlayer.setAttributeNS(null, 'fill', `url(#${cardName})`);
 
     // display card
     showElement(cardPlayedByPlayer);

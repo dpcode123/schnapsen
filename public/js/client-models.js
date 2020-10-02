@@ -84,12 +84,12 @@ class Game {
 /**
  * PlayerMove (CLIENT SIDE)
  * @param {string} roomId - unique game id (room id)
- * @param {number} playerId - socket.io id
+ * @param {string} playerId - socket.io id
  * @param {number} moveNum - total move number in game, for both players (0,1,2...n)
- * @param {string} moveType - card, closeDeck, foldHand
+ * @param {string} moveType - card, exchangeTrumpCard, closeDeck, foldHand
  * @param {number} trickNum - trick number, 1-10
  * @param {boolean} leadOrResponse - TRUE-lead play(1st card played in trick), FALSE-response play(2nd card)
- * @param {string} cardName - card played(card name: "a-karo","j-pik") - only for moveType "playCard"
+ * @param {string} cardName - card played(card name: 'a-karo','j-pik') - only for moveType 'card'
  * */
 class PlayerMove {
     constructor(roomId, playerId, moveNum, moveType, trickNum, leadOrResponse, cardName){

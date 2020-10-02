@@ -111,7 +111,7 @@ function calculateTrickPoints(leadingPlay, respondingPlay){
 
 
 /**
- * Checks for "marriages" (hr. zvanja) in player's hand 
+ * Checks for marriages (hr. zvanja) in player's hand 
  * - check if player has marriages in hand
  * - 20 or 40 - check if marriage suit equals trump suit
  * @param {array} playerHand - cards in player's hand
@@ -122,10 +122,10 @@ function checkForMarriagesInHand(playerHand, trumpSuit){
 
     const marriages = [];
 
-    const z_h = [getCardByName("q-herc"), getCardByName("k-herc")];
-    const z_k = [getCardByName("q-karo"), getCardByName("k-karo")];
-    const z_p = [getCardByName("q-pik"), getCardByName("k-pik")];
-    const z_t = [getCardByName("q-tref"), getCardByName("k-tref")];
+    const z_h = [getCardByName('q-herc'), getCardByName('k-herc')];
+    const z_k = [getCardByName('q-karo'), getCardByName('k-karo')];
+    const z_p = [getCardByName('q-pik'), getCardByName('k-pik')];
+    const z_t = [getCardByName('q-tref'), getCardByName('k-tref')];
 
     // test if ALL of the elements in z_x exist in playerHand
     var hasMarriage_Herc = z_h.every(i => playerHand.includes(i));
@@ -135,38 +135,38 @@ function checkForMarriagesInHand(playerHand, trumpSuit){
 
     // add marriage(s) suit and points to array if there are any
     if(hasMarriage_Herc){
-        if(trumpSuit === "Herc"){
-            marriages.push({suit: "Herc", points: 40});
+        if(trumpSuit === 'herc'){
+            marriages.push({suit: 'herc', points: 40});
         }
         else{
-            marriages.push({suit: "Herc", points: 20});
+            marriages.push({suit: 'herc', points: 20});
         }
     };
 
     if(hasMarriage_Karo){
-        if(trumpSuit === "Karo"){
-            marriages.push({suit: "Karo", points: 40});
+        if(trumpSuit === 'karo'){
+            marriages.push({suit: 'karo', points: 40});
         }
         else{
-            marriages.push({suit: "Karo", points: 20});
+            marriages.push({suit: 'karo', points: 20});
         }
     };
 
     if(hasMarriage_Pik){
-        if(trumpSuit === "Pik"){
-            marriages.push({suit: "Pik", points: 40});
+        if(trumpSuit === 'pik'){
+            marriages.push({suit: 'pik', points: 40});
         }
         else{
-            marriages.push({suit: "Pik", points: 20});
+            marriages.push({suit: 'pik', points: 20});
         }
     };
 
     if(hasMarriage_Tref){
-        if(trumpSuit === "Tref"){
-            marriages.push({suit: "Tref", points: 40});
+        if(trumpSuit === 'tref'){
+            marriages.push({suit: 'tref', points: 40});
         }
         else{
-            marriages.push({suit: "Tref", points: 20});
+            marriages.push({suit: 'tref', points: 20});
         }
     };
 
@@ -179,7 +179,7 @@ function checkPlayedCardMarriagePoints(card, marriagesInHand){
 
     let marriagePoints = 0;
 
-    if(marriagesInHand.length > 0 && (card.tier === "Q" || card.tier === "K" )){
+    if(marriagesInHand.length > 0 && (card.tier === 'Q' || card.tier === 'K' )){
 
         marriagesInHand.forEach(marriage => {
             if(marriage.suit === card.suit){

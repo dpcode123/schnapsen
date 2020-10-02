@@ -24,7 +24,7 @@ module.exports = function (num, openingPlayer) {
     this.deck = shuffle([...ALL_CARDS]);
 
     // game state (started, finished)
-    this.status = "started";
+    this.status = 'started';
 
     // opening player(first player) 0 or 1
     this.openingPlayer = openingPlayer;
