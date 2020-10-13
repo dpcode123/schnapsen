@@ -1,19 +1,23 @@
-// Get username and room from URL
-const urlParams = new URLSearchParams(window.location.search);
-const username = urlParams.get('username');
-const room = urlParams.get('room');
-
+// Socket.IO client library
 const socket = io();
+
+// Username, Room - passed from server
+const username = passedUsername;
+const room = passedRoom;
+const socketJwt = passedToken;
+
+//console.log(socketJwt);
 
 // Session, Bummerl, Game objects
 let playSession;
 let bummerl;
 let game;
 
+// Initialize socket.io connection
+socket.emit('init', socketJwt);
+
 // Join room
-socket.emit('joinRoom', { username, room });
-
-
+//socket.emit('joinRoom', { username, room });
 
 // GAMEPLAY - Receive from server
 // ***************************************************************************
@@ -324,16 +328,12 @@ function playCard(cardPlace){
 // exchange trump card with jack
 function exchangeTrumpCard(){
     if(game.thisPlayerOnTurn){
-
         // create PlayerMove object
         playerMove = new PlayerMove(room, socket.id, game.moveNum, 'exchangeTrumpCard', 
                                     game.trickNum, game.leadOrResponse, null);
-        
+
         // send move to server
         sendMove(playerMove);
-
-        console.log("AAA");
-
     }
 }
 // Shows trump card exchange button
@@ -351,10 +351,7 @@ function updateExchangeTrumpButton(playerHand, trumpSuit) {
         // Jack's position in hand (0-4)
         jackPositionInHand = playerHand.findIndex(card => card.name === jackTrumpCardName);
 
-        console.log(jackPositionInHand);
-
         if(jackPositionInHand !== -1){
-            console.log("imaaaaaaaaaaa");
             exchangeTrumpCardRect.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+32);
             exchangeTrumpCardRect.setAttributeNS(null, 'y', parseInt((cardsInHand[jackPositionInHand].getAttribute('y')), 10)-30);
             exchangeTrumpCardText.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+38);
@@ -377,7 +374,7 @@ function emptyPlaceInHand(cardPlace){
 
 // sends player move to server
 function sendMove(playerMove){
-    socket.emit('clientMove', playerMove);
+    socket.emit('clientMove', {socketJwt, playerMove});
 }
 
 

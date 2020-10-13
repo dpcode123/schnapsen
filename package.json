@@ -4,13 +4,22 @@
   "description": "Node Schnaps",
   "main": "server.js",
   "scripts": {
-    "start": "node server",
-    "dev": "nodemon server"
+    "start": "node app",
+    "dev": "nodemon app"
   },
   "author": "DP",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {

@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Schnaps Game</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+<%- include('partials/head') %>
+
 <body>
 
     <div class="svg-container">
@@ -18,6 +11,12 @@
         </defs>
     </svg>
 
+   <script>
+      const passedUsername = JSON.parse('<%- JSON.stringify(u) %>');
+      const passedRoom = JSON.parse('<%- JSON.stringify(r) %>');
+      const passedToken = JSON.parse('<%- JSON.stringify(t) %>');
+   </script>
+
     <script src="js/game-ui.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/client.js"></script>
@@ -25,4 +24,5 @@
     <script src="js/client-util.js"></script>
     
 </body>
-</html>
+
+<%- include('partials/footer') %>

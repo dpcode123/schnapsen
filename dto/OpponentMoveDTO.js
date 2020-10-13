@@ -1,6 +1,6 @@
 /**
  * Opponent move DTO
- * @param {string} moveType - playCard, closeDeck, foldHand
+ * @param {string} moveType - playCard, exchangeTrumpCard, closeDeck, foldHand
  * @param {number} trickNum - 0...10
  * @param {number} moveNum - 0...n(11)
  * @param {string} cardName 

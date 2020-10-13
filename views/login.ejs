@@ -1,0 +1,36 @@
+<%- include('partials/head') %>
+
+<body>
+
+    <div class="form-container">
+        <header class="join-header">
+            <h1>Šnaps</h1>
+        </header>
+        <main class="main-form">
+            <form action="/login" method="POST">
+                <div class="form-control">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        placeholder="Enter name..."
+                        required
+                    />
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="Enter password..."
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </main>
+    </div>
+
+</body>
+
+<%- include('partials/footer') %>

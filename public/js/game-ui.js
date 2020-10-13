@@ -410,8 +410,8 @@ textAlert.textContent = '';
 
 // TEXT - Points (66)
 textPoints = document.createElementNS(XMLNS, 'text');
-textPoints.setAttributeNS(null, 'x', 720);
-textPoints.setAttributeNS(null, 'y', 410);
+textPoints.setAttributeNS(null, 'x', 935);
+textPoints.setAttributeNS(null, 'y', 275);
 textPoints.setAttributeNS(null, 'font-size', '36px');
 textPoints.setAttributeNS(null, 'fill', 'black');
 textPoints.textContent = '0';

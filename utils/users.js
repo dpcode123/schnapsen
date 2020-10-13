@@ -18,10 +18,6 @@ function getUserById(id) {
     return users.find(user => user.id === id);
 }
 
-// Gets user's index in room (0 or 1)
-function getUserIndexInRoom(roomUsers, id){
-    return roomUsers.findIndex(user => user.id === id);
-}
 
 // User leaves
 function userLeave(id) {
@@ -52,6 +48,5 @@ module.exports = {
   userLeave,
   getUsersByRoom,
   getAllUsers,
-  removeAllUsersFromRoom,
-  getUserIndexInRoom
+  removeAllUsersFromRoom
 };
