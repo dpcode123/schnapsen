@@ -1,34 +1,56 @@
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
+const LocalStrategy = require("passport-local").Strategy;
+const { pool } = require("../repository/dbPoolConfig");
+const bcrypt = require("bcrypt");
 
-function initialize(passport, getUserByUsername, getUserById) {
 
-    const authenticateUser = async (username, password, done) => {
-        
-        const user = getUserByUsername(username);
+function initializePassport(passport) {
 
-        if (user == null) {
-            return done(null, false, { message: 'No user with that email' });
-        }
+    const authenticateUser = (username, password, done) => {
 
-        try {
-            if (await bcrypt.compare(password, user.password)) {
-              return done(null, user);
-            } else {
-              return done(null, false, { message: 'Password incorrect' });
+        pool.query(
+            `SELECT * FROM users WHERE username = $1`, [username],
+            (err, results) => {
+                if (err) {
+                    throw err;
+                }
+                console.log(results.rows);
+
+                if (results.rows.length > 0) {
+                    const user = results.rows[0];
+
+                    bcrypt.compare(password, user.password, (err, isMatch) => {
+                      if (err) {
+                        console.log(err);
+                      }
+                      if (isMatch) {
+                        return done(null, user);
+                      } else {
+                        //password is incorrect
+                        return done(null, false, { message: "Password is incorrect" });
+                      }
+                    });
+                } else {
+                    // No user
+                    return done(null, false, { message: "No user with that username" });
+                }
             }
-        } catch (e) {
-            return done(e);
+        );
+    };
+
+    passport.use(new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, authenticateUser));
+
+    passport.serializeUser((user, done) => done(null, {id: user.id, username: user.username}));
+
+    passport.deserializeUser((serializedUser, done) => {
+      pool.query(`SELECT * FROM users WHERE id = $1`, [serializedUser.id], (err, results) => {
+        if (err) {
+          return done(err);
         }
-      }
-
-      passport.use(new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, authenticateUser));
-
-      passport.serializeUser((user, done) => done(null, {id: user.id, username: user.username}));
-
-      passport.deserializeUser((serializedUser, done) => {
-          return done(null, getUserById(serializedUser.id));
-      })
+        console.log(`ID is ${results.rows[0].id}`);
+        return done(null, results.rows[0]);
+      });
+    });
 }
 
-module.exports = initialize 
+module.exports = initializePassport;
+

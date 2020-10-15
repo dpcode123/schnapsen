@@ -1,26 +1,6 @@
-const bcrypt = require('bcrypt');
-// Players
-const { getPlayers } = require('../repository/mockPlayers');
-const players = getPlayers();
+const registerService = require('../services/registerService');
 
-
-const add_user = async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        players.push({
-            id: Date.now().toString(),
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword
-        });
-        //console.log(players);
-        res.redirect('/login');
-    } catch(err) {
-        console.log(err);
-        res.redirect('/register');
-    }
-}
-
+const add_user = registerService.add_user;
 
 module.exports = {
     add_user

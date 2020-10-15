@@ -19,17 +19,9 @@ const flash = require('express-flash');
 // Play sessions map
 const playSessions = new Map();
 
-// MOCK PLAYERS
-const { getPlayers } = require('./repository/mockPlayers');
-const players = getPlayers();
+const initializePassport = require("./auth/passportConfig");
+initializePassport(passport);
 
-const initializePassport = require('./auth/passportConfig')
-
-initializePassport(
-  passport,
-  username => players.find(user => user.username === username),
-  id => players.find(user => user.id === id)
-);
 
 const SocketioController = require('./controllers/SocketioController');
 
