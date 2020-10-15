@@ -32,12 +32,6 @@ module.exports = function(io, socket) {
                     console.log('destroy play room');
                 }
             }, 3000);
-
-                    
-
-            
-
-
             
         } catch (error) {
             console.error(error);
