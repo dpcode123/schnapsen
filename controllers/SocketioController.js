@@ -3,6 +3,7 @@ const GameService = require('../services/GameService');
 const MoveService = require('../services/MoveService');
 const { validateToken } = require('../auth/socketJwt');
 const RoomStateDTO = require('../dto/RoomStateDTO');
+const BummerlStateDTO =require('../dto/BummerlStateDTO');
 const GameStateDTO = require('../dto/GameStateDTO');
 
 
@@ -32,7 +33,7 @@ module.exports = function(io) {
 
                 // get room object
                 const playRoom = getPlayRoomById(roomId);
-
+                
                 // check if payload's player data equals to room's player data
                 if(tokenPayload.userId === playRoom.players[tokenPayload.playerInRoom].id
                     && tokenPayload.username === playRoom.players[tokenPayload.playerInRoom].username){
@@ -46,7 +47,10 @@ module.exports = function(io) {
 
                             // update client
                             io.to(socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, tokenPayload.playerInRoom));
-                            io.to(socketId).emit('gameStart', new GameStateDTO(playRoom.game, tokenPayload.playerInRoom));
+                            io.to(socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, tokenPayload.playerInRoom));
+                            io.to(socketId).emit('gameStateUpdateAfterClientRefresh', new GameStateDTO(playRoom.game, tokenPayload.playerInRoom));
+                            
+                            
                     }
                     else{
                         // assign socketid to player in room
@@ -72,7 +76,10 @@ module.exports = function(io) {
                                 
                                 // start 1st bummerl; update clients
                                 playRoom.startBummerl();
-                                io.to(roomId).emit('bummerlStart', playRoom.bummerl.status);
+                                //io.to(roomId).emit('bummerlStart', playRoom.bummerl);
+                                for(let i=0; i<2; i++){
+                                    io.to(playRoom.players[i].socketId).emit('bummerlStart', new BummerlStateDTO(playRoom.bummerl, i));
+                                }
 
                                 // start 1st game
                                 playRoom.startGame();

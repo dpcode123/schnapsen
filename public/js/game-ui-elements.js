@@ -7,8 +7,6 @@
  * - Create SVG elements and style them
  * - Add all elements to array 
  * - Append elements to screen
- * - Functions
- * - Add event listener to elements
  */
 
 // MAIN SVG ELEMENT
@@ -534,6 +532,27 @@ exchangeTrumpCardText.textContent = '<->';
 exchangeTrumpCardButton.appendChild(exchangeTrumpCardRect);
 exchangeTrumpCardButton.appendChild(exchangeTrumpCardText);
 
+// bummerls lost ● - player
+textBummerlsLostPlayer = document.createElementNS(XMLNS, 'text');
+textBummerlsLostPlayer.setAttributeNS(null, 'x', 10);
+textBummerlsLostPlayer.setAttributeNS(null, 'y', 285);
+textBummerlsLostPlayer.setAttributeNS(null, 'font-size', '28px');
+textBummerlsLostPlayer.setAttributeNS(null, 'fill', 'black');
+textBummerlsLostPlayer.textContent = '';
+
+// bummerls lost ● - opponent
+textBummerlsLostOpponent = document.createElementNS(XMLNS, 'text');
+textBummerlsLostOpponent.setAttributeNS(null, 'x', 10);
+textBummerlsLostOpponent.setAttributeNS(null, 'y', 170);
+textBummerlsLostOpponent.setAttributeNS(null, 'font-size', '28px');
+textBummerlsLostOpponent.setAttributeNS(null, 'fill', 'black');
+textBummerlsLostOpponent.textContent = '';
+
+
+
+
+
+
 
 // ADDING ALL GUI ELEMENTS TO ARRAY
 // ********************************************************************************
@@ -604,9 +623,11 @@ forbiddenCardOverlay.forEach(cardOverlay => {
     allGuiElements.push(cardOverlay);
 });
 
-// names, gamepoints
+// names
 allGuiElements.push(textPlayerName);
 allGuiElements.push(textOpponentName);
+
+// gamepoints
 allGuiElements.push(textPlayerGamePoints);
 allGuiElements.push(textOpponentGamePoints);
 
@@ -616,332 +637,14 @@ allGuiElements.push(textRoomId);
 // change trump card button
 allGuiElements.push(exchangeTrumpCardButton);
 
+// bummerls lost
+allGuiElements.push(textBummerlsLostPlayer);
+allGuiElements.push(textBummerlsLostOpponent);
 
-// APPENDING ALL ELEMENTS
+
+
+// APPEND ALL ELEMENTS
 // ********************************************************************************
-
 allGuiElements.forEach(element => {
     svg.appendChild(element);
 });
-
-
-// FUNCTIONS
-// ********************************************************************************
-
-// Puts card in element
-function putCardInElement(cardElement, cardName){
-    cardElement.setAttributeNS(null, 'data-card', cardName);
-    cardElement.setAttributeNS(null, 'fill', `url(#${cardName})`);
-}
-
-// Removes card from element
-function removeCardFromElement(cardElement){
-    cardElement.setAttributeNS(null, 'data-card', 'none');
-    cardElement.setAttributeNS(null, 'fill', 'none');
-}
-
-// Updates all cards in player's hand
-function updateAllCardsInHand(cards){
-    // remove all cards
-    for(let i = 0; i < 5; i++){
-        removeCardFromElement(cardsInHand[i]);
-    }
-    // put cards in places
-    for(let i = 0; i < cards.length; i++){
-        putCardInElement(cardsInHand[i], cards[i].name);
-    }
-}
-
-// Updates all cards in opponent's hand
-function updateOpponentCards(numberOfCardsInHand){
-    // hide all cards(5)
-    hideElements(opponentCardsInHand);
-
-    // display all cards(max 5)
-    for(let i = 0; i < numberOfCardsInHand; i++){
-        showElement(opponentCardsInHand[i]);
-    }
-}
-
-// Updates cards in tricks won by player
-function updatePlayerTricks(cards){
-    if(cards.length === 2){
-        updatePlayerWonFirstTrick(cards);
-    }
-    else if(cards.length > 2){
-        updatePlayerWonOtherTricks(cards);
-    }
-}
-// Updates cards in tricks won by OPPONENT
-function updateOpponentTricks(cardsInFirstTrick, totalNumberOfWonCards){
-    if(totalNumberOfWonCards === 2){
-        updateOpponentWonFirstTrick(cardsInFirstTrick);
-    }
-    else if(totalNumberOfWonCards > 2){
-        updateOpponentWonOtherTricks(totalNumberOfWonCards);
-    }
-}
-
-
-// Updates cards in tricks won by player - 1st trick
-function updatePlayerWonFirstTrick(cards){
-    for(let i=0; i<cards.length; i++){
-        showElement(wonCardsFirstTrick[i]);
-
-        // not toggled show all
-        putCardInElement(wonCardsFirstTrick[i], cards[i]);
-
-        // toggled show all
-        putCardInElement(wonCardsAllTricksDisplayed[i], cards[i]);
-    }
-}
-// Updates cards in tricks won by player - other tricks
-function updatePlayerWonOtherTricks(cards){
-
-    // toggled show all
-    for(let i=0; i<cards.length; i++){
-        putCardInElement(wonCardsAllTricksDisplayed[i], cards[i]);
-    }
-    
-    let lengthWithoutFirstTrick = cards.length - 2;
-
-    // not toggled show all
-    for(let i=0; i<lengthWithoutFirstTrick; i++){
-        showElement(wonCardsOtherTricksCardbacks[i]);
-    }
-}
-
-// Updates cards in tricks won by OPPONENT - 1st trick
-function updateOpponentWonFirstTrick(cards){
-    for(let i=0; i<cards.length; i++){
-        showElement(opponentWonCardsFirstTrick[i]);
-        putCardInElement(opponentWonCardsFirstTrick[i], cards[i]);
-    }
-}
-// Updates cards in tricks won by OPPONENT - other tricks
-function updateOpponentWonOtherTricks(totalNumberOfWonCards){
-    // remove first 2 cards(1st trick)
-    let num = totalNumberOfWonCards - 2;
-        
-    for(let i=0; i<num; i++){
-        showElement(opponentWonCardsOtherTricksCardbacks[i]);
-    }
-}
-
-// Removes(hides) cards from deck stack (when players draw a card)
-function removeCardsStackedInDeck(numberOfCardsInDeck){
-    for(let i = 0; i<9; i++){
-        if(i >= numberOfCardsInDeck){
-
-            hideElement(cardsInDeck[i]);
-
-            if(numberOfCardsInDeck === 0){
-                hideElement(trumpCard);
-            }
-        }
-    }
-}
-
-
-
-/**
- * Updates marriage indicators in hand
- * - for each marriage get position in hand (0-4) of Queen
- * - [Pos.in.hand] = [Pos. of marriage display]
- * @param {*} playerHand - cards in player's hand
- * @param {*} marriages - marriages in player's hand
- */
-function updateMarriageIndicators(playerHand, marriages){
-
-    // Clear display positions
-    for(let i=0; i<4; i++){
-        marriagesIndicator[i].textContent = '';
-    }
-
-    marriages.forEach(m => {
-
-        let position;
-
-        switch (m.suit) {
-            case 'herc':
-                position = playerHand.findIndex(card => card.name === 'q-herc');
-
-                    switch (position) {
-                        case 0:
-                            marriagesIndicator[0].textContent = m.points;
-                            break;
-                        case 1:
-                            marriagesIndicator[1].textContent = m.points;
-                            break;
-                        case 2:
-                            marriagesIndicator[2].textContent = m.points;
-                            break;
-                        case 3:
-                            marriagesIndicator[3].textContent = m.points;
-                            break;
-                    
-                        default:
-                            break;
-                    }       
-                
-                break;
-
-            case 'karo':
-                position = playerHand.findIndex(card => card.name === 'q-karo');
-                
-                    switch (position) {
-                        case 0:
-                            marriagesIndicator[0].textContent = m.points;
-                            break;
-                        case 1:
-                            marriagesIndicator[1].textContent = m.points;
-                            break;
-                        case 2:
-                            marriagesIndicator[2].textContent = m.points;
-                            break;
-                        case 3:
-                            marriagesIndicator[3].textContent = m.points;
-                            break;
-                    
-                        default:
-                            break;
-                    }       
-                
-                break;
-
-            case 'pik':
-                position = playerHand.findIndex(card => card.name === 'q-pik');
-                
-                    switch (position) {
-                        case 0:
-                            marriagesIndicator[0].textContent = m.points;
-                            break;
-                        case 1:
-                            marriagesIndicator[1].textContent = m.points;
-                            break;
-                        case 2:
-                            marriagesIndicator[2].textContent = m.points;
-                            break;
-                        case 3:
-                            marriagesIndicator[3].textContent = m.points;
-                            break;
-                    
-                        default:
-                            break;
-                    }       
-                
-                break;
-
-            case'tref':
-                position = playerHand.findIndex(card => card.name === 'q-tref');
-                
-                    switch (position) {
-                        case 0:
-                            marriagesIndicator[0].textContent = m.points;
-                            break;
-                        case 1:
-                            marriagesIndicator[1].textContent = m.points;
-                            break;
-                        case 2:
-                            marriagesIndicator[2].textContent = m.points;
-                            break;
-                        case 3:
-                            marriagesIndicator[3].textContent = m.points;
-                            break;
-                    
-                        default:
-                            break;
-                    }       
-                
-                break;
-
-            default:
-                break;
-        }
-    });
-}
-
-
-
-// Updates player's points (0->66+)
-function updatePoints(points){
-    textPoints.textContent = points;
-}
-
-// Update player's and opponent's game points (0->7+)
-function updatePlayerAndOpponentGamePoints(){
-    textPlayerGamePoints.textContent = bummerl.gamePointsPlayer;
-    textOpponentGamePoints.textContent = bummerl.gamePointsOpponent;
-}
-
-// Sets the indicator(background color) - that shows if player is on turn or not
-function setPlayerOnTurnIndicator(isPlayerOnTurn){
-    if(isPlayerOnTurn){
-        playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
-    }
-    else{
-        playerOnTurnIndicator.setAttributeNS(null, 'fill', 'gray');
-    }
-}
-
-// Sets the cards opacity - that shows if player is on turn or not
-function setPlayerOnTurnCardsOpacity(isPlayerOnTurn){
-    if(isPlayerOnTurn){
-        cardsInHand.forEach(card => {
-            card.style.opacity = 1;
-            card.style.cursor = 'default';
-        });
-    }
-    else{
-        cardsInHand.forEach(card => {
-            card.style.opacity = 0.95;
-            card.style.cursor = 'default';
-        });
-    }
-}
-
-// Shows one GUI element
-function showElement(element){
-    element.setAttributeNS(null, 'visibility', 'visible');
-}
-
-// Shows an array of GUI elements
-function showElements(elements){
-    elements.forEach(element => {
-        showElement(element);
-    });
-}
-
-// Hides one GUI element
-function hideElement(element){
-    element.setAttributeNS(null, 'visibility', 'hidden');
-}
-
-// Hides an array of GUI element
-function hideElements(elements){
-    elements.forEach(element => {
-        hideElement(element);
-    });
-}
-
-
-
-
-
-// ADDING EVENT LISTENERS
-// ********************************************************************************
-
-// cards
-for(let i = 0; i<5; i++){
-    cardsInHand[i].addEventListener('mouseover', function () {cardHover(cardsInHand[i]);}, false);
-    cardsInHand[i].addEventListener('mouseout',  function () {cardHoverOut(cardsInHand[i]);}, false);
-    cardsInHand[i].addEventListener('click',     function () {playCard(cardsInHand[i]);}, false);
-}
-
-textPoints.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
-textPoints.addEventListener('mouseout', function () {toggleHideAllTricks();}, false);
-textPoints.style.cursor = 'grabbing';
-
-exchangeTrumpCardButton.addEventListener('mouseover', function () {buttonHover(exchangeTrumpCardButton);}, false);
-exchangeTrumpCardButton.addEventListener('mouseout', function () {buttonHoverOut(exchangeTrumpCardButton);}, false);
-exchangeTrumpCardButton.addEventListener('click', function () {exchangeTrumpCard();}, false);

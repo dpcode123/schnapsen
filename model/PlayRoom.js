@@ -1,21 +1,15 @@
+const {v4 : uuidv4} = require('uuid');
 const Bummerl = require('./Bummerl');
 const Game = require('./Game');
-const {
-    getAllCards,
-    randomCard,
-    getCardByName,
-    removeCardFromDeck,
-    getCardPositionInHandByName
-} = require('../schnaps/cards');
-const { 
-    calculateTrickWinner, 
-    calculateTrickPoints,
-    checkForMarriagesInHand,
-} = require('../schnaps/schnaps');
+const { checkForMarriagesInHand } = require('../schnaps/schnaps');
+
 
 module.exports = function (room, player1) {
 
-    // play session id (socket.io room)
+    // unique room uuid
+    this.uuid = uuidv4();
+
+    // socket.io room
     this.room = room;
 
     // status (starting, started, finished)

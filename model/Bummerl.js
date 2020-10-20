@@ -13,7 +13,6 @@ module.exports = function (num) {
     this.gamePoints[0] = 0;
     this.gamePoints[1] = 0;
 
-
     // check if bummerls is over (7+ game points)
     this.bummerlOver = function(pIndex){
         let isBummerlOver = this.gamePoints[pIndex] >= 7;

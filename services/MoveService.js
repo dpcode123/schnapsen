@@ -9,7 +9,8 @@ const {
     checkPlayedCardMarriagePoints,
     calculateValidRespondingCards,
 } = require('../schnaps/schnaps');
-
+const RoomStateDTO = require('../dto/RoomStateDTO');
+const BummerlStateDTO =require('../dto/BummerlStateDTO');
 const GameStateDTO = require('../dto/GameStateDTO');
 const GameOverDTO = require('../dto/GameOverDTO');
 const OpponentMoveDTO = require('../dto/OpponentMoveDTO');
@@ -63,12 +64,12 @@ module.exports = function(io, socket) {
             card = getCardByName(move.cardName);
 
             // Add lead card to card buffer (if move is lead, and lead buffer is empty)
-            if(move.leadOrResponse && !playRoom.game.cardBuffer.lead){
-                playRoom.game.cardBuffer.lead = move;
+            if(move.leadOrResponse && !playRoom.game.moveBuffer.leadMove){
+                playRoom.game.moveBuffer.leadMove = move;
             }
             // Add response card to card buffer (if move is response, and response buffer is empty)
-            else if(!move.leadOrResponse && !playRoom.game.cardBuffer.response){
-                playRoom.game.cardBuffer.response = move;
+            else if(!move.leadOrResponse && !playRoom.game.moveBuffer.responseMove){
+                playRoom.game.moveBuffer.responseMove = move;
             }
 
             // Send move validation/confirmation to player
@@ -80,7 +81,7 @@ module.exports = function(io, socket) {
             let validRespondingCards;
 
             // if card/move is lead calculate valid responses
-            if(playRoom.game.cardBuffer.lead && !playRoom.game.cardBuffer.response){
+            if(playRoom.game.moveBuffer.leadMove && !playRoom.game.moveBuffer.responseMove){
                 validRespondingCards = calculateValidRespondingCards(
                     card, playRoom.game.cardsInHand[otherPlayer(playerIndex)],
                     playRoom.game.trumpSuit, playRoom.game.deckClosed);
@@ -100,7 +101,7 @@ module.exports = function(io, socket) {
 
 
             // LEAD CARD
-            if(playRoom.game.cardBuffer.lead && !playRoom.game.cardBuffer.response){
+            if(playRoom.game.moveBuffer.leadMove && !playRoom.game.moveBuffer.responseMove){
 
                 // add marriage points (as marriages can be called only on lead)
                 let marriagePoints = checkPlayedCardMarriagePoints(card, playRoom.game.marriagesInHand[playerIndex]);
@@ -119,18 +120,18 @@ module.exports = function(io, socket) {
                 }
             }
             // RESPONSE CARD
-            else if(playRoom.game.cardBuffer.lead && playRoom.game.cardBuffer.response){
+            else if(playRoom.game.moveBuffer.leadMove && playRoom.game.moveBuffer.responseMove){
 
                 // Increase move number
                 playRoom.game.increaseMoveNumber();            
 
                 // Calculate trick winner
-                let trickWinnerId = calculateTrickWinner(playRoom.game.trumpSuit, playRoom.game.cardBuffer.lead, playRoom.game.cardBuffer.response);
+                let trickWinnerId = calculateTrickWinner(playRoom.game.trumpSuit, playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
                 console.log('trickWinnerId');
                 console.log(trickWinnerId);
 
                 // Calculate trick points
-                let trickPoints = calculateTrickPoints(playRoom.game.cardBuffer.lead, playRoom.game.cardBuffer.response);
+                let trickPoints = calculateTrickPoints(playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
 
                 // Get trick winner index in room (0 or 1)
                 let trickWinnerIndex = getPlayerIndexInRoomBySocketId(playRoom, trickWinnerId);
@@ -142,8 +143,8 @@ module.exports = function(io, socket) {
                 // Create trick object
                 let trick = new Trick(
                     playRoom.game.trickNum,
-                    playRoom.game.cardBuffer.lead.socketId, playRoom.game.cardBuffer.response.socketId,
-                    playRoom.game.cardBuffer.lead.cardName, playRoom.game.cardBuffer.response.cardName,
+                    playRoom.game.moveBuffer.leadMove.socketId, playRoom.game.moveBuffer.responseMove.socketId,
+                    playRoom.game.moveBuffer.leadMove.cardName, playRoom.game.moveBuffer.responseMove.cardName,
                     trickWinnerId, trickWinnerIndex, trickPoints
                 );
 
@@ -151,12 +152,12 @@ module.exports = function(io, socket) {
                 playRoom.game.lastTrick = trick;
 
                 // add cards to winning player's tricks
-                playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.cardBuffer.lead.cardName);
-                playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.cardBuffer.response.cardName);
+                playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.leadMove.cardName);
+                playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.responseMove.cardName);
                 
                 // remove played cards from hands            
-                playRoom.game.removeCardFromHand(playRoom.game.cardBuffer.lead.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.cardBuffer.lead.socketId));
-                playRoom.game.removeCardFromHand(playRoom.game.cardBuffer.response.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.cardBuffer.response.socketId));
+                playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.leadMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.leadMove.socketId));
+                playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.responseMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.responseMove.socketId));
 
                 // add points
                 playRoom.game.addPointsToPlayer(trickWinnerIndex, trickPoints);
@@ -183,7 +184,8 @@ module.exports = function(io, socket) {
                     if(bummerlOver){
                         // start next bummerl; update clients
                         playRoom.startBummerl();
-                        io.to(room).emit('bummerlStart', playRoom.bummerl.status);
+                        //io.to(playRoom.room).emit('bummerlStart', playRoom.bummerl.status);
+                        playRoom.bummerlsWon[trickWinnerIndex] = playRoom.bummerlsWon[trickWinnerIndex] + 1;
                     }
 
                     // start new game
@@ -191,7 +193,10 @@ module.exports = function(io, socket) {
 
                     // update clients
                     for(let i=0; i<2; i++){
+                        io.to(playRoom.players[i].socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, i));
+                        io.to(playRoom.players[i].socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, i));
                         io.to(playRoom.players[i].socketId).emit('gameStart', new GameStateDTO(playRoom.game, i));
+                        
                     }
 
                 }

@@ -17,9 +17,11 @@ class PlaySession {
  * Bummerl (CLIENT SIDE)
  */
 class Bummerl {
-    constructor(){
-        this.gamePointsPlayer = 0;
-        this.gamePointsOpponent = 0;
+    constructor(bummerlDTO){
+        this.num = bummerlDTO.num;
+        this.status = bummerlDTO.status;
+        this.gamePointsPlayer = bummerlDTO.gamePointsPlayer;
+        this.gamePointsOpponent = bummerlDTO.gamePointsOpponent;
     }
 }
 
@@ -50,6 +52,9 @@ class Game {
 
         // Lead(true) or Response(false)
         this.leadOrResponse = gameStateDTO.leadOrResponse;
+
+        // Lead card played (if current state is response, else null)
+        this.leadCardOnTable = gameStateDTO.leadCardOnTable;
 
         // deck closed or out of cards
         this.deckClosed = gameStateDTO.deckClosed;

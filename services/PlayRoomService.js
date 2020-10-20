@@ -35,11 +35,15 @@ const joinRoom = function(roomId, secondPlayer) {
 }
 
 const getRoomByPlayersSocketId = function(socketId) {
-    let room;
+    let room = false;
 
     playRooms.forEach(playRoom => {
-        if(playRoom.players.filter(player => player.socketId === socketId).length === 1){
-            room = playRoom;
+        // if there are any players in room
+        if(playRoom.players.length > 0){
+            // if there is any player in room with that socket id
+            if(playRoom.players.filter(player => player.socketId === socketId).length === 1){
+                room = playRoom;
+            }
         }
     });
     return room;

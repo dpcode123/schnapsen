@@ -5,6 +5,12 @@ module.exports = function(game, player) {
     let isThisPlayerOnTurn = false;
     let opponentWonCardsFirstTrick = [];
 
+    // lead card player (on table)
+    let leadCardOnTable = null;
+    if((game.leadOrResponse === false) && game.moveBuffer){
+        leadCardOnTable = game.moveBuffer.leadMove.cardName;
+    }
+
     if(player === game.playerOnTurn){
         isThisPlayerOnTurn = true;
     }
@@ -24,6 +30,7 @@ module.exports = function(game, player) {
         trickNum: game.trickNum,
         moveNum: game.moveNum,
         leadOrResponse: game.leadOrResponse,
+        leadCardOnTable: leadCardOnTable,
         deckClosed: game.deckClosed,
         playerPoints: game.playerPoints[player],
         cardsInHand: game.cardsInHand[player],
@@ -34,6 +41,6 @@ module.exports = function(game, player) {
         opponentTotalWonCardsNumber: opponentTotalWonCardsNumber,
         marriagesInHand: game.marriagesInHand[player],
     };
-
+    //console.log(dto);
     return dto;
 }

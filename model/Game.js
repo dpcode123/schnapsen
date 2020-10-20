@@ -17,8 +17,8 @@ module.exports = function (num, openingPlayer) {
     // if final score is 7:6 or 6:7 and every win was for only 1 point
     this.num = num;
 
-    // play buffer
-    this.cardBuffer = {lead: null, response: null};
+    // move buffer
+    this.moveBuffer = {lead: null, response: null};
 
     // cards deck
     this.deck = shuffle([...ALL_CARDS]);
@@ -114,6 +114,7 @@ module.exports = function (num, openingPlayer) {
     this.dealCardsToPlayers = function (firstPlayer, numberOfCards){
 
         // more than 1 card in deck
+        // - deal card(s) to first player, then other player
         if(this.deck.length > 1){
             for(let i = 0; i < numberOfCards; i++){
                 this.dealRandomCardToPlayer(firstPlayer);
@@ -122,10 +123,12 @@ module.exports = function (num, openingPlayer) {
                 this.dealRandomCardToPlayer(otherPlayer(firstPlayer));
             }
         }
-        // only 1 card in deck - deal that card to first player and trump card to other
+        // only 1 card in deck 
+        // - deal that card to first player and trump card to other; remove trump card
         else if(this.deck.length === 1){
             this.dealRandomCardToPlayer(firstPlayer);
             this.cardsInHand[otherPlayer(firstPlayer)].push(this.trumpCard);
+            this.trumpCard = 'none';
         }
     }
     
@@ -179,7 +182,7 @@ module.exports = function (num, openingPlayer) {
     this.startNextTrick = function (lastTricksWinner){
 
         // clear card buffer
-        this.cardBuffer = {lead: null, response: null};
+        this.moveBuffer = {lead: null, response: null};
 
         // increase trick num
         this.trickNum+=1;
