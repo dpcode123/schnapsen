@@ -1,4 +1,4 @@
-const { getPlayRooms, getPlayRoomById } = require('../repository/roomRepository');
+const { getPlayRooms, getPlayRoomById, deletePlayRoomById } = require('../repository/roomRepository');
 const PlayRoom = require('../model/PlayRoom');
 const { getRandomIntInclusive } = require('../utils/util');
 
@@ -6,7 +6,7 @@ const playRooms = getPlayRooms();
 
 const createRoom = function(firstPlayer) {
     // generate random room id
-    const randomId = getRandomIntInclusive(5000, 5002).toString();
+    const randomId = getRandomIntInclusive(1000, 9999).toString();
 
     // if room already exist return false
     if(playRooms.has(randomId)) {
@@ -49,8 +49,13 @@ const getRoomByPlayersSocketId = function(socketId) {
     return room;
 }
 
+const deleteRoomById = function(roomId) {
+    return deletePlayRoomById(roomId);
+}
+
 module.exports = {
     createRoom,
     joinRoom,
-    getRoomByPlayersSocketId
+    getRoomByPlayersSocketId,
+    deleteRoomById
 };

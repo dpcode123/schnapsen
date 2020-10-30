@@ -109,52 +109,86 @@ cardPatterns.forEach(card => {
 // GUI ELEMENT CONSTANTS AND VARIABLES
 // ********************************************************************************
 
-// all elements
-const allGuiElements = [];
+// All elements
+const ALL_GUI_ELEMENTS = [];
 
-// Player cards
+// Player active (background color)
+let playerOnTurnIndicator;
+
+// Player cards, Opponent cards
 const cardsInHand = [];
-// Opponent cards
 const opponentCardsInHand = [];
+
+// Card on the table - played by Player, Opponent
+let cardPlayedByPlayer;
+let cardPlayedByOpponent;
+
+// Marriage points (20 or 40) called on current move - by Opponent
+let uiMarriagePointsCalledOnCurrentMoveByOpponent;
+
+// Trump card under the deck
+let trumpCard;
 
 // Deck - max 9 cards in deck
 const cardsInDeck = [];
 
-// 1st won trick(2 cards), always shown - PLAYER
+// Player tricks
+// - 1st won trick(2 cards), always shown
+// - other won tricks (max. 7 tricks/14 cards), hidden
+// - all won tricks, when 'show all' is toggled
 const wonCardsFirstTrick = [];
-// other won tricks (max. 7 tricks/14 cards), hidden - PLAYER
 const wonCardsOtherTricksCardbacks = [];
-// all won tricks, when 'show all' is toggled - PLAYER
 const wonCardsAllTricksDisplayed = [];
 
-// 1st won trick(2 cards), always shown - OPPONENT
+// Opponent tricks
+// - 1st won trick(2 cards), always shown
+// - other won tricks (max. 7 tricks/14 cards), hidden
 const opponentWonCardsFirstTrick = [];
-// other won tricks (max. 7 tricks/14 cards), hidden - OPPONENT
 const opponentWonCardsOtherTricksCardbacks = [];
+
+// Room #
+let textRoomId;
+
+// Text alert
+let textAlert;
+
+// Text - Points (66)
+let textPoints;
+
+// Player name, Opponent name
+let textPlayerName;
+let textOpponentName;
+
+// Player gamepoints, Opponent gamepoints
+let textPlayerGamePoints;
+let textOpponentGamePoints;
+
+// Bummerls lost (dots)
+let textBummerlsLostPlayer;
+let textBummerlsLostOpponent;
 
 // Marriages(20,40) in player's hand
 const marriagesIndicator = [];
 
-// unavailable(forbidden) cards
+// Unavailable(forbidden) cards
 const forbiddenCardOverlay = [];
 
-// Trump card under the deck
-let trumpCard;
-// Card in the middle of the table, played by PLAYER
-let cardPlayedByPlayer;
-// Card in the middle of the table, played by OPPONENT
-let cardPlayedByOpponent;
-
-
 // Change trump card button(group with rect and text)
+let exchangeTrumpCardRect, exchangeTrumpCardText;
 let exchangeTrumpCardButton;
-let exchangeTrumpCardRect;
-let exchangeTrumpCardText;
-
 
 
 // SVG ELEMENTS
 // ********************************************************************************
+
+// Player active (background color)
+playerOnTurnIndicator = document.createElementNS(XMLNS, 'rect');
+playerOnTurnIndicator.setAttributeNS(null, 'x', 0);
+playerOnTurnIndicator.setAttributeNS(null, 'y', 0);
+playerOnTurnIndicator.setAttributeNS(null, 'width',  1080);
+playerOnTurnIndicator.setAttributeNS(null, 'height', 540);
+playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
+playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 0.2);
 
 // Player cards
 for(let i=0; i<5; i++){
@@ -188,7 +222,6 @@ for(let i=0; i<5; i++){
     opponentCardsInHand[i].setAttributeNS(null, 'visibility', 'hidden');
 }
 
-
 // Card in the middle of the table, played by PLAYER
 cardPlayedByPlayer = document.createElementNS(XMLNS, 'rect');
 cardPlayedByPlayer.setAttributeNS(null, 'x', 350);
@@ -218,7 +251,16 @@ cardPlayedByOpponent.setAttributeNS(null, 'transform', 'rotate(180)');
 cardPlayedByOpponent.setAttributeNS(null, 'fill', 'url(#cardback)');
 cardPlayedByOpponent.setAttributeNS(null, 'visibility', 'hidden');
 
+ 
 
+// Marriage points (20 or 40) called on current move - by Opponent
+uiMarriagePointsCalledOnCurrentMoveByOpponent = document.createElementNS(XMLNS, 'text');
+uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'x', 290);
+uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'y', 300);
+uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'font-size', '36px');
+uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'fill', MARRIAGES_FONT_COLOR);
+uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
+uiMarriagePointsCalledOnCurrentMoveByOpponent.textContent = '';
 
 // Trump card under the deck
 trumpCard = document.createElementNS(XMLNS, 'rect');
@@ -251,8 +293,6 @@ for(let i = 0; i<9; i++){
     cardsInDeck[i].setAttributeNS(null, 'visibility', 'hidden');
 }
 
-
-
 // Won cards - first trick - shown - PLAYER
 wonCardsFirstTrick[0] = document.createElementNS(XMLNS, 'rect');
 wonCardsFirstTrick[0].setAttributeNS(null, 'x', 28);
@@ -281,7 +321,6 @@ wonCardsFirstTrick[1].setAttributeNS(null, 'stroke-opacity', CARD_STROKE_OPACITY
 wonCardsFirstTrick[1].setAttributeNS(null, 'fill', 'url(#cardback)');
 wonCardsFirstTrick[1].setAttributeNS(null, 'transform', 'rotate(-15)');
 wonCardsFirstTrick[1].setAttributeNS(null, 'visibility', 'hidden');
-
 
 // Won cards - other tricks - hidden - PLAYER
 for(let i=0; i<14; i++){
@@ -346,8 +385,6 @@ for(let i=10;i<16;i++){
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'visibility', 'hidden');
 }
 
-
-
 // Won cards - first trick - shown - OPPONENT
 opponentWonCardsFirstTrick[0] = document.createElementNS(XMLNS, 'rect');
 opponentWonCardsFirstTrick[0].setAttributeNS(null, 'x', -1000);
@@ -377,7 +414,6 @@ opponentWonCardsFirstTrick[1].setAttributeNS(null, 'fill', 'url(#cardback)');
 opponentWonCardsFirstTrick[1].setAttributeNS(null, 'transform', 'rotate(195)');
 opponentWonCardsFirstTrick[1].setAttributeNS(null, 'visibility', 'hidden');
 
-
 // Won cards - other tricks - hidden - OPPONENT
 for(let i=0; i<14; i++){
     opponentWonCardsOtherTricksCardbacks[i] = document.createElementNS(XMLNS, 'rect');
@@ -395,36 +431,30 @@ for(let i=0; i<14; i++){
     opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, 'visibility', 'hidden');
 }
 
+// Room id
+textRoomId = document.createElementNS(XMLNS, 'text');
+textRoomId.setAttributeNS(null, 'x', 380);
+textRoomId.setAttributeNS(null, 'y', 80);
+textRoomId.setAttributeNS(null, 'font-size', '48px');
+textRoomId.setAttributeNS(null, 'fill', 'black');
+textRoomId.textContent = '';
 
-// TEXT - game status
+// Text alert
 textAlert = document.createElementNS(XMLNS, 'text');
 textAlert.setAttributeNS(null, 'x', 150);
 textAlert.setAttributeNS(null, 'y', 200);
 textAlert.setAttributeNS(null, 'font-size', '72px');
 textAlert.setAttributeNS(null, 'fill', 'black');
 textAlert.textContent = '';
-//textAlert.setAttributeNS(null, 'visibility', 'hidden');
 
-
-// TEXT - Points (66)
+// Text - Points (66)
 textPoints = document.createElementNS(XMLNS, 'text');
 textPoints.setAttributeNS(null, 'x', 935);
 textPoints.setAttributeNS(null, 'y', 275);
 textPoints.setAttributeNS(null, 'font-size', '36px');
 textPoints.setAttributeNS(null, 'fill', 'black');
-textPoints.textContent = '0';
 textPoints.setAttributeNS(null, 'visibility', 'hidden');
-
-
-// player active - background color
-playerOnTurnIndicator = document.createElementNS(XMLNS, 'rect');
-playerOnTurnIndicator.setAttributeNS(null, 'x', 0);
-playerOnTurnIndicator.setAttributeNS(null, 'y', 0);
-playerOnTurnIndicator.setAttributeNS(null, 'width',  1080);
-playerOnTurnIndicator.setAttributeNS(null, 'height', 540);
-playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
-playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 0.2);
-//playerOnTurnIndicator.setAttributeNS(null, 'visibility', 'hidden');
+textPoints.textContent = '0';
 
 // Player name
 textPlayerName = document.createElementNS(XMLNS, 'text');
@@ -464,15 +494,21 @@ textOpponentGamePoints.setAttributeNS(null, 'fill', 'black');
 textOpponentGamePoints.textContent = '0';
 textOpponentGamePoints.setAttributeNS(null, 'visibility', 'hidden');
 
-// Room id
-textRoomId = document.createElementNS(XMLNS, 'text');
-textRoomId.setAttributeNS(null, 'x', 380);
-textRoomId.setAttributeNS(null, 'y', 80);
-textRoomId.setAttributeNS(null, 'font-size', '48px');
-textRoomId.setAttributeNS(null, 'fill', 'black');
-textRoomId.textContent = '';
-//textRoomId.setAttributeNS(null, 'visibility', 'hidden');
+// bummerls lost ● - player
+textBummerlsLostPlayer = document.createElementNS(XMLNS, 'text');
+textBummerlsLostPlayer.setAttributeNS(null, 'x', 10);
+textBummerlsLostPlayer.setAttributeNS(null, 'y', 285);
+textBummerlsLostPlayer.setAttributeNS(null, 'font-size', '28px');
+textBummerlsLostPlayer.setAttributeNS(null, 'fill', 'black');
+textBummerlsLostPlayer.textContent = '';
 
+// bummerls lost ● - opponent
+textBummerlsLostOpponent = document.createElementNS(XMLNS, 'text');
+textBummerlsLostOpponent.setAttributeNS(null, 'x', 10);
+textBummerlsLostOpponent.setAttributeNS(null, 'y', 170);
+textBummerlsLostOpponent.setAttributeNS(null, 'font-size', '28px');
+textBummerlsLostOpponent.setAttributeNS(null, 'fill', 'black');
+textBummerlsLostOpponent.textContent = '';
 
 // marriages(zvanja) - 20/40 - Positions 0,1,2,3
 // 0 - between 1st and 2nd card, 1 between 2nd and 3rd card...
@@ -502,12 +538,7 @@ for(let i=0; i<5; i++){
     forbiddenCardOverlay[i].setAttributeNS(null, 'opacity', 0.4);
 }
 
-// change trump card button
-exchangeTrumpCardButton = document.createElementNS(XMLNS, 'g');
-exchangeTrumpCardButton.setAttributeNS(null, 'opacity', 0.3);
-exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'hidden');
-
-// rect
+// change trump card button - rect
 exchangeTrumpCardRect = document.createElementNS(XMLNS, 'rect');
 exchangeTrumpCardRect.setAttributeNS(null, 'x', 0);
 exchangeTrumpCardRect.setAttributeNS(null, 'y', 0);
@@ -520,7 +551,7 @@ exchangeTrumpCardRect.setAttributeNS(null, 'stroke-width', 1);
 exchangeTrumpCardRect.setAttributeNS(null, 'stroke-opacity', 1);
 exchangeTrumpCardRect.setAttributeNS(null, 'fill', 'none');
 
-// text
+// change trump card button - text
 exchangeTrumpCardText = document.createElementNS(XMLNS, 'text');
 exchangeTrumpCardText.setAttributeNS(null, 'x', 0);
 exchangeTrumpCardText.setAttributeNS(null, 'y', 0);
@@ -528,29 +559,14 @@ exchangeTrumpCardText.setAttributeNS(null, 'font-size', '48px');
 exchangeTrumpCardText.setAttributeNS(null, 'fill', 'black');
 exchangeTrumpCardText.textContent = '<->';
 
+// change trump card button - group with rect and text elements
+exchangeTrumpCardButton = document.createElementNS(XMLNS, 'g');
+exchangeTrumpCardButton.setAttributeNS(null, 'opacity', 0.3);
+exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'hidden');
+
 // append to group
 exchangeTrumpCardButton.appendChild(exchangeTrumpCardRect);
 exchangeTrumpCardButton.appendChild(exchangeTrumpCardText);
-
-// bummerls lost ● - player
-textBummerlsLostPlayer = document.createElementNS(XMLNS, 'text');
-textBummerlsLostPlayer.setAttributeNS(null, 'x', 10);
-textBummerlsLostPlayer.setAttributeNS(null, 'y', 285);
-textBummerlsLostPlayer.setAttributeNS(null, 'font-size', '28px');
-textBummerlsLostPlayer.setAttributeNS(null, 'fill', 'black');
-textBummerlsLostPlayer.textContent = '';
-
-// bummerls lost ● - opponent
-textBummerlsLostOpponent = document.createElementNS(XMLNS, 'text');
-textBummerlsLostOpponent.setAttributeNS(null, 'x', 10);
-textBummerlsLostOpponent.setAttributeNS(null, 'y', 170);
-textBummerlsLostOpponent.setAttributeNS(null, 'font-size', '28px');
-textBummerlsLostOpponent.setAttributeNS(null, 'fill', 'black');
-textBummerlsLostOpponent.textContent = '';
-
-
-
-
 
 
 
@@ -558,93 +574,96 @@ textBummerlsLostOpponent.textContent = '';
 // ********************************************************************************
 
 // player active - background color
-allGuiElements.push(playerOnTurnIndicator);
+ALL_GUI_ELEMENTS.push(playerOnTurnIndicator);
 
 // player cards
 cardsInHand.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // opponent cards
 opponentCardsInHand.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // played cards on the table
-allGuiElements.push(cardPlayedByOpponent);
-allGuiElements.push(cardPlayedByPlayer);
+ALL_GUI_ELEMENTS.push(cardPlayedByOpponent);
+ALL_GUI_ELEMENTS.push(cardPlayedByPlayer);
+
+// marriages called by opponent on current move
+ALL_GUI_ELEMENTS.push(uiMarriagePointsCalledOnCurrentMoveByOpponent);
 
 // trump card
-allGuiElements.push(trumpCard);
+ALL_GUI_ELEMENTS.push(trumpCard);
 
 // deck
 cardsInDeck.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // won tricks - player - 1st trick
 wonCardsFirstTrick.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // won tricks - player - other tricks
 wonCardsOtherTricksCardbacks.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // won tricks - player - show all tricks toggled
 wonCardsAllTricksDisplayed.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // won tricks - opponent - 1st trick
 opponentWonCardsFirstTrick.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
 // won tricks - opponent - other tricks
 opponentWonCardsOtherTricksCardbacks.forEach(card => {
-    allGuiElements.push(card);
+    ALL_GUI_ELEMENTS.push(card);
 });
 
-// points
-allGuiElements.push(textPoints);
+// room id
+ALL_GUI_ELEMENTS.push(textRoomId);
 
 // game status
-allGuiElements.push(textAlert);
+ALL_GUI_ELEMENTS.push(textAlert);
+
+// points
+ALL_GUI_ELEMENTS.push(textPoints);
+
+// names
+ALL_GUI_ELEMENTS.push(textPlayerName);
+ALL_GUI_ELEMENTS.push(textOpponentName);
+
+// gamepoints
+ALL_GUI_ELEMENTS.push(textPlayerGamePoints);
+ALL_GUI_ELEMENTS.push(textOpponentGamePoints);
+
+// bummerls lost
+ALL_GUI_ELEMENTS.push(textBummerlsLostPlayer);
+ALL_GUI_ELEMENTS.push(textBummerlsLostOpponent);
 
 // marriagesIndicator
 marriagesIndicator.forEach(m => {
-    allGuiElements.push(m);
+    ALL_GUI_ELEMENTS.push(m);
 });
 
 // overlays
 forbiddenCardOverlay.forEach(cardOverlay => {
-    allGuiElements.push(cardOverlay);
+    ALL_GUI_ELEMENTS.push(cardOverlay);
 });
 
-// names
-allGuiElements.push(textPlayerName);
-allGuiElements.push(textOpponentName);
-
-// gamepoints
-allGuiElements.push(textPlayerGamePoints);
-allGuiElements.push(textOpponentGamePoints);
-
-// room id
-allGuiElements.push(textRoomId);
-
 // change trump card button
-allGuiElements.push(exchangeTrumpCardButton);
-
-// bummerls lost
-allGuiElements.push(textBummerlsLostPlayer);
-allGuiElements.push(textBummerlsLostOpponent);
+ALL_GUI_ELEMENTS.push(exchangeTrumpCardButton);
 
 
 
 // APPEND ALL ELEMENTS
 // ********************************************************************************
-allGuiElements.forEach(element => {
+ALL_GUI_ELEMENTS.forEach(element => {
     svg.appendChild(element);
 });

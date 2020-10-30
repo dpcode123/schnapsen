@@ -365,6 +365,7 @@ function cleanupGameScreen(){
     hideElement(cardPlayedByOpponent);
     hideElement(trumpCard);
     hideElement(textPoints);
+    hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
     hideElements(forbiddenCardOverlay);
     hideElements(wonCardsFirstTrick);
     hideElements(wonCardsOtherTricksCardbacks);
@@ -556,6 +557,7 @@ function getCardPositionInHandByName(cardName, playerHand){
 
 
 function disableForbiddenCards(cardsInHand, validRespondingCards) {
+
     // for each card in hand array, check if it's in valid responses array
     // if it is not, disable that card
     cardsInHand.forEach(cardInHand => {

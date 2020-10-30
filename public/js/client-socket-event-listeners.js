@@ -1,4 +1,3 @@
-
 /**
  * GAMEPLAY - Receive events from server
  * - session 
@@ -13,7 +12,7 @@
 socket.on('sessionStarting', gameRoomId => {
     showElement(textAlert);
     textAlert.textContent = 'Waiting for other player...';
-    textRoomId.textContent = `#${gameRoomId}`;
+    textRoomId.textContent = `# ${gameRoomId}`;
 });
 
 // Session state update
@@ -77,6 +76,8 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
+            hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
         }
     );
 });
@@ -97,6 +98,8 @@ socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
             putCardInElement(trumpCard, game.trumpCard.name);
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
+            hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
         }
     );
@@ -132,6 +135,8 @@ socket.on('gameStart', gameStateDTO => {
             setupGameScreenStarted();
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
+            hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
         }
     );
@@ -151,13 +156,27 @@ socket.on('moveInvalidError', moveInvalidError => {
 
 // Opponent's move
 socket.on('opponentMove', opponentMoveDTO => {
+
+    console.log(opponentMoveDTO);
+
     // hide random card in opponent's hand
     hideElement(opponentCardsInHand[getRandomInt(5)]);
+
+    // display marriage points called by opponent
+    if(opponentMoveDTO.marriagePoints > 0){
+        uiMarriagePointsCalledOnCurrentMoveByOpponent.textContent = opponentMoveDTO.marriagePoints;
+        //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'visible');
+        showElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+    }
+    //else{uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');}
 
     // throw card on the table 
     putCardInElement(cardPlayedByOpponent, opponentMoveDTO.cardName);
     showElement(cardPlayedByOpponent);
 
     // disable/overlay unavailable(forbidden) response cards
-    disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
+    if(opponentMoveDTO.validRespondingCards !== 'all'){
+        disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
+    }
+    
 });

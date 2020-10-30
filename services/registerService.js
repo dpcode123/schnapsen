@@ -61,9 +61,6 @@ const add_user = async (req, res) => {
 }
 
 
-
-
-
 module.exports = {
     add_user
 }

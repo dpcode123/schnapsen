@@ -1,11 +1,7 @@
-const { getPlayRooms, getPlayRoomById } = require('../repository/roomRepository');
-const PlayRoom = require('../model/PlayRoom');
-const { getRoomByPlayersSocketId } = require('../services/PlayRoomService')
-const { otherPlayer, 
-    getPlayerIndexInRoomBySocketId 
-} = require("../utils/util");
+const { getRoomByPlayersSocketId, deleteRoomById } = require('../services/PlayRoomService')
+const { getPlayerIndexInRoomBySocketId } = require("../utils/util");
 
-module.exports = function(io, socket) {
+module.exports = function(io) {
 
     this.disconnect = function(socketId) {
         try {
@@ -29,8 +25,8 @@ module.exports = function(io, socket) {
                         // update users
                         io.to(playRoom.room).emit('sessionEnd', playRoom.status);
 
-                        // destroy play session
-                        console.log('destroy play room');
+                        // destroy play room
+                        deleteRoomById(playRoom.room);
                     }
                 }, 3000);
             }

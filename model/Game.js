@@ -10,6 +10,7 @@ const { otherPlayer } = require('../utils/util');
 const { shuffle } = require('../schnaps/shuffle');
 const ALL_CARDS = getAllCards();
 
+
 module.exports = function (num, openingPlayer) {
 
     // game number: (1...13)
@@ -141,12 +142,13 @@ module.exports = function (num, openingPlayer) {
     // check if player is out (66+ points)
     this.gameOver = function(pIndex){
 
-        // player get 1,2 or 3 game points
+        // player gets 1,2 or 3 game points
         let gamePoints = 0;
 
-        let playerOut = this.playerPoints[pIndex] >= 66;
+        // check if player has >= 66 points
+        let isGameOver = this.playerPoints[pIndex] >= 66;
 
-        if(playerOut){
+        if(isGameOver){
             // opponent has 0 points
             if(this.playerPoints[otherPlayer(pIndex)] === 0) {
                 gamePoints = 3;
@@ -161,7 +163,25 @@ module.exports = function (num, openingPlayer) {
             }
         }
         return {
-            playerOut: playerOut,
+            winnerIndex: pIndex,
+            isGameOver: isGameOver,
+            gamePoints: gamePoints,
+            playerPointsAtEndOfGame: this.playerPoints[pIndex],
+        };
+    }
+
+    // check if player is out (66+ points)
+    this.gameOverLastTrick = function(pIndex){
+
+        // game is over
+        isGameOver = true;
+
+        // player gets 1 game point
+        let gamePoints = 1;
+
+        return {
+            winnerIndex: pIndex,
+            isGameOver: isGameOver,
             gamePoints: gamePoints,
             playerPointsAtEndOfGame: this.playerPoints[pIndex],
         };

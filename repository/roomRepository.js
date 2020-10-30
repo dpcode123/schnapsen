@@ -13,4 +13,8 @@ function getPlayRoomById(roomId) {
     return false;
 }
 
-module.exports = { getPlayRooms, getPlayRoomById };
+function deletePlayRoomById(roomId) {
+    return playRooms.delete(roomId);
+}
+
+module.exports = { getPlayRooms, getPlayRoomById, deletePlayRoomById };

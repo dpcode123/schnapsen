@@ -12,7 +12,7 @@ const {
 const RoomStateDTO = require('../dto/RoomStateDTO');
 const BummerlStateDTO =require('../dto/BummerlStateDTO');
 const GameStateDTO = require('../dto/GameStateDTO');
-const GameOverDTO = require('../dto/GameOverDTO');
+
 const OpponentMoveDTO = require('../dto/OpponentMoveDTO');
 const Trick = require('../model/Trick');
 
@@ -60,155 +60,172 @@ module.exports = function(io, socket) {
     this.handleMove_card = (move, playerIndex, playRoom) => {
 
         try {
-            // create card object from cardName
-            card = getCardByName(move.cardName);
 
-            // Add lead card to card buffer (if move is lead, and lead buffer is empty)
-            if(move.leadOrResponse && !playRoom.game.moveBuffer.leadMove){
-                playRoom.game.moveBuffer.leadMove = move;
-            }
-            // Add response card to card buffer (if move is response, and response buffer is empty)
-            else if(!move.leadOrResponse && !playRoom.game.moveBuffer.responseMove){
-                playRoom.game.moveBuffer.responseMove = move;
-            }
+            // check if move is valid
+            // ...
 
-            // Send move validation/confirmation to player
-            io.to(playRoom.players[playerIndex].socketId).emit(
-                'moveValid', true
-            );
+            // if valid
+            if(true){
 
-            // available cards
-            let validRespondingCards;
+                // Send move validation/confirmation to player
+                io.to(playRoom.players[playerIndex].socketId).emit('moveValid', true);
 
-            // if card/move is lead calculate valid responses
-            if(playRoom.game.moveBuffer.leadMove && !playRoom.game.moveBuffer.responseMove){
-                validRespondingCards = calculateValidRespondingCards(
-                    card, playRoom.game.cardsInHand[otherPlayer(playerIndex)],
-                    playRoom.game.trumpSuit, playRoom.game.deckClosed);
-            }
-            // if card/move is not lead, all cards in hand are valid
-            else{
-                validRespondingCards = playRoom.game.cardsInHand[otherPlayer(playerIndex)];
-            }
+                // create card object from cardName
+                const card = getCardByName(move.cardName);
 
-            // create opponent's move DTO
-            let opponentMoveDTO = new OpponentMoveDTO(
-                move.moveType, move.trickNum, move.moveNum, 
-                move.cardName, move.marriagePoints, validRespondingCards);
+                // valid plays - all cards are valid for leading play
+                //let validRespondingCards = playRoom.game.cardsInHand[otherPlayer(playerIndex)];
+                let validRespondingCards = 'all';
 
-            // send opponent's move to other player
-            io.to(playRoom.players[otherPlayer(playerIndex)].socketId).emit('opponentMove', opponentMoveDTO);
+                //  called marriage points
+                let marriagePoints = 0;
 
+                // is game over or it continues
+                let gameContinues = true;
+                let gameOver;
 
-            // LEAD CARD
-            if(playRoom.game.moveBuffer.leadMove && !playRoom.game.moveBuffer.responseMove){
+                // Move leading or responding
+                let isMoveLeading;
 
-                // add marriage points (as marriages can be called only on lead)
-                let marriagePoints = checkPlayedCardMarriagePoints(card, playRoom.game.marriagesInHand[playerIndex]);
-                if(marriagePoints > 0){ playRoom.game.addPointsToPlayer(playerIndex, marriagePoints); }
+                // trick winner index
+                let trickWinnerIndex;
 
-                // change player on turn; increase moveNum
-                playRoom.game.changePlayerOnTurn();
-                playRoom.game.increaseMoveNumber();
-
-                // change lead/response
-                playRoom.game.leadOrResponse = !playRoom.game.leadOrResponse;
-
-                // update clients
-                for(let i=0; i<2; i++){
-                    io.to(playRoom.players[i].socketId).emit('gameStateUpdate', new GameStateDTO(playRoom.game, i));
+                // Move is leading (if move is lead, and lead buffer is empty)
+                if(move.leadOrResponse && !playRoom.game.moveBuffer.leadMove){
+                    isMoveLeading = true;
                 }
-            }
-            // RESPONSE CARD
-            else if(playRoom.game.moveBuffer.leadMove && playRoom.game.moveBuffer.responseMove){
+                // Move is responding (if move is response, and response buffer is empty)
+                else if(!move.leadOrResponse && !playRoom.game.moveBuffer.responseMove){
+                    isMoveLeading = false;
+                }
 
-                // Increase move number
-                playRoom.game.increaseMoveNumber();            
 
-                // Calculate trick winner
-                let trickWinnerId = calculateTrickWinner(playRoom.game.trumpSuit, playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
-                console.log('trickWinnerId');
-                console.log(trickWinnerId);
+                // LEADING PLAY
+                if(isMoveLeading){
+                    // Add lead move to move buffer
+                    playRoom.game.moveBuffer.leadMove = move;
 
-                // Calculate trick points
-                let trickPoints = calculateTrickPoints(playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
+                    // check for valid cards for next play(response)
+                    validRespondingCards = calculateValidRespondingCards(
+                            card, playRoom.game.cardsInHand[otherPlayer(playerIndex)],
+                            playRoom.game.trumpSuit, playRoom.game.deckClosed);
 
-                // Get trick winner index in room (0 or 1)
-                let trickWinnerIndex = getPlayerIndexInRoomBySocketId(playRoom, trickWinnerId);
-            
-                
-                console.log('trickWinnerIndex');
-                console.log(trickWinnerIndex);
+                    // check for marriage points
+                    marriagePoints = checkPlayedCardMarriagePoints(card, playRoom.game.marriagesInHand[playerIndex]);
 
-                // Create trick object
-                let trick = new Trick(
-                    playRoom.game.trickNum,
-                    playRoom.game.moveBuffer.leadMove.socketId, playRoom.game.moveBuffer.responseMove.socketId,
-                    playRoom.game.moveBuffer.leadMove.cardName, playRoom.game.moveBuffer.responseMove.cardName,
-                    trickWinnerId, trickWinnerIndex, trickPoints
-                );
+                    if(marriagePoints > 0){
+                        // add points to player
+                        playRoom.game.addPointsToPlayer(playerIndex, marriagePoints); 
 
-                // save to last trick
-                playRoom.game.lastTrick = trick;
+                        // check if game is over
+                        const gameOverAfterMarriages = playRoom.game.gameOver(playerIndex);
 
-                // add cards to winning player's tricks
-                playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.leadMove.cardName);
-                playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.responseMove.cardName);
-                
-                // remove played cards from hands            
-                playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.leadMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.leadMove.socketId));
-                playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.responseMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.responseMove.socketId));
-
-                // add points
-                playRoom.game.addPointsToPlayer(trickWinnerIndex, trickPoints);
-
-                // check if game is over
-                let gameOver = playRoom.game.gameOver(trickWinnerIndex);
-
-                if(gameOver.playerOut){
-                    // add game points (1, 2 or 3) to winner
-                    playRoom.bummerl.gamePoints[trickWinnerIndex] += gameOver.gamePoints;
-
-                    // change game status
-                    playRoom.game.status = 'finished';
-
-                    // update game winner
-                    io.to(playRoom.players[trickWinnerIndex].socketId).emit('gameOverDTO', new GameOverDTO(gameOver, true));
-
-                    // update game loser
-                    io.to(playRoom.players[otherPlayer(trickWinnerIndex)].socketId).emit('gameOverDTO', new GameOverDTO(gameOver, false));
-                    
-                    // check if bummerl is over(player has 7+ game points)
-                    let bummerlOver  = playRoom.bummerl.bummerlOver(trickWinnerIndex);
-
-                    if(bummerlOver){
-                        // start next bummerl; update clients
-                        playRoom.startBummerl();
-                        //io.to(playRoom.room).emit('bummerlStart', playRoom.bummerl.status);
-                        playRoom.bummerlsWon[trickWinnerIndex] = playRoom.bummerlsWon[trickWinnerIndex] + 1;
+                        if(gameOverAfterMarriages.isGameOver){
+                            // ===> END GAME
+                            gameContinues = false;
+                            gameOver = gameOverAfterMarriages;
+                        }
+                        else{
+                            // ===> GAME CONTINUES
+                        }
+                    }
+                    else{
+                        // ===> GAME CONTINUES
                     }
 
-                    // start new game
-                    playRoom.startGame();
+                }
+                // RESPONDING PLAY
+                else if(!isMoveLeading){
+                    // Add response move to move buffer
+                    playRoom.game.moveBuffer.responseMove = move;
+
+                    // Calculate trick winner
+                    let trickWinnerId = calculateTrickWinner(playRoom.game.trumpSuit, playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
+
+                    // Calculate trick points
+                    let trickPoints = calculateTrickPoints(playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
+
+                    // Get trick winner index in room (0 or 1)
+                    trickWinnerIndex = getPlayerIndexInRoomBySocketId(playRoom, trickWinnerId);
+
+                    // Create trick object
+                    let trick = new Trick(
+                        playRoom.game.trickNum,
+                        playRoom.game.moveBuffer.leadMove.socketId, playRoom.game.moveBuffer.responseMove.socketId,
+                        playRoom.game.moveBuffer.leadMove.cardName, playRoom.game.moveBuffer.responseMove.cardName,
+                        trickWinnerId, trickWinnerIndex, trickPoints
+                    );
+
+                    // save to last trick
+                    playRoom.game.lastTrick = trick;
+
+                    // add cards to winning player's tricks
+                    playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.leadMove.cardName);
+                    playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.responseMove.cardName);
+
+                    // remove played cards from hands
+                    playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.leadMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.leadMove.socketId));
+                    playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.responseMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.responseMove.socketId));
+
+                    // add points to trick winner
+                    playRoom.game.addPointsToPlayer(trickWinnerIndex, trickPoints);
+
+                    // check if game is over
+                    const gameOverAfterTrick = playRoom.game.gameOver(trickWinnerIndex);
+
+                    if(gameOverAfterTrick.isGameOver){
+                        // ===> END GAME
+                        gameContinues = false;
+                        gameOver = gameOverAfterTrick;
+                    }
+                    else{
+                        // if this is last trick and no player is out yet
+                        if(trick.trickNum === 10){
+                            // ===> END GAME
+                            gameContinues = false;
+
+                            // last trick's winner is game winner
+                            const gameOverAfterLastTrick = playRoom.game.gameOverLastTrick(trickWinnerIndex);
+                            gameOver = gameOverAfterLastTrick;
+                        }
+                        else{
+                            // ===> GAME CONTINUES
+                        }
+
+                    }
+
+                }
+
+                // create opponent's move DTO
+                let opponentMoveDTO = new OpponentMoveDTO(
+                    move.moveType, move.trickNum, move.moveNum, 
+                    move.cardName, marriagePoints, validRespondingCards);
+
+                // send opponent's move to other player
+                io.to(playRoom.players[otherPlayer(playerIndex)].socketId).emit('opponentMove', opponentMoveDTO);
+
+
+                // GAME CONTINUES
+                if(gameContinues){
+                    // Increase move number
+                    playRoom.game.increaseMoveNumber(); 
+
+                    // change player on turn
+                    playRoom.game.changePlayerOnTurn();
+
+                    // change lead/response
+                    playRoom.game.leadOrResponse = !playRoom.game.leadOrResponse;
 
                     // update clients
                     for(let i=0; i<2; i++){
-                        io.to(playRoom.players[i].socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, i));
-                        io.to(playRoom.players[i].socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, i));
-                        io.to(playRoom.players[i].socketId).emit('gameStart', new GameStateDTO(playRoom.game, i));
-                        
+                        io.to(playRoom.players[i].socketId).emit('gameStateUpdate', new GameStateDTO(playRoom.game, i));
                     }
-
-                }
-                else{
-                    // if this is last trick and no player is out yet
-                    if(trick.num === 10){
-                        // to implement: last trick's winner is game winner
-                    }
-                    else{
+                    
+                    // if both players played card this turn
+                    if(!isMoveLeading){
                         // start new trick
                         playRoom.game.startNextTrick(trickWinnerIndex);
-                                                
+                                                                
                         // deal 1 card to each player
                         playRoom.game.dealCardsToPlayers(trickWinnerIndex, 1);
 
@@ -223,7 +240,26 @@ module.exports = function(io, socket) {
                         }
                     }
                 }
-            }            
+                // GAME IS OVER
+                else{
+                    // end game
+                    playRoom.endGame(gameOver, io);
+                    // start new game
+                    playRoom.startGame();
+
+                    // update clients
+                    for(let i=0; i<2; i++){
+                        io.to(playRoom.players[i].socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, i));
+                        io.to(playRoom.players[i].socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, i));
+                        io.to(playRoom.players[i].socketId).emit('gameStart', new GameStateDTO(playRoom.game, i));
+                    }
+                }
+                
+            }
+            else{
+                // move not valid
+            }      
+                       
         } catch (error) {
             console.error(error);
         }

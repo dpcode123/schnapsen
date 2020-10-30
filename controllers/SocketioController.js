@@ -1,18 +1,18 @@
-const { getPlayRoomById } = require('../repository/roomRepository');
+const { getPlayRooms, getPlayRoomById } = require('../repository/roomRepository');
 const GameService = require('../services/GameService');
 const MoveService = require('../services/MoveService');
 const { validateToken } = require('../auth/socketJwt');
 const RoomStateDTO = require('../dto/RoomStateDTO');
 const BummerlStateDTO =require('../dto/BummerlStateDTO');
 const GameStateDTO = require('../dto/GameStateDTO');
-
+const socketEventValidationService = require('../services/socketEventValidationService');
 
 module.exports = function(io) {
 
     // Runs when client connects
     io.on('connection', socket => {
 
-        const gameService = new GameService(io, socket);
+        const gameService = new GameService(io);
         const moveService = new MoveService(io, socket);
 
         // Runs when client initializes socket.io connection
@@ -35,10 +35,9 @@ module.exports = function(io) {
                 const playRoom = getPlayRoomById(roomId);
                 
                 // check if payload's player data equals to room's player data
-                if(tokenPayload.userId === playRoom.players[tokenPayload.playerInRoom].id
-                    && tokenPayload.username === playRoom.players[tokenPayload.playerInRoom].username){
+                if(socketEventValidationService.validate(tokenPayload, playRoom)){
                     
-                    // ?PAGE REFRESH
+                    // PAGE REFRESH
                     // check if user was added before and now has socketId === disconnected
                     if(playRoom.players[tokenPayload.playerInRoom] && 
                         playRoom.players[tokenPayload.playerInRoom].socketId === 'disconnected'){
@@ -49,8 +48,6 @@ module.exports = function(io) {
                             io.to(socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, tokenPayload.playerInRoom));
                             io.to(socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, tokenPayload.playerInRoom));
                             io.to(socketId).emit('gameStateUpdateAfterClientRefresh', new GameStateDTO(playRoom.game, tokenPayload.playerInRoom));
-                            
-                            
                     }
                     else{
                         // assign socketid to player in room
@@ -92,8 +89,13 @@ module.exports = function(io) {
                         }
                     }
 
-                    
                 }
+                else{
+                    console.log('payload data != room data');
+                }
+            }
+            else{
+                console.log('token not valid');
             }
         });
 
@@ -101,13 +103,12 @@ module.exports = function(io) {
         // ROOM - Runs when client disconnects
         socket.on('disconnect', () => {
             gameService.disconnect(socket.id);
-            //exitRoom(socket.id);
         });
 
 
         // GAMEPLAY - listen for player moves from client
         socket.on('clientMove', (moveDTO) => {
-
+            
             const socketJwt = moveDTO.socketJwt;
             const move = moveDTO.playerMove;
 
@@ -121,34 +122,46 @@ module.exports = function(io) {
 
                 // get socket.io session id
                 const socketId = socket.id;
+                
                 // get room id
                 const roomId = tokenPayload.roomId;
+
                 // get room object
                 const playRoom = getPlayRoomById(roomId);
 
-                // MOVE TYPE - PLAY CARD
-                if(move.moveType === 'card'){
-                    if(moveService.validateMove(move)){
-                        moveService.handleMove_card(move, playerIndex, playRoom);
-                    }
-                }
-                // MOVE TYPE - EXCHANGE TRUMP CARD
-                else if(move.moveType === 'exchangeTrumpCard'){
-                    if(moveService.validateMove(move)){
-                        moveService.handleMove_exchangeTrump(move, playerIndex, playRoom);
-                    }
-                }
-                // MOVE TYPE - CLOSE DECK
-                else if(move.moveType === 'closeDeck'){
-                                        
-                }
-                // MOVE TYPE - FOLD HAND
-                else if(move.moveType === 'foldHand'){
-                    
-                }
+                // check if payload's player data equals to room's player data
+                if(socketEventValidationService.validate(tokenPayload, playRoom)){
 
+                    // MOVE TYPE - PLAY CARD
+                    if(move.moveType === 'card'){
+                        if(moveService.validateMove(move)){
+                            moveService.handleMove_card(move, playerIndex, playRoom);
+                        }
+                    }
+                    // MOVE TYPE - EXCHANGE TRUMP CARD
+                    else if(move.moveType === 'exchangeTrumpCard'){
+                        if(moveService.validateMove(move)){
+                            moveService.handleMove_exchangeTrump(move, playerIndex, playRoom);
+                        }
+                    }
+                    // MOVE TYPE - CLOSE DECK
+                    else if(move.moveType === 'closeDeck'){
+                                            
+                    }
+                    // MOVE TYPE - FOLD HAND
+                    else if(move.moveType === 'foldHand'){
+                        
+                    }
+                }
+                else{
+                    console.log('payload data != room data');
+                }
+            }
+            else{
+                console.log('token not valid');
             }
 
         });
     });
+
 }

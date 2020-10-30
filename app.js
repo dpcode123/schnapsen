@@ -56,8 +56,6 @@ app.use('/', mainRouter);
 // Socket.io controller
 const socketioController = new SocketioController(io, playSessions);
 
-
-
 // Port number
 const PORT = process.env.PORT || 3000;
 
