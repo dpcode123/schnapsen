@@ -19,7 +19,7 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// Gets user's index in room (0 or 1)
+// Gets user's index in room (0 or 1) by socket.io id
 function getPlayerIndexInRoomBySocketId(playRoom, socketId){
     let playerIndex = false;
 
@@ -36,10 +36,28 @@ function getPlayerIndexInRoomBySocketId(playRoom, socketId){
     return playerIndex;
 }
 
+// Gets user's index in room (0 or 1)  by user id
+function getPlayerIndexInRoomByUserId(playRoom, userId){
+    let playerIndex = false;
+
+    // if params not null
+    if(playRoom && userId){
+        if(playRoom.players[0].id === userId){
+            playerIndex = 0;
+        }
+        else if(playRoom.players[1].id === userId){
+            playerIndex = 1;
+        }
+    }
+    
+    return playerIndex;
+}
+
 module.exports = {
     otherPlayer, 
     delay, 
     getRandomInt, 
     getRandomIntInclusive,
-    getPlayerIndexInRoomBySocketId
+    getPlayerIndexInRoomBySocketId,
+    getPlayerIndexInRoomByUserId
 };

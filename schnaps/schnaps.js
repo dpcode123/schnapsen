@@ -51,22 +51,22 @@ function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
             if(leadingCard.suit === responseCard.suit){
                 // {compare values}
                 if(leadingCard.points > responseCard.points){
-                    winner = leadingPlay.socketId;
+                    winner = leadingPlay.userId;
                 }
                 else{
-                    winner = respondingPlay.socketId;
+                    winner = respondingPlay.userId;
                 }
             }
             //### Diff suits
             else{
                 //{L win}
-                winner = leadingPlay.socketId;
+                winner = leadingPlay.userId;
             }
         }
         //### Response TRUMP
         else if(respTrump){
             //{R win}
-            winner = respondingPlay.socketId;
+            winner = respondingPlay.userId;
         }
     }
     //### Lead TRUMP
@@ -74,16 +74,16 @@ function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
         //### Response NOT
         if(!respTrump){
             // {L win}
-            winner = leadingPlay.socketId;
+            winner = leadingPlay.userId;
         }
         //### Response TRUMP
         else if(respTrump){
             // {compare values}
             if(leadingCard.points > responseCard.points){
-                winner = leadingPlay.socketId;
+                winner = leadingPlay.userId;
             }
             else{
-                winner = respondingPlay.socketId;
+                winner = respondingPlay.userId;
             }
         }
     }

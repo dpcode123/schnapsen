@@ -89,6 +89,7 @@ class Game {
 /**
  * PlayerMove (CLIENT SIDE)
  * @param {string} roomId - unique game id (room id)
+ * @param {number} userId - user id
  * @param {string} socketId - socket.io id
  * @param {number} moveNum - total move number in game, for both players (0,1,2...n)
  * @param {string} moveType - card, exchangeTrumpCard, closeDeck, foldHand
@@ -97,8 +98,9 @@ class Game {
  * @param {string} cardName - card played(card name: 'a-karo','j-pik') - only for moveType 'card'
  * */
 class PlayerMove {
-    constructor(roomId, socketId, moveNum, moveType, trickNum, leadOrResponse, cardName){
+    constructor(roomId, userId, socketId, moveNum, moveType, trickNum, leadOrResponse, cardName){
         this.roomId = roomId;
+        this.userId = userId;
         this.socketId = socketId;
         this.moveNum = moveNum;
         this.moveType = moveType;

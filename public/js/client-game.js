@@ -33,7 +33,7 @@ function playCard(cardPlace) {
         throwCardOnTheTable(cardName);
         
         // create PlayerMove object
-        playerMove = new PlayerMove(room, socket.id, game.moveNum, 'card', 
+        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'card', 
                                     game.trickNum, game.leadOrResponse, cardName);
         
         // send move to server
@@ -41,7 +41,6 @@ function playCard(cardPlace) {
 
         // return opacity back to normal
         cardPlace.style.opacity = 1;
-
     }
 }
 
@@ -49,7 +48,7 @@ function playCard(cardPlace) {
 function exchangeTrumpCard() {
     if(game.thisPlayerOnTurn){
         // create PlayerMove object
-        playerMove = new PlayerMove(room, socket.id, game.moveNum, 'exchangeTrumpCard', 
+        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'exchangeTrumpCard', 
                                     game.trickNum, game.leadOrResponse, null);
 
         // send move to server

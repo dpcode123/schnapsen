@@ -474,6 +474,9 @@ function updateClientGameScreen(){
 
 // show all won tricks
 function toggleShowAllTricks() {
+
+    console.log('toggleShowAllTricks: ' + showAllWonTricks);
+
     // hide default tricks display
     hideElements(wonCardsFirstTrick);
     hideElements(wonCardsOtherTricksCardbacks);
@@ -482,26 +485,40 @@ function toggleShowAllTricks() {
     for(let i=0; i<game.playerWonCards.length; i++) {
         showElement(wonCardsAllTricksDisplayed[i]);
     }
+
+    showAllWonTricks = true;
+    
+    
 }
 
 // hide all won tricks
 function toggleHideAllTricks() {
+    
+    if(showAllWonTricks){
+        console.log('hide: ' + showAllWonTricks);
 
-    // show default tricks display
-    if(game.playerWonCards.length === 2) {
-        showElements(wonCardsFirstTrick);
-    }
-    else if(game.playerWonCards.length > 2) {
-        showElements(wonCardsFirstTrick);
-        for(let i=0; i<(game.playerWonCards.length-2);i++){
-            showElement(wonCardsOtherTricksCardbacks[i]);
+        // show default tricks display
+        if(game.playerWonCards.length === 2) {
+            showElements(wonCardsFirstTrick);
         }
+        else if(game.playerWonCards.length > 2) {
+            showElements(wonCardsFirstTrick);
+            for(let i=0; i<(game.playerWonCards.length-2);i++){
+                showElement(wonCardsOtherTricksCardbacks[i]);
+            }
+        }
+        // hide all won cards
+        hideElements(wonCardsAllTricksDisplayed);
+
+        delay(500).then(
+            () => {
+                showAllWonTricks = false;
+            }
+        );
+        
     }
 
-    // hide all won cards
-    hideElements(wonCardsAllTricksDisplayed);
 }
-
 
 
 // Shows trump card exchange button
@@ -583,10 +600,20 @@ for(let i = 0; i<5; i++){
     cardsInHand[i].addEventListener('mouseout',  function () {cardHoverOut(cardsInHand[i]);}, false);
     cardsInHand[i].addEventListener('click',     function () {playCard(cardsInHand[i]);}, false);
 }
-
+/*
 textPoints.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
 textPoints.addEventListener('mouseout', function () {toggleHideAllTricks();}, false);
 textPoints.style.cursor = 'grabbing';
+*/
+wonCardsFirstTrick.forEach(element => {
+    element.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
+});
+
+wonCardsAllTricksDisplayed.forEach(element => {
+    element.addEventListener('mouseout', function () {toggleHideAllTricks();}, false);
+    element.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
+});
+
 
 exchangeTrumpCardButton.addEventListener('mouseover', function () {buttonHover(exchangeTrumpCardButton);}, false);
 exchangeTrumpCardButton.addEventListener('mouseout', function () {buttonHoverOut(exchangeTrumpCardButton);}, false);

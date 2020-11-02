@@ -22,7 +22,7 @@ const create_room = (req, res) => {
         const socketJwt = signToken(connectionObject);
 
         // game session data; add to express session
-        const gameSessionData = {u: player.username, r: roomId, t: socketJwt};
+        const gameSessionData = {u: player.username, i: player.id, r: roomId, t: socketJwt};
         req.session.gameSessionData = gameSessionData;
         //console.log('req.session.gameSessionData');
         //console.log(req.session.gameSessionData);
@@ -61,7 +61,7 @@ const join_room = (req, res) => {
         const socketJwt = signToken(connectionObject);
 
         // game session data; add to express session
-        const gameSessionData = {u: player.username, r: roomId, t: socketJwt};
+        const gameSessionData = {u: player.username, i: player.id, r: roomId, t: socketJwt};
         req.session.gameSessionData = gameSessionData;
 
         // redirect

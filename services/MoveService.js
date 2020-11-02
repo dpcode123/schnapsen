@@ -1,5 +1,5 @@
-const { otherPlayer, 
-    getPlayerIndexInRoomBySocketId 
+const { otherPlayer,
+    getPlayerIndexInRoomByUserId
 } = require("../utils/util");
 const { getCardByName } = require('../schnaps/cards');
 const { 
@@ -58,6 +58,9 @@ module.exports = function(io, socket) {
 
     // Handle move - card
     this.handleMove_card = (move, playerIndex, playRoom) => {
+
+        console.log('playRoom:');
+        console.log(playRoom);
 
         try {
 
@@ -146,7 +149,12 @@ module.exports = function(io, socket) {
                     let trickPoints = calculateTrickPoints(playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
 
                     // Get trick winner index in room (0 or 1)
-                    trickWinnerIndex = getPlayerIndexInRoomBySocketId(playRoom, trickWinnerId);
+                    /* trickWinnerIndex = getPlayerIndexInRoomBySocketId(playRoom, trickWinnerId); */
+                    trickWinnerIndex = getPlayerIndexInRoomByUserId(playRoom, trickWinnerId);
+                    
+
+                    console.log('trickWinnerIndex');
+                    console.log(trickWinnerIndex);
 
                     // Create trick object
                     let trick = new Trick(
@@ -164,8 +172,8 @@ module.exports = function(io, socket) {
                     playRoom.game.wonCards[trickWinnerIndex].push(playRoom.game.moveBuffer.responseMove.cardName);
 
                     // remove played cards from hands
-                    playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.leadMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.leadMove.socketId));
-                    playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.responseMove.cardName, getPlayerIndexInRoomBySocketId(playRoom, playRoom.game.moveBuffer.responseMove.socketId));
+                    playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.leadMove.cardName, getPlayerIndexInRoomByUserId(playRoom, playRoom.game.moveBuffer.leadMove.userId));
+                    playRoom.game.removeCardFromHand(playRoom.game.moveBuffer.responseMove.cardName, getPlayerIndexInRoomByUserId(playRoom, playRoom.game.moveBuffer.responseMove.userId));
 
                     // add points to trick winner
                     playRoom.game.addPointsToPlayer(trickWinnerIndex, trickPoints);

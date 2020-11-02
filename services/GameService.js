@@ -27,8 +27,10 @@ module.exports = function(io) {
 
                         // destroy play room
                         deleteRoomById(playRoom.room);
+
+                        console.log('room deleted');
                     }
-                }, 3000);
+                }, 5000);
             }
             
         } catch (error) {

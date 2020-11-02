@@ -157,8 +157,6 @@ socket.on('moveInvalidError', moveInvalidError => {
 // Opponent's move
 socket.on('opponentMove', opponentMoveDTO => {
 
-    console.log(opponentMoveDTO);
-
     // hide random card in opponent's hand
     hideElement(opponentCardsInHand[getRandomInt(5)]);
 

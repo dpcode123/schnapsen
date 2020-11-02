@@ -3,7 +3,7 @@ const Bummerl = require('./Bummerl');
 const Game = require('./Game');
 const { checkForMarriagesInHand } = require('../schnaps/schnaps');
 const GameOverDTO = require('../dto/GameOverDTO');
-const { otherPlayer, getPlayerIndexInRoomBySocketId } = require("../utils/util");
+const { otherPlayer} = require("../utils/util");
 
 module.exports = function (room, player1) {
 
