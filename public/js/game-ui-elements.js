@@ -570,8 +570,8 @@ exchangeTrumpCardButton.appendChild(exchangeTrumpCardText);
 
 // back to main menu button
 exitButton = document.createElementNS(XMLNS, 'text');
-exitButton.setAttributeNS(null, 'x', 1055);
-exitButton.setAttributeNS(null, 'y', 27);
+exitButton.setAttributeNS(null, 'x', 1052);
+exitButton.setAttributeNS(null, 'y', 30);
 exitButton.setAttributeNS(null, 'font-size', '48px');
 exitButton.setAttributeNS(null, 'font-weight', 'bold');
 exitButton.setAttributeNS(null, 'fill', 'black');
