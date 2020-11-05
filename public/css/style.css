@@ -97,9 +97,6 @@ body {
 
 /* Game page */
 .svg-container{
-	/*
-    width: 1080px;
-	height: 760px;*/
 	position: relative; 
 	height: 0; 
 	width: 100%; 
@@ -131,7 +128,7 @@ body {
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
 }
 .modal-content {
-    position: relative;
+    position: fixed;
     top: 20%;
     left: 50%;
 	transform: translate(-50%, -50%);
