@@ -4,6 +4,12 @@
 
     <div class="svg-container">
         <svg id="svg-content" viewBox="0 0 1080 540" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close-button">×</span>
+                <h1>Hello, I am a modal!</h1>
+            </div>
+        </div>
     </div>
 
     <svg id="card_patterns" xmlns="http://www.w3.org/2000/svg">
@@ -11,12 +17,18 @@
         </defs>
     </svg>
 
-   <script>
-      const passedUsername = JSON.parse('<%- JSON.stringify(u) %>');
-      const passedUserId = JSON.parse('<%- JSON.stringify(i) %>');
-      const passedRoom = JSON.parse('<%- JSON.stringify(r) %>');
-      const passedToken = JSON.parse('<%- JSON.stringify(t) %>');
-   </script>
+    <button class="trigger">Click here to trigger the modal!</button>
+
+    
+
+    <script>
+        const passedUsername = JSON.parse('<%- JSON.stringify(u) %>');
+        const passedUserId = JSON.parse('<%- JSON.stringify(i) %>');
+        const passedRoom = JSON.parse('<%- JSON.stringify(r) %>');
+        const passedToken = JSON.parse('<%- JSON.stringify(t) %>');
+    </script>
+
+    <script src="js/modal.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/game-ui-elements.js"></script>

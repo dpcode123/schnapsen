@@ -48,7 +48,7 @@ const PLAYER_WON_TRICK_CARDS_SHOW_ALL_Y_POSITION = 280;
 
 // won tricks positioning - opponent
 const OPPONENT_WON_TRICK_CARDS_HIDDEN_X_POSITION = -60;
-const OPPONENT_WON_TRICK_CARDS_HIDDEN_Y_POSITION = -1075;
+const OPPONENT_WON_TRICK_CARDS_HIDDEN_Y_POSITION = -1065;
 
 // marriages in hand indicators
 const MARRIAGES_0_X_POSITION = 130;
@@ -449,7 +449,7 @@ textAlert.textContent = '';
 
 // Text - Points (66)
 textPoints = document.createElementNS(XMLNS, 'text');
-textPoints.setAttributeNS(null, 'x', 935);
+textPoints.setAttributeNS(null, 'x', 875);
 textPoints.setAttributeNS(null, 'y', 275);
 textPoints.setAttributeNS(null, 'font-size', '36px');
 textPoints.setAttributeNS(null, 'fill', 'black');
@@ -568,7 +568,14 @@ exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'hidden');
 exchangeTrumpCardButton.appendChild(exchangeTrumpCardRect);
 exchangeTrumpCardButton.appendChild(exchangeTrumpCardText);
 
-
+// back to main menu button
+exitButton = document.createElementNS(XMLNS, 'text');
+exitButton.setAttributeNS(null, 'x', 1055);
+exitButton.setAttributeNS(null, 'y', 27);
+exitButton.setAttributeNS(null, 'font-size', '48px');
+exitButton.setAttributeNS(null, 'font-weight', 'bold');
+exitButton.setAttributeNS(null, 'fill', 'black');
+exitButton.textContent = '×';
 
 // ADDING ALL GUI ELEMENTS TO ARRAY
 // ********************************************************************************
@@ -660,6 +667,8 @@ forbiddenCardOverlay.forEach(cardOverlay => {
 // change trump card button
 ALL_GUI_ELEMENTS.push(exchangeTrumpCardButton);
 
+// exit button
+ALL_GUI_ELEMENTS.push(exitButton);
 
 
 // APPEND ALL ELEMENTS
