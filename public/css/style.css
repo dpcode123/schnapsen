@@ -132,22 +132,22 @@ body {
 }
 .modal-content {
     position: absolute;
-    top: 85px;
+    top: 10%;
     left: 50%;
 	transform: translate(-50%, -50%);
-	font-size: 1.5rem;
+	font-size: 18px;
     background-color: white;
-    padding: 1rem;
+    padding: 10px;
     width: 50%;
-	border-radius: 0.5rem;
+	border-radius: 8px;
 }
 .close-button {
     float: right;
-    width: 1.5rem;
-    line-height: 1.5rem;
+    width: 18px;
+    line-height: 18px;
     text-align: center;
     cursor: pointer;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     background-color: lightgray;
 }
 .close-button:hover {
