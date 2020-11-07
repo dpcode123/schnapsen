@@ -1,6 +1,7 @@
 const { getPlayRooms, getPlayRoomById } = require('../repository/roomRepository');
 const GameService = require('../services/GameService');
-const MoveService = require('../services/MoveService');
+const MoveHandlingService = require('../services/MoveHandlingService');
+
 const { validateToken } = require('../auth/socketJwt');
 const RoomStateDTO = require('../dto/RoomStateDTO');
 const BummerlStateDTO =require('../dto/BummerlStateDTO');
@@ -13,9 +14,8 @@ module.exports = function(io) {
     io.on('connection', socket => {
 
         try {
-
             const gameService = new GameService(io);
-            const moveService = new MoveService(io, socket);
+            const moveHandlingService = new MoveHandlingService(io, socket);
 
             // Runs when client initializes socket.io connection
             socket.on('init', (socketJwt) => {
@@ -90,7 +90,6 @@ module.exports = function(io) {
                                 }
                             }
                         }
-
                     }
                     else{
                         console.log('payload data != room data');
@@ -117,7 +116,7 @@ module.exports = function(io) {
                 // validate token; extract payload
                 let tokenPayload = validateToken(socketJwt);
                 
-                // if token valid
+                // if token is valid
                 if(tokenPayload) {
 
                     const playerIndex = tokenPayload.playerInRoom;
@@ -133,26 +132,17 @@ module.exports = function(io) {
 
                     // check if payload's player data equals to room's player data
                     if(socketEventValidationService.validate(tokenPayload, playRoom)){
-
                         // MOVE TYPE - PLAY CARD
-                        if(move.moveType === 'card'){
-                            if(moveService.validateMove(move)){
-                                moveService.handleMove_card(move, playerIndex, playRoom);
-                            }
+                        if(move.moveType === 'playCard'){
+                            moveHandlingService.playCard(move, playerIndex, playRoom);
                         }
                         // MOVE TYPE - EXCHANGE TRUMP CARD
-                        else if(move.moveType === 'exchangeTrumpCard'){
-                            if(moveService.validateMove(move)){
-                                moveService.handleMove_exchangeTrump(move, playerIndex, playRoom);
-                            }
+                        else if(move.moveType === 'exchangeTrump'){
+                            moveHandlingService.exchangeTrump(move, playerIndex, playRoom);
                         }
                         // MOVE TYPE - CLOSE DECK
                         else if(move.moveType === 'closeDeck'){
-                                                
-                        }
-                        // MOVE TYPE - FOLD HAND
-                        else if(move.moveType === 'foldHand'){
-                            
+                            moveHandlingService.closeDeck(move, playerIndex, playRoom);
                         }
                     }
                     else{

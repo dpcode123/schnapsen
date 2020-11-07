@@ -475,8 +475,6 @@ function updateClientGameScreen(){
 // show all won tricks
 function toggleShowAllTricks() {
 
-    console.log('toggleShowAllTricks: ' + showAllWonTricks);
-
     // hide default tricks display
     hideElements(wonCardsFirstTrick);
     hideElements(wonCardsOtherTricksCardbacks);
@@ -495,29 +493,35 @@ function toggleShowAllTricks() {
 function toggleHideAllTricks() {
     
     if(showAllWonTricks){
-        console.log('hide: ' + showAllWonTricks);
+        console.log('toggleHideAllTricks: ' + showAllWonTricks);
 
-        // show default tricks display
-        if(game.playerWonCards.length === 2) {
-            showElements(wonCardsFirstTrick);
-        }
-        else if(game.playerWonCards.length > 2) {
-            showElements(wonCardsFirstTrick);
-            for(let i=0; i<(game.playerWonCards.length-2);i++){
-                showElement(wonCardsOtherTricksCardbacks[i]);
-            }
-        }
-        // hide all won cards
-        hideElements(wonCardsAllTricksDisplayed);
+        hideAllTricks();
 
         delay(500).then(
             () => {
                 showAllWonTricks = false;
             }
         );
-        
     }
+}
 
+
+// hide all won tricks
+function hideAllTricks() {
+
+    // show default tricks display
+    if(game.playerWonCards.length === 2) {
+        showElements(wonCardsFirstTrick);
+    }
+    else if(game.playerWonCards.length > 2) {
+        showElements(wonCardsFirstTrick);
+        for(let i=0; i<(game.playerWonCards.length-2);i++){
+            showElement(wonCardsOtherTricksCardbacks[i]);
+        }
+    }
+    // hide all won cards
+    hideElements(wonCardsAllTricksDisplayed);
+    
 }
 
 
@@ -598,7 +602,7 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
 for(let i = 0; i<5; i++){
     cardsInHand[i].addEventListener('mouseover', function () {cardHover(cardsInHand[i]);}, false);
     cardsInHand[i].addEventListener('mouseout',  function () {cardHoverOut(cardsInHand[i]);}, false);
-    cardsInHand[i].addEventListener('click',     function () {playCard(cardsInHand[i]);}, false);
+    cardsInHand[i].addEventListener('click',     function () {movePlayCard(cardsInHand[i]);}, false);
 }
 /*
 textPoints.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
@@ -614,7 +618,37 @@ wonCardsAllTricksDisplayed.forEach(element => {
     element.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
 });
 
-
 exchangeTrumpCardButton.addEventListener('mouseover', function () {buttonHover(exchangeTrumpCardButton);}, false);
 exchangeTrumpCardButton.addEventListener('mouseout', function () {buttonHoverOut(exchangeTrumpCardButton);}, false);
-exchangeTrumpCardButton.addEventListener('click', function () {exchangeTrumpCard();}, false);
+exchangeTrumpCardButton.addEventListener('click', function () {moveExchangeTrump();}, false);
+
+// close deck
+trumpCard.addEventListener('mouseover', function () {cardHover(trumpCard);}, false);
+trumpCard.addEventListener('mouseout',  function () {cardHoverOut(trumpCard);}, false);
+trumpCard.addEventListener('click', function () {moveCloseDeck();}, false);
+
+
+
+
+// modal
+let modal = document.querySelector('.modal');
+let modalCloseButton = document.querySelector('.modal-close-button');
+let modalExitGameButton = document.getElementById('modal-exit-game-btn');
+let modalContinueGameButton = document.getElementById('modal-continue-game-btn');
+
+exitButton.addEventListener('click', toggleModal);
+exitButton.style.cursor = 'grab';
+
+modalCloseButton.addEventListener('click', toggleModal);
+window.addEventListener('click', windowOnClick);
+modalContinueGameButton.addEventListener('click', toggleModal);
+
+function toggleModal() {
+    modal.classList.toggle('show-modal');
+}
+
+function windowOnClick(event) {
+    if (event.target === modal) {
+        toggleModal();
+    }
+}

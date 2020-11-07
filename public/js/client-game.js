@@ -19,8 +19,8 @@ function updateClientGameState(gameStateDTO) {
 }
 
 
-// play card
-function playCard(cardPlace) {
+// Move - play card
+function movePlayCard(cardPlace) {
 
     // get card(name) from selected card place
     let cardName = cardPlace.getAttribute('data-card');
@@ -33,29 +33,43 @@ function playCard(cardPlace) {
         throwCardOnTheTable(cardName);
         
         // create PlayerMove object
-        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'card', 
-                                    game.trickNum, game.leadOrResponse, cardName);
+        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'playCard', 
+                                        game.trickNum, game.leadOrResponse, cardName);
         
         // send move to server
         sendMove(playerMove);
 
         // return opacity back to normal
         cardPlace.style.opacity = 1;
+
+        // hide won tricks
+        hideAllTricks();
     }
 }
 
-// exchange trump card with jack
-function exchangeTrumpCard() {
+// Move - exchange trump card with jack
+function moveExchangeTrump() {
     if(game.thisPlayerOnTurn){
         // create PlayerMove object
-        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'exchangeTrumpCard', 
-                                    game.trickNum, game.leadOrResponse, null);
+        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'exchangeTrump', 
+                                        game.trickNum, game.leadOrResponse, null);
 
         // send move to server
         sendMove(playerMove);
     }
 }
 
+// Move - close deck
+function moveCloseDeck() {
+    if(game.thisPlayerOnTurn && !game.deckClosed && game.deckSize > 0){
+        // create PlayerMove object
+        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'closeDeck', 
+                                        game.trickNum, game.leadOrResponse, null);
+
+        // send move to server
+        sendMove(playerMove);
+    }
+}
 
 // empty card place
 function emptyPlaceInHand(cardPlace) {

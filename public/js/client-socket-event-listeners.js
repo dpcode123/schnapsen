@@ -76,7 +76,6 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
-            //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
             hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
         }
     );
@@ -98,9 +97,21 @@ socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
             putCardInElement(trumpCard, game.trumpCard.name);
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-            //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
             hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+        }
+    );
+});
+
+// Game state update - after exchanging trump
+socket.on('gameStateUpdateAfterClosingDeck', gameStateDTO => {
+    updateClientGameState(gameStateDTO);
+    
+    delay(100).then(
+        () => {
+        // put trump card on top of deck
+        svg.removeChild(trumpCard);
+        svg.appendChild(trumpCard);
         }
     );
 });
@@ -131,11 +142,22 @@ socket.on('gameStart', gameStateDTO => {
 
     delay(delay_ms).then(
         () => {
+            
+            // put trump card on under the deck
+            svg.removeChild(trumpCard);
+            svg.appendChild(trumpCard);
+
+            cardsInDeck.forEach(card => {
+                svg.removeChild(card);
+            });
+            cardsInDeck.forEach(card => {
+                svg.appendChild(card);
+            });
+
             updateClientGameState(gameStateDTO);
             setupGameScreenStarted();
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-            //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
             hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
         }

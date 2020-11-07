@@ -49,6 +49,9 @@ module.exports = function (num, openingPlayer) {
     // deck closed or out of cards
     this.deckClosed = false;
 
+    // deck is closed by player(0 or 1) or not(null)
+    this.deckClosedByPlayer = null;
+
     // last trick
     this.lastTrick = null;
 
@@ -111,26 +114,27 @@ module.exports = function (num, openingPlayer) {
     }
 
 
-    // Deals n cards to both players
+    // Deals n cards to both players if deck is not closed
     this.dealCardsToPlayers = function (firstPlayer, numberOfCards){
 
-        // more than 1 card in deck
-        // - deal card(s) to first player, then other player
-        if(this.deck.length > 1){
-            for(let i = 0; i < numberOfCards; i++){
+        if(!this.deckClosed){
+            // >1 cards in deck - deal card(s) to first player, then other player
+            if(this.deck.length > 1){
+                for(let i = 0; i < numberOfCards; i++){
+                    this.dealRandomCardToPlayer(firstPlayer);
+                }
+                for(let i = 0; i < numberOfCards; i++){
+                    this.dealRandomCardToPlayer(otherPlayer(firstPlayer));
+                }
+            }
+            // 1 card - deal that card to first player and trump card to other; remove trump card
+            else if(this.deck.length === 1){
                 this.dealRandomCardToPlayer(firstPlayer);
-            }
-            for(let i = 0; i < numberOfCards; i++){
-                this.dealRandomCardToPlayer(otherPlayer(firstPlayer));
+                this.cardsInHand[otherPlayer(firstPlayer)].push(this.trumpCard);
+                this.trumpCard = 'none';
             }
         }
-        // only 1 card in deck 
-        // - deal that card to first player and trump card to other; remove trump card
-        else if(this.deck.length === 1){
-            this.dealRandomCardToPlayer(firstPlayer);
-            this.cardsInHand[otherPlayer(firstPlayer)].push(this.trumpCard);
-            this.trumpCard = 'none';
-        }
+        
     }
     
 

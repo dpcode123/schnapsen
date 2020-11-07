@@ -95,7 +95,7 @@ class Game {
  * @param {string} moveType - card, exchangeTrumpCard, closeDeck, foldHand
  * @param {number} trickNum - trick number, 1-10
  * @param {boolean} leadOrResponse - TRUE-lead play(1st card played in trick), FALSE-response play(2nd card)
- * @param {string} cardName - card played(card name: 'a-karo','j-pik') - only for moveType 'card'
+ * @param {string} cardName - card played(card name: 'a-karo','j-pik') - only for moveType 'playCard'
  * */
 class PlayerMove {
     constructor(roomId, userId, socketId, moveNum, moveType, trickNum, leadOrResponse, cardName){

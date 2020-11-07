@@ -139,16 +139,15 @@ body {
 	border-radius: 8px;
 	text-align: center;
 }
-.close-button {
+.modal-close-button {
     float: right;
     width: 1.5rem;
     line-height: 1.5rem;
     text-align: center;
     cursor: pointer;
-    border-radius: 4px;
     background-color: lightgray;
 }
-.close-button:hover {
+.modal-close-button:hover {
     background-color: darkgray;
 }
 .show-modal {
@@ -162,7 +161,7 @@ body {
     .modal-content  {
 		font-size: 0.5rem;
 	}
-	.close-button {
+	.modal-close-button {
 		width: 0.5rem;
 		line-height: 0.5rem;
 	}
@@ -172,7 +171,7 @@ body {
     .modal-content  {
 		font-size: 0.75rem;
 	}
-	.close-button {
+	.modal-close-button {
 		width: 0.75rem;
 		line-height: 0.75rem;
 	}
@@ -182,7 +181,7 @@ body {
     .modal-content  {
 		font-size: 1rem;
 	}
-	.close-button {
+	.modal-close-button {
 		width: 1rem;
 		line-height: 1rem;
 	}
@@ -192,7 +191,7 @@ body {
     .modal-content  {
 		font-size: 1.25rem;
 	}
-	.close-button {
+	.modal-close-button {
 		width: 1.25rem;
 		line-height: 1.25rem;
 	}
@@ -202,7 +201,7 @@ body {
     .modal-content  {
 		font-size: 1.5rem;
 	}
-	.close-button {
+	.modal-close-button {
 		width: 1.5rem;
 		line-height: 1.5rem;
 	}

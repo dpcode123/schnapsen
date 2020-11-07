@@ -6,10 +6,10 @@
         <svg id="svg-content" viewBox="0 0 1080 540" xmlns="http://www.w3.org/2000/svg"></svg>
         <div class="modal">
             <div class="modal-content">
-                <span class="close-button">×</span>
+                <span class="modal-close-button">×</span>
                 <h1>Back to main menu?</h1>
-                <a class="modal_button" title="Back to main menu" href="#">Yes</a>
-                <a class="modal_button" title="Continue game" href="#">No</a>
+                <a id="modal-exit-game-btn" class="modal_button" title="Back to main menu" href="/">Yes</a>
+                <a id="modal-continue-game-btn" class="modal_button" title="Continue game" href="#">No</a>
             </div>
         </div>
     </div>
@@ -17,11 +17,7 @@
     <svg id="card_patterns" xmlns="http://www.w3.org/2000/svg">
         <defs id="defs">
         </defs>
-    </svg>
-
-    <button class="trigger">Click here to trigger the modal!</button>
-
-    
+    </svg>    
 
     <script>
         const passedUsername = JSON.parse('<%- JSON.stringify(u) %>');
@@ -29,8 +25,6 @@
         const passedRoom = JSON.parse('<%- JSON.stringify(r) %>');
         const passedToken = JSON.parse('<%- JSON.stringify(t) %>');
     </script>
-
-    <script src="js/modal.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/game-ui-elements.js"></script>

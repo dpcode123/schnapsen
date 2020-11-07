@@ -12,20 +12,18 @@ const {
 const RoomStateDTO = require('../dto/RoomStateDTO');
 const BummerlStateDTO =require('../dto/BummerlStateDTO');
 const GameStateDTO = require('../dto/GameStateDTO');
-
+const MoveValidationService = require('../services/MoveValidationService');
 const OpponentMoveDTO = require('../dto/OpponentMoveDTO');
 const Trick = require('../model/Trick');
+const PlayRoom = require("../model/PlayRoom");
 
 
 module.exports = function(io, socket) {
 
-    // Validate move
-    this.validateMove = (move) => {
-        return true;
-    }
+    const moveValidationService = new MoveValidationService(io, socket);
 
     // Handle move - exchange trump
-    this.handleMove_exchangeTrump = (move, playerIndex, playRoom) => {
+    this.exchangeTrump = (move, playerIndex, playRoom) => {
 
         try {
             // jack-trump card name
@@ -56,20 +54,29 @@ module.exports = function(io, socket) {
         
     }
 
-    // Handle move - card
-    this.handleMove_card = (move, playerIndex, playRoom) => {
-
-        console.log('playRoom:');
-        console.log(playRoom);
+    // Handle move - close deck
+    this.closeDeck = (move, playerIndex, playRoom) => {
 
         try {
+            playRoom.game.deckClosed = true;
+            playRoom.game.deckClosedByPlayer = playerIndex;
 
-            // check if move is valid
-            // ...
+            // update clients
+            for(let i=0; i<2; i++){
+                io.to(playRoom.players[i].socketId).emit('gameStateUpdateAfterClosingDeck', new GameStateDTO(playRoom.game, i));
+            }
+            
+        } catch (error) {
+            console.error(error);
+        }
 
-            // if valid
-            if(true){
+    }
 
+    // Handle move - play card
+    this.playCard = (move, playerIndex, playRoom) => {
+
+        try {
+            if(moveValidationService.playCard(move)){
                 // Send move validation/confirmation to player
                 io.to(playRoom.players[playerIndex].socketId).emit('moveValid', true);
 
@@ -101,7 +108,6 @@ module.exports = function(io, socket) {
                 else if(!move.leadOrResponse && !playRoom.game.moveBuffer.responseMove){
                     isMoveLeading = false;
                 }
-
 
                 // LEADING PLAY
                 if(isMoveLeading){
@@ -188,7 +194,8 @@ module.exports = function(io, socket) {
                     }
                     else{
                         // if this is last trick and no player is out yet
-                        if(trick.trickNum === 10){
+                        if(playRoom.game.cardsInHand[0].length === 0 && playRoom.game.cardsInHand[1].length === 0){
+                            
                             // ===> END GAME
                             gameContinues = false;
 
@@ -211,7 +218,6 @@ module.exports = function(io, socket) {
 
                 // send opponent's move to other player
                 io.to(playRoom.players[otherPlayer(playerIndex)].socketId).emit('opponentMove', opponentMoveDTO);
-
 
                 // GAME CONTINUES
                 if(gameContinues){
@@ -262,19 +268,14 @@ module.exports = function(io, socket) {
                         io.to(playRoom.players[i].socketId).emit('gameStart', new GameStateDTO(playRoom.game, i));
                     }
                 }
-                
             }
             else{
-                // move not valid
-            }      
-                       
+                // # => move not valid
+            }
         } catch (error) {
             console.error(error);
         }
-
         
     }
-
-
 
 }
