@@ -117,7 +117,11 @@ module.exports = function (num, openingPlayer) {
     // Deals n cards to both players if deck is not closed
     this.dealCardsToPlayers = function (firstPlayer, numberOfCards){
 
+        console.log('this.deckClosed' + this.deckClosed);
+        console.log('this.trickNum' + this.trickNum);
+
         if(!this.deckClosed){
+            console.log('dijelimo kartu');
             // >1 cards in deck - deal card(s) to first player, then other player
             if(this.deck.length > 1){
                 for(let i = 0; i < numberOfCards; i++){
@@ -211,10 +215,11 @@ module.exports = function (num, openingPlayer) {
         // increase trick num
         this.trickNum+=1;
 
-        // close game if deck is empty
-        if(this.trickNum > 5){
+        /* // close game if deck is empty
+        if(this.trickNum > 6){
             this.deckClosed = true;
-        }
+            console.log('game zatvara deck')
+        } */
 
         // player on turn = last tricks winner
         this.playerOnTurn = lastTricksWinner;
@@ -234,7 +239,6 @@ module.exports = function (num, openingPlayer) {
     this.sortCardsByPointsAndSuit = function (cardsArray){
         cardsArray.sort((a,b) => a.points-b.points);
         cardsArray.sort((a,b) => a.suit.localeCompare(b.suit));
-        //return cardsArray;
     }
     
 }

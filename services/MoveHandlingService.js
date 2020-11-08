@@ -234,7 +234,7 @@ module.exports = function(io, socket) {
                     for(let i=0; i<2; i++){
                         io.to(playRoom.players[i].socketId).emit('gameStateUpdate', new GameStateDTO(playRoom.game, i));
                     }
-                    
+
                     // if both players played card this turn
                     if(!isMoveLeading){
                         // start new trick
@@ -244,7 +244,9 @@ module.exports = function(io, socket) {
                         playRoom.game.dealCardsToPlayers(trickWinnerIndex, 1);
 
                         // close deck if there are no cards left in it
-                        if(playRoom.game.deck.length === 0){ playRoom.game.deckClosed = true; }
+                        if(playRoom.game.deck.length === 0 && !playRoom.game.deckClosed){ 
+                            playRoom.game.deckClosed = true;
+                        }
 
                         // sort cards in hands; check for marriages; update clients
                         for(let i=0; i<2; i++){
