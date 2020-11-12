@@ -7,13 +7,14 @@ function updateClientGameState(gameStateDTO) {
     game.trickNum = gameStateDTO.trickNum;
     game.moveNum = gameStateDTO.moveNum;
     game.leadOrResponse = gameStateDTO.leadOrResponse;
+    game.leadCardOnTable = gameStateDTO.leadCardOnTable;
     game.deckClosed = gameStateDTO.deckClosed;
     game.playerPoints = gameStateDTO.playerPoints;
     game.cardsInHand = gameStateDTO.cardsInHand;
     game.thisPlayerOnTurn = gameStateDTO.thisPlayerOnTurn;
     game.deckSize = gameStateDTO.deckSize;
     game.playerWonCards = gameStateDTO.playerWonCards;
-    game.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;    
+    game.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;
     game.opponentTotalWonCardsNumber = gameStateDTO.opponentTotalWonCardsNumber;
     game.marriagesInHand = gameStateDTO.marriagesInHand;
 }

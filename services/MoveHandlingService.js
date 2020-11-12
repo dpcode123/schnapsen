@@ -60,6 +60,7 @@ module.exports = function(io, socket) {
         try {
             playRoom.game.deckClosed = true;
             playRoom.game.deckClosedByPlayer = playerIndex;
+            playRoom.game.nonCloserPoints = playRoom.game.playerPoints[otherPlayer(playerIndex)];
 
             // update clients
             for(let i=0; i<2; i++){
@@ -74,7 +75,7 @@ module.exports = function(io, socket) {
 
     // Handle move - play card
     this.playCard = (move, playerIndex, playRoom) => {
-
+        console.log(playRoom.game);
         try {
             if(moveValidationService.playCard(move)){
                 // Send move validation/confirmation to player
@@ -92,6 +93,8 @@ module.exports = function(io, socket) {
 
                 // is game over or it continues
                 let gameContinues = true;
+                
+                // game over object
                 let gameOver;
 
                 // Move leading or responding
@@ -117,7 +120,7 @@ module.exports = function(io, socket) {
                     // check for valid cards for next play(response)
                     validRespondingCards = calculateValidRespondingCards(
                             card, playRoom.game.cardsInHand[otherPlayer(playerIndex)],
-                            playRoom.game.trumpSuit, playRoom.game.deckClosed);
+                            playRoom.game.trumpSuit, playRoom.game.deckClosed, playRoom.game.deck.length);
 
                     // check for marriage points
                     marriagePoints = checkPlayedCardMarriagePoints(card, playRoom.game.marriagesInHand[playerIndex]);
@@ -199,7 +202,6 @@ module.exports = function(io, socket) {
                             // ===> END GAME
                             gameContinues = false;
 
-                            // last trick's winner is game winner
                             const gameOverAfterLastTrick = playRoom.game.gameOverLastTrick(trickWinnerIndex);
                             gameOver = gameOverAfterLastTrick;
                         }
@@ -242,12 +244,7 @@ module.exports = function(io, socket) {
                                                                 
                         // deal 1 card to each player
                         playRoom.game.dealCardsToPlayers(trickWinnerIndex, 1);
-
-                        // close deck if there are no cards left in it
-                        if(playRoom.game.deck.length === 0 && !playRoom.game.deckClosed){ 
-                            playRoom.game.deckClosed = true;
-                        }
-
+                        
                         // sort cards in hands; check for marriages; update clients
                         for(let i=0; i<2; i++){
                             playRoom.game.sortCardsByPointsAndSuit(playRoom.game.cardsInHand[i]);

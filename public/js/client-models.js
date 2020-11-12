@@ -72,16 +72,16 @@ class Game {
         this.deckSize = gameStateDTO.deckSize;
 
         // won tricks(cards) by player
-        this.playerWonCards = [];
+        this.playerWonCards = gameStateDTO.playerWonCards;
 
         // won 1st trick(2 cards) by opponent
-        this.opponentWonCardsFirstTrick = [];
+        this.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;
 
         // total number of cards in opponent won tricks
-        this.opponentTotalWonCardsNumber = 0;
+        this.opponentTotalWonCardsNumber = gameStateDTO.opponentTotalWonCardsNumber;
 
         // marriages
-        this.marriagesInHand = [];
+        this.marriagesInHand = gameStateDTO.marriagesInHand;
     }
 }
 

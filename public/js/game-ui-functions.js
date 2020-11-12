@@ -108,7 +108,7 @@ function updateOpponentWonOtherTricks(totalNumberOfWonCards){
 }
 
 // Removes(hides) cards from deck stack (when players draw a card)
-function removeCardsStackedInDeck(numberOfCardsInDeck){
+function updateCardsStackedInDeck(numberOfCardsInDeck){
     for(let i = 0; i<9; i++){
         if(i >= numberOfCardsInDeck){
 
@@ -399,6 +399,25 @@ function refreshPlayerOnTurnIndicator(isPlayerOnTurn) {
 
 function updateClientGameScreen(){
 
+    if(game.deckClosed) {
+        // put trump card on top of deck
+        svg.removeChild(trumpCard);
+        svg.appendChild(trumpCard);
+        // put text alert on top
+        svg.removeChild(textAlert);
+        svg.appendChild(textAlert);
+    }
+    else{
+        // put trump card under the deck
+        svg.removeChild(trumpCard);
+        svg.appendChild(trumpCard);
+        cardsInDeck.forEach(card => { svg.removeChild(card); });
+        cardsInDeck.forEach(card => { svg.appendChild(card); });
+        // put text alert on top
+        svg.removeChild(textAlert);
+        svg.appendChild(textAlert);
+    }
+
     // clean up screen
     cleanupGameScreen();
 
@@ -443,7 +462,7 @@ function updateClientGameScreen(){
     updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
     
     // cards in deck    
-    removeCardsStackedInDeck(game.deckSize);
+    updateCardsStackedInDeck(game.deckSize);
     showElements(cardsInDeck);
 
     // player tricks

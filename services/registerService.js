@@ -26,7 +26,7 @@ const add_user = async (req, res) => {
             hashedPassword = await bcrypt.hash(password, 10);
             
             pool.query(
-                `SELECT * FROM users WHERE username = $1`, [username],
+                `SELECT * FROM users WHERE LOWER(username) = LOWER($1)`, [username],
                 (err, results) => {
                     if (err) { 
                         console.log(err);

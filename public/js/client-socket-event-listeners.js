@@ -71,7 +71,7 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             hideElements(forbiddenCardOverlay);
             updateAllCardsInHand(game.cardsInHand);
             updateOpponentCards(game.cardsInHand.length);
-            removeCardsStackedInDeck(game.deckSize);
+            updateCardsStackedInDeck(game.deckSize);
             updatePlayerTricks(game.playerWonCards); 
             updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
@@ -103,17 +103,10 @@ socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
     );
 });
 
-// Game state update - after exchanging trump
+// Game state update - after closing deck
 socket.on('gameStateUpdateAfterClosingDeck', gameStateDTO => {
     updateClientGameState(gameStateDTO);
-    
-    delay(100).then(
-        () => {
-        // put trump card on top of deck
-        svg.removeChild(trumpCard);
-        svg.appendChild(trumpCard);
-        }
-    );
+    updateClientGameScreen();
 });
 
 // Game over
@@ -143,16 +136,11 @@ socket.on('gameStart', gameStateDTO => {
     delay(delay_ms).then(
         () => {
             
-            // put trump card on under the deck
+            // put trump card under the deck
             svg.removeChild(trumpCard);
             svg.appendChild(trumpCard);
-
-            cardsInDeck.forEach(card => {
-                svg.removeChild(card);
-            });
-            cardsInDeck.forEach(card => {
-                svg.appendChild(card);
-            });
+            cardsInDeck.forEach(card => { svg.removeChild(card); });
+            cardsInDeck.forEach(card => { svg.appendChild(card); });
 
             updateClientGameState(gameStateDTO);
             setupGameScreenStarted();

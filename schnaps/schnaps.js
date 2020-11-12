@@ -218,7 +218,7 @@ function checkPlayedCardMarriagePoints(card, marriagesInHand){
  *      ===> {play any card}
  * 
  */
-function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trumpSuit, isDeckClosed){
+function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trumpSuit, isDeckClosed, deckLength){
     let validRespondingCards = [];
 
     // responding player has same suit card in hand
@@ -236,7 +236,7 @@ function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trump
     // trump cards in player's hand
     let trumpCards = cardsInRespondingHand.filter(c => c.suit === trumpSuit);
 
-    if(isDeckClosed){
+    if(isDeckClosed || deckLength === 0){
         if(hasSameSuit){
             if(hasStrongerSameSuit){
                 // ===> {play stronger same suit card}

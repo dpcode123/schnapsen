@@ -13,10 +13,11 @@ module.exports = function(io) {
     // Runs when client connects
     io.on('connection', socket => {
 
-        try {
-            const gameService = new GameService(io);
-            const moveHandlingService = new MoveHandlingService(io, socket);
+        const gameService = new GameService(io);
+        const moveHandlingService = new MoveHandlingService(io, socket);
 
+        try {
+            
             // Runs when client initializes socket.io connection
             socket.on('init', (socketJwt) => {
                 // validate token; extract payload

@@ -52,6 +52,9 @@ module.exports = function (num, openingPlayer) {
     // deck is closed by player(0 or 1) or not(null)
     this.deckClosedByPlayer = null;
 
+    // points that non-closer had at the moment of closing
+    this.nonCloserPoints = 0;
+
     // last trick
     this.lastTrick = null;
 
@@ -114,11 +117,8 @@ module.exports = function (num, openingPlayer) {
     }
 
 
-    // Deals n cards to both players if deck is not closed
+    // Deals n cards to both players if deck is not closed and there are card(s) in it
     this.dealCardsToPlayers = function (firstPlayer, numberOfCards){
-
-        console.log('this.deckClosed' + this.deckClosed);
-        console.log('this.trickNum' + this.trickNum);
 
         if(!this.deckClosed){
             console.log('dijelimo kartu');
@@ -150,45 +150,108 @@ module.exports = function (num, openingPlayer) {
     // check if player is out (66+ points)
     this.gameOver = function(pIndex){
 
-        // player gets 1,2 or 3 game points
-        let gamePoints = 0;
-
-        // check if player has >= 66 points
+        let winnerIndex = pIndex;
         let isGameOver = this.playerPoints[pIndex] >= 66;
-
+        let gamePoints = 0;
+        
+        // Game is over
         if(isGameOver){
-            // opponent has 0 points
-            if(this.playerPoints[otherPlayer(pIndex)] === 0) {
-                gamePoints = 3;
+
+            // deck is closed
+            if(this.deckClosed && this.deckClosedByPlayer !== null){
+
+                // THIS player closed the deck
+                if(this.deckClosedByPlayer === pIndex){
+
+                    // opponent(non closer) had 0 points at the moment of closing
+                    if(this.nonCloserPoints === 0) { gamePoints = 3; }
+
+                    // opponent(non closer) had 1-32 points at the moment of closing
+                    else if(this.nonCloserPoints > 0 && this.nonCloserPoints < 33) { gamePoints = 2; }
+
+                    // opponent(non closer) had 33+ points at the moment of closing
+                    else if(this.nonCloserPoints > 32 && this.nonCloserPoints < 66) { gamePoints = 1; }      
+                }
+                // OTHER player closed the deck
+                else if(this.deckClosedByPlayer === otherPlayer(pIndex)){
+
+                    // this player(non closer) had some points at the moment of closing
+                    if(this.nonCloserPoints > 0){ gamePoints = 2; }
+
+                    // this player(non closer) had 0 points at the moment of closing
+                    else{ gamePoints = 3; }
+                }
             }
-            // opponent has 1-32 points
-            else if(this.playerPoints[otherPlayer(pIndex)] > 0 && this.playerPoints[otherPlayer(pIndex)] < 33) {
-                gamePoints = 2;
+            // deck is NOT closed
+            else{
+                // opponent has 0 points
+                if(this.playerPoints[otherPlayer(pIndex)] === 0) { gamePoints = 3; }
+
+                // opponent has 1-32 points
+                else if(this.playerPoints[otherPlayer(pIndex)] > 0 && this.playerPoints[otherPlayer(pIndex)] < 33) { gamePoints = 2; }
+
+                // opponent has 33+ points
+                else if(this.playerPoints[otherPlayer(pIndex)] > 32 && this.playerPoints[otherPlayer(pIndex)] < 66) { gamePoints = 1; }
             }
-            // opponent has 33+ points
-            else if(this.playerPoints[otherPlayer(pIndex)] > 32 && this.playerPoints[otherPlayer(pIndex)] < 66) {
-                gamePoints = 1;
-            }
+
         }
+
         return {
-            winnerIndex: pIndex,
+            winnerIndex: winnerIndex,
             isGameOver: isGameOver,
             gamePoints: gamePoints,
             playerPointsAtEndOfGame: this.playerPoints[pIndex],
         };
     }
 
-    // check if player is out (66+ points)
+    // after last trick
     this.gameOverLastTrick = function(pIndex){
 
-        // game is over
-        isGameOver = true;
+        const isGameOver = true;
+        let gamePoints = 0;
+        let winnerIndex;
 
-        // player gets 1 game point
-        let gamePoints = 1;
+        // deck is closed
+        if(this.deckClosed && this.deckClosedByPlayer !== null){
+
+            // THIS player closed the deck
+            if(this.deckClosedByPlayer === pIndex){
+
+                // other player is winner because deck is closed and this player isn't out yet
+                winnerIndex = otherPlayer(pIndex);
+
+                // opponent(non closer) had 0 points at the moment of closing
+                if(this.nonCloserPoints === 0) { gamePoints = 3; }
+
+                // opponent(non closer) had 1-32 points at the moment of closing
+                else if(this.nonCloserPoints > 0 && this.nonCloserPoints < 33) { gamePoints = 2; 
+                }
+                // opponent(non closer) had 33+ points at the moment of closing
+                else if(this.nonCloserPoints > 32 && this.nonCloserPoints < 66) { gamePoints = 1; }
+                
+            }
+            // OTHER player closed the deck
+            else if(this.deckClosedByPlayer === otherPlayer(pIndex)){
+
+                // this player is winner because other player closed the deck and isn't out yet 
+                winnerIndex = pIndex;
+
+                // this player(non closer) had some points at the moment of closing
+                if(this.nonCloserPoints > 0){ gamePoints = 2; }
+
+                // this player(non closer) had 0 points at the moment of closing
+                else{ gamePoints = 3; }
+            }
+        }
+        // deck is NOT closed
+        else{
+            // player gets 1 game point
+            gamePoints = 1;
+            winnerIndex = pIndex;
+        }
 
         return {
-            winnerIndex: pIndex,
+            winnerIndex: winnerIndex,
             isGameOver: isGameOver,
             gamePoints: gamePoints,
             playerPointsAtEndOfGame: this.playerPoints[pIndex],
@@ -214,12 +277,6 @@ module.exports = function (num, openingPlayer) {
 
         // increase trick num
         this.trickNum+=1;
-
-        /* // close game if deck is empty
-        if(this.trickNum > 6){
-            this.deckClosed = true;
-            console.log('game zatvara deck')
-        } */
 
         // player on turn = last tricks winner
         this.playerOnTurn = lastTricksWinner;

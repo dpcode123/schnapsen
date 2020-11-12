@@ -8,7 +8,7 @@ function initializePassport(passport) {
     const authenticateUser = (username, password, done) => {
 
         pool.query(
-            `SELECT * FROM users WHERE username = $1`, [username],
+            `SELECT * FROM users WHERE LOWER(username) = LOWER($1)`, [username],
             (err, results) => {
                 if (err) {
                     throw err;
