@@ -1,9 +1,10 @@
-const LocalStrategy = require("passport-local").Strategy;
-const { pool } = require("../repository/dbPoolConfig");
-const bcrypt = require("bcrypt");
+import passportLocal from 'passport-local';
+import bcrypt from 'bcrypt';
+import pool from '../repository/dbPoolConfig.js';
 
+const LocalStrategy = passportLocal.Strategy;
 
-function initializePassport(passport) {
+export default function initializePassport(passport) {
 
     const authenticateUser = (username, password, done) => {
 
@@ -51,6 +52,3 @@ function initializePassport(passport) {
       });
     });
 }
-
-module.exports = initializePassport;
-

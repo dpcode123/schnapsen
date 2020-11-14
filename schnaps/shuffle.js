@@ -4,7 +4,7 @@
   * https://blog.codinghorror.com/the-danger-of-naivete/
   * https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
   */
-function shuffle(array) {
+export function shuffle(array) {
     var m = array.length, t, i;
 
     // While there remain elements to shuffle…
@@ -19,8 +19,4 @@ function shuffle(array) {
       array[i] = t;
     }
     return array;
-}
-
-module.exports = {
-    shuffle
 }

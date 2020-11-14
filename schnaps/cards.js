@@ -1,4 +1,4 @@
-const Card = require('../model/Card.js');
+import Card from '../model/Card.js';
 const CARDS = [];
 
 // Herc
@@ -31,26 +31,25 @@ CARDS.push(new Card('A', 'tref', 11, 'a-tref'));
 
 
 // Gets all 20 cards
-function getAllCards(){
+export function getAllCards(){
     return CARDS;
 }
 
 // Gets random card from deck
-function randomCard(deck) {
+export function randomCard(deck) {
     return deck[Math.floor(Math.random() * deck.length)];
 }
 
-// Gets Card by name
-function getCardByName(cardName){
-    card = CARDS.find(object => object.name === cardName);
+// Gets card by name
+export function getCardByName(cardName) {
+    const card = CARDS.find(object => object.name === cardName);
     return card;
 }
 
 // Removes card from deck
-function removeCardFromDeck(card, deck){
+export function removeCardFromDeck(card, deck) {
     deck.splice(deck.findIndex(object => object === card), 1);
 }
-
 
 /**
  * Gets card's position in hand by card name
@@ -58,16 +57,7 @@ function removeCardFromDeck(card, deck){
  * @param {*} playerHand 
  * @returns {number} position 0-4 
  */
-function getCardPositionInHandByName(cardName, playerHand){
-    let position = playerHand.findIndex(object => object.name === cardName);
+export function getCardPositionInHandByName(cardName, playerHand) {
+    const position = playerHand.findIndex(object => object.name === cardName);
     return position;
-}
-
-
-module.exports = {
-    getAllCards,
-    randomCard,
-    getCardByName,
-    removeCardFromDeck,
-    getCardPositionInHandByName
 }

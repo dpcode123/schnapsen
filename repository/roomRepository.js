@@ -1,20 +1,23 @@
 const playRooms = new Map();
 
-function getPlayRooms() {
-    return playRooms;
-}
+export default class {
+    constructor() {
 
-function getPlayRoomById(roomId) {
-    // check if room exist
-    if(playRooms.has(roomId)) {
-        return playRooms.get(roomId);        
+        this.getPlayRooms = function () {
+            return playRooms;
+        };
+
+        this.getPlayRoomById = function (roomId) {
+            // check if room exist
+            if (playRooms.has(roomId)) {
+                return playRooms.get(roomId);
+            }
+            // room doesn't exist
+            return false;
+        };
+
+        this.deletePlayRoomById = function (roomId) {
+            return playRooms.delete(roomId);
+        };
     }
-    // room doesn't exist
-    return false;
 }
-
-function deletePlayRoomById(roomId) {
-    return playRooms.delete(roomId);
-}
-
-module.exports = { getPlayRooms, getPlayRoomById, deletePlayRoomById };

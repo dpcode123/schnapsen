@@ -1,9 +1,10 @@
-const express = require('express');
-const { userAuthenticated } = require('../auth/passportMiddleware');
-const roomController = require('../controllers/roomController');
+import express from 'express';
+import { userAuthenticated } from '../auth/passportMiddleware.js';
+import { createRoom, joinRoom } from '../controllers/RoomController.js';
+
 const router = express.Router();
 
-router.get('/create', userAuthenticated, roomController.create_room);
-router.get('/join', userAuthenticated, roomController.join_room);
+router.get('/create', userAuthenticated, createRoom);
+router.get('/join', userAuthenticated, joinRoom);
 
-module.exports = router;
+export default router;

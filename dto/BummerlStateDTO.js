@@ -1,4 +1,4 @@
-module.exports = function(bummerl, player) {
+export default function(bummerl, player) {
 
     let gamePointsPlayer, gamePointsOpponent;
 

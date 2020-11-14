@@ -1,8 +1,10 @@
-const express = require('express');
-//const passport = require('passport');
-const loginController = require('../controllers/loginController');
-const { userNotAuthenticated } = require('../auth/passportMiddleware');
+import express from 'express';
+import LoginController from '../controllers/LoginController.js';
+//import login_user from '../controllers/LoginController.js';
+import { userNotAuthenticated } from '../auth/passportMiddleware.js';
+
 const router = express.Router();
+const loginController = new LoginController();
 
 router.get('/', userNotAuthenticated, (req, res) => {
     res.render('login');
@@ -10,5 +12,4 @@ router.get('/', userNotAuthenticated, (req, res) => {
 
 router.post('/', userNotAuthenticated, loginController.login_user);
 
-
-module.exports = router;
+export default router;

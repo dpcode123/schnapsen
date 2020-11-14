@@ -1,24 +1,4 @@
-/* const { otherPlayer,
-    getPlayerIndexInRoomByUserId
-} = require("../utils/util");
-const { getCardByName } = require('../schnaps/cards');
-const { 
-    calculateTrickWinner,
-    calculateTrickPoints,
-    checkForMarriagesInHand,
-    checkPlayedCardMarriagePoints,
-    calculateValidRespondingCards,
-} = require('../schnaps/schnaps');
-const RoomStateDTO = require('../dto/RoomStateDTO');
-const BummerlStateDTO =require('../dto/BummerlStateDTO');
-const GameStateDTO = require('../dto/GameStateDTO');
-
-const OpponentMoveDTO = require('../dto/OpponentMoveDTO');
-const Trick = require('../model/Trick');
-const PlayRoom = require("../model/PlayRoom"); */
-
-
-module.exports = function(io, socket) {
+export default function MoveValidationService(io, socket) {
 
     // Validate move - exchange trump
     this.exchangeTrump = (move) => {

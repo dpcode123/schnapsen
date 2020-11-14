@@ -7,7 +7,7 @@
  * @param {number} marriagePoints - 0, 20 or 40
  * @param {array} validRespondingCards - array of cards
  */
-module.exports = function(moveType, trickNum, moveNum, cardName, marriagePoints, validRespondingCards) {
+export default function(moveType, trickNum, moveNum, cardName, marriagePoints, validRespondingCards) {
 
     const dto = {
         moveType: moveType,
@@ -17,6 +17,5 @@ module.exports = function(moveType, trickNum, moveNum, cardName, marriagePoints,
         marriagePoints: marriagePoints,
         validRespondingCards: validRespondingCards
     };
-
     return dto;
 }

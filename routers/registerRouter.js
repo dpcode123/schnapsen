@@ -1,8 +1,9 @@
-const express = require('express');
-const registerController = require('../controllers/registerController');
-const { userNotAuthenticated } = require('../auth/passportMiddleware');
-const router = express.Router();
+import express from 'express';
+import RegisterController from '../controllers/RegisterController.js';
+import { userNotAuthenticated } from '../auth/passportMiddleware.js';
 
+const router = express.Router();
+const registerController = new RegisterController();
 
 router.get('/', userNotAuthenticated, (req, res) => {
     res.render('register');
@@ -10,5 +11,4 @@ router.get('/', userNotAuthenticated, (req, res) => {
 
 router.post('/', userNotAuthenticated, registerController.add_user);
 
-
-module.exports = router;
+export default router;

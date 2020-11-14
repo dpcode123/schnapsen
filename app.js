@@ -1,29 +1,28 @@
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const session = require('express-session');
+import path from 'path';
+const __dirname = path.resolve();
+import http from 'http';
+import express from 'express';
+import session from 'express-session';
 const app = express();
 const server = http.createServer(app);
-const socketio = require('socket.io');
+import socketio from 'socket.io';
 const io = socketio(server);
 
-const roomRouter = require('./routers/roomRouter');
-const loginRouter = require('./routers/loginRouter');
-const registerRouter = require('./routers/registerRouter');
-const mainRouter = require('./routers/mainRouter');
+import roomRouter from './routers/RoomRouter.js';
+import loginRouter from './routers/LoginRouter.js';
+import registerRouter from './routers/RegisterRouter.js';
+import mainRouter from './routers/MainRouter.js';
 
-const passport = require('passport');
-const flash = require('express-flash');
-
+import passport from 'passport';
+import flash from 'express-flash';
 
 // Play sessions map
 const playSessions = new Map();
 
-const initializePassport = require("./auth/passportConfig");
+import initializePassport from './auth/passportConfig.js';
 initializePassport(passport);
 
-
-const SocketioController = require('./controllers/SocketioController');
+import SocketioController from './controllers/SocketioController.js';
 
 // View engine
 app.set('view engine', 'ejs');

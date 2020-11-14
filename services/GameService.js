@@ -1,11 +1,13 @@
-const { getRoomByPlayersSocketId, deleteRoomById } = require('../services/PlayRoomService')
-const { getPlayerIndexInRoomBySocketId } = require("../utils/util");
+import PlayRoomService from '../services/PlayRoomService.js';
+import { getPlayerIndexInRoomBySocketId } from '../utils/util.js';
 
-module.exports = function(io) {
+const playRoomService = new PlayRoomService();
+
+export default function GameService(io) {
 
     this.disconnect = function(socketId) {
         try {
-            const playRoom = getRoomByPlayersSocketId(socketId);
+            const playRoom = playRoomService.getRoomByPlayersSocketId(socketId);
 
             if(playRoom){
                 const playerIndex = getPlayerIndexInRoomBySocketId(playRoom, socketId);
@@ -26,7 +28,7 @@ module.exports = function(io) {
                         io.to(playRoom.room).emit('sessionEnd', playRoom.status);
 
                         // destroy play room
-                        deleteRoomById(playRoom.room);
+                        playRoomService.deleteRoomById(playRoom.room);
 
                         console.log('room deleted');
                     }
@@ -37,6 +39,4 @@ module.exports = function(io) {
             console.error(error);
         }
     }
-
-
 }

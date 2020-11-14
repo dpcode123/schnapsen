@@ -1,6 +1,6 @@
-const { otherPlayer } = require('../utils/util');
+import { otherPlayer } from '../utils/util.js';
 
-module.exports = function(game, player) {
+export default function(game, player) {
     
     let isThisPlayerOnTurn = false;
     let opponentWonCardsFirstTrick = [];
@@ -41,6 +41,5 @@ module.exports = function(game, player) {
         opponentTotalWonCardsNumber: opponentTotalWonCardsNumber,
         marriagesInHand: game.marriagesInHand[player],
     };
-    //console.log(dto);
     return dto;
 }

@@ -1,8 +1,7 @@
-const express = require('express');
-const { userAuthenticated } = require('../auth/passportMiddleware');
-//### controller
-const router = express.Router();
+import express from 'express';
+import { userAuthenticated } from '../auth/passportMiddleware.js';
 
+const router = express.Router();
 
 // Index page
 router.get('/', userAuthenticated, (req, res) => {
@@ -30,5 +29,4 @@ router.use((req, res) => {
     res.status(404).render('404');
 });
 
-
-module.exports = router;
+export default router;

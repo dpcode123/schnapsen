@@ -1,14 +1,17 @@
-const { getPlayRooms, getPlayRoomById } = require('../repository/roomRepository');
-const GameService = require('../services/GameService');
-const MoveHandlingService = require('../services/MoveHandlingService');
+import RoomRepository from '../repository/RoomRepository.js';
+import GameService from '../services/GameService.js';
+import MoveHandlingService from '../services/MoveHandlingService.js';
 
-const { validateToken } = require('../auth/socketJwt');
-const RoomStateDTO = require('../dto/RoomStateDTO');
-const BummerlStateDTO =require('../dto/BummerlStateDTO');
-const GameStateDTO = require('../dto/GameStateDTO');
-const socketEventValidationService = require('../services/socketEventValidationService');
+import { validateToken } from '../auth/socketJwt.js';
+import RoomStateDTO from '../dto/RoomStateDTO.js';
+import BummerlStateDTO from '../dto/BummerlStateDTO.js';
+import GameStateDTO from '../dto/GameStateDTO.js';
+import SocketEventValidationService from '../services/SocketEventValidationService.js';
 
-module.exports = function(io) {
+const roomRepository = new RoomRepository();
+const socketEventValidationService = new SocketEventValidationService();
+
+export default function SocketioController(io) {
 
     // Runs when client connects
     io.on('connection', socket => {
@@ -35,7 +38,7 @@ module.exports = function(io) {
                     socket.join(roomId);
 
                     // get room object
-                    const playRoom = getPlayRoomById(roomId);
+                    const playRoom = roomRepository.getPlayRoomById(roomId);
                     
                     // check if payload's player data equals to room's player data
                     if(socketEventValidationService.validate(tokenPayload, playRoom)){
@@ -129,7 +132,7 @@ module.exports = function(io) {
                     const roomId = tokenPayload.roomId;
 
                     // get room object
-                    const playRoom = getPlayRoomById(roomId);
+                    const playRoom = roomRepository.getPlayRoomById(roomId);
 
                     // check if payload's player data equals to room's player data
                     if(socketEventValidationService.validate(tokenPayload, playRoom)){

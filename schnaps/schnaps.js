@@ -1,11 +1,4 @@
-const {
-    getAllCards,
-    randomCard,
-    getCardByName,
-    removeCardFromDeck,
-    getCardPositionInHandByName
-} = require('./cards');
-
+import { getCardByName } from './cards.js';
 
 /**
  * @description CALCULATES TRICK WINNER
@@ -30,7 +23,7 @@ const {
  *              ===> {compare values}
  * 
  */
-function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
+export function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
     let leadingCard = getCardByName(leadingPlay.cardName);
     let responseCard = getCardByName(respondingPlay.cardName);
 
@@ -99,7 +92,7 @@ function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
  * @param respondingPlay - second play in trick
  * 
  */
-function calculateTrickPoints(leadingPlay, respondingPlay){
+export function calculateTrickPoints(leadingPlay, respondingPlay){
 
     let leadingCard = getCardByName(leadingPlay.cardName);
     let responseCard = getCardByName(respondingPlay.cardName);
@@ -118,7 +111,7 @@ function calculateTrickPoints(leadingPlay, respondingPlay){
  * @param {string} trumpSuit - trump suit (hr. adut)
  * @returns array of objects containing suits in which player has marriage with 20/40 values
  */
-function checkForMarriagesInHand(playerHand, trumpSuit){
+export function checkForMarriagesInHand(playerHand, trumpSuit){
 
     const marriages = [];
 
@@ -175,7 +168,7 @@ function checkForMarriagesInHand(playerHand, trumpSuit){
 
 
 
-function checkPlayedCardMarriagePoints(card, marriagesInHand){
+export function checkPlayedCardMarriagePoints(card, marriagesInHand){
 
     let marriagePoints = 0;
 
@@ -218,7 +211,7 @@ function checkPlayedCardMarriagePoints(card, marriagesInHand){
  *      ===> {play any card}
  * 
  */
-function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trumpSuit, isDeckClosed, deckLength){
+export function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trumpSuit, isDeckClosed, deckLength){
     let validRespondingCards = [];
 
     // responding player has same suit card in hand
@@ -263,13 +256,4 @@ function calculateValidRespondingCards(leadingCard, cardsInRespondingHand, trump
         validRespondingCards = cardsInRespondingHand;
     }
     return validRespondingCards;
-}
-
-
-module.exports = {
-    calculateTrickWinner,
-    calculateTrickPoints,
-    checkForMarriagesInHand,
-    checkPlayedCardMarriagePoints,
-    calculateValidRespondingCards
 }

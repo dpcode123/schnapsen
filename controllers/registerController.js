@@ -1,7 +1,9 @@
-const registerService = require('../services/registerService');
+import RegisterService from '../services/RegisterService.js';
 
-const add_user = registerService.add_user;
+const registerService = new RegisterService();
 
-module.exports = {
-    add_user
+export default class RegisterController {
+    constructor() {
+        this.add_user = registerService.add_user;
+    }
 }

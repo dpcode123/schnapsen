@@ -1,6 +1,6 @@
-const { otherPlayer } = require('../utils/util');
+import { otherPlayer } from '../utils/util.js';
 
-module.exports = function(playRoom, playerIndex) {
+export default function(playRoom, playerIndex) {
     
     const dto = {
         room: playRoom.room,
@@ -10,6 +10,5 @@ module.exports = function(playRoom, playerIndex) {
         bummerlsLostPlayer: playRoom.bummerlsWon[otherPlayer(playerIndex)],
         bummerlsLostOpponent: playRoom.bummerlsWon[playerIndex],
     };
-
     return dto;
 }

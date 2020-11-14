@@ -1,6 +1,8 @@
-const playRoomService = require('../services/PlayRoomService');
+import PlayRoomService from '../services/PlayRoomService.js';
 
-const create_room = (req, res) => {
+const playRoomService = new PlayRoomService();
+
+export function createRoom (req, res) {
     // logged in user
     const player = req.session.passport.user;
 
@@ -18,7 +20,7 @@ const create_room = (req, res) => {
     }
 }
 
-const join_room = (req, res) => {
+export function joinRoom (req, res) {
     // logged in user
     const player = req.session.passport.user;
 
@@ -37,9 +39,4 @@ const join_room = (req, res) => {
     else{
         res.redirect(`/`);
     }  
-}
-
-module.exports = {
-    create_room,
-    join_room
 }
