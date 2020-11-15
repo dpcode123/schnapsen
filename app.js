@@ -32,7 +32,7 @@ import flash from 'express-flash';
 // Play sessions map
 const playSessions = new Map();
 
-import initializePassport from './auth/passportConfig.js';
+import initializePassport from './auth/passport_config.js';
 initializePassport(passport);
 
 import SocketioController from './controllers/socketio_controller.js';
