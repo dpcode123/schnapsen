@@ -1,5 +1,5 @@
 import express from 'express';
-import LoginController from '../controllers/LoginController.js';
+import LoginController from '../controllers/login_controller.js';
 //import login_user from '../controllers/LoginController.js';
 import { userNotAuthenticated } from '../auth/passportMiddleware.js';
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import { userAuthenticated } from '../auth/passportMiddleware.js';
-import { createRoom, joinRoom } from '../controllers/RoomController.js';
+import { createRoom, joinRoom } from '../controllers/room_controller.js';
 
 const router = express.Router();
 

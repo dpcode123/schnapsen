@@ -35,7 +35,7 @@ const playSessions = new Map();
 import initializePassport from './auth/passportConfig.js';
 initializePassport(passport);
 
-import SocketioController from './controllers/SocketioController.js';
+import SocketioController from './controllers/socketio_controller.js';
 
 // View engine
 app.set('view engine', 'ejs');
