@@ -1,13 +1,13 @@
-import PlayRoomService from './play_room_service.js';
+import RoomService from './room_service.js';
 import { getPlayerIndexInRoomBySocketId } from '../utils/util.js';
 
-const playRoomService = new PlayRoomService();
+const roomService = new RoomService();
 
 export default function GameService(io) {
 
     this.disconnect = function(socketId) {
         try {
-            const playRoom = playRoomService.getRoomByPlayersSocketId(socketId);
+            const playRoom = roomService.getRoomByPlayersSocketId(socketId);
 
             if(playRoom){
                 const playerIndex = getPlayerIndexInRoomBySocketId(playRoom, socketId);
@@ -28,7 +28,7 @@ export default function GameService(io) {
                         io.to(playRoom.room).emit('sessionEnd', playRoom.status);
 
                         // destroy play room
-                        playRoomService.deleteRoomById(playRoom.room);
+                        roomService.deleteRoomById(playRoom.room);
 
                         console.log('room deleted');
                     }

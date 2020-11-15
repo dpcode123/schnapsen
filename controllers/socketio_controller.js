@@ -1,12 +1,12 @@
-import RoomRepository from '../repository/RoomRepository.js';
-import GameService from '../services/GameService.js';
-import MoveHandlingService from '../services/MoveHandlingService.js';
+import RoomRepository from '../repository/room_repository.js';
+import GameService from '../services/game_service.js';
+import MoveHandlingService from '../services/move_handling_service.js';
 
 import { validateToken } from '../auth/socket_jwt.js';
-import RoomStateDTO from '../dto/RoomStateDTO.js';
-import BummerlStateDTO from '../dto/BummerlStateDTO.js';
-import GameStateDTO from '../dto/GameStateDTO.js';
-import SocketEventValidationService from '../services/SocketEventValidationService.js';
+import RoomStateDTO from '../dto/room_state_dto.js';
+import BummerlStateDTO from '../dto/bummerl_state_dto.js';
+import GameStateDTO from '../dto/game_state_dto.js';
+import SocketEventValidationService from '../services/socket_event_validation_service.js';
 
 const roomRepository = new RoomRepository();
 const socketEventValidationService = new SocketEventValidationService();

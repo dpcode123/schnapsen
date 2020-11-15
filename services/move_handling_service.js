@@ -9,12 +9,12 @@ import {
     checkPlayedCardMarriagePoints,
     calculateValidRespondingCards
 } from '../schnaps/schnaps.js';
-import RoomStateDTO from '../dto/RoomStateDTO.js';
-import BummerlStateDTO from '../dto/BummerlStateDTO.js';
-import GameStateDTO from '../dto/GameStateDTO.js';
+import RoomStateDTO from '../dto/room_state_dto.js';
+import BummerlStateDTO from '../dto/bummerl_state_dto.js';
+import GameStateDTO from '../dto/game_state_dto.js';
 import MoveValidationService from './move_validation_service.js';
-import OpponentMoveDTO from '../dto/OpponentMoveDTO.js';
-import Trick from '../model/Trick.js';
+import OpponentMoveDTO from '../dto/opponent_move_dto.js';
+import Trick from '../model/trick.js';
 
 export default class MoveHandlingService {
     constructor(io, socket) {

@@ -1,5 +1,5 @@
-import RoomRepository from '../repository/RoomRepository.js';
-import PlayRoom from '../model/PlayRoom.js';
+import RoomRepository from '../repository/room_repository.js';
+import PlayRoom from '../model/room.js';
 import { getRandomIntInclusive } from '../utils/util.js';
 import GameSessionService from './game_session_service.js';
 

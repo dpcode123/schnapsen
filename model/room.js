@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import Bummerl from './Bummerl.js';
-import Game from './Game.js';
+import Bummerl from './bummerl.js';
+import Game from './game.js';
 
 import { checkForMarriagesInHand } from '../schnaps/schnaps.js';
-import GameOverDTO from '../dto/GameOverDTO.js';
+import GameOverDTO from '../dto/game_over_dto.js';
 import { otherPlayer} from '../utils/util.js';
 
 export default class PlayRoom {

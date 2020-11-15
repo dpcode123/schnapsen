@@ -1,8 +1,4 @@
-/* import login_user from '../services/LoginService.js';
-
-export default login_user; */
-
-import LoginService from '../services/LoginService.js';
+import LoginService from '../services/login_service.js';
 
 const loginService = new LoginService();
 
