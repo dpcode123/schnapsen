@@ -27,7 +27,8 @@ import flash from 'express-flash';
 
 
 
-
+console.log("AAA");
+if(NODE_ENV !== null){console.log(NODE_ENV);}
 
 // Play sessions map
 const playSessions = new Map();
