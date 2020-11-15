@@ -1,6 +1,6 @@
 import passportLocal from 'passport-local';
 import bcrypt from 'bcrypt';
-import pool from '../repository/dbPoolConfig.js';
+import pool from '../repository/db_pool_config.js';
 
 const LocalStrategy = passportLocal.Strategy;
 

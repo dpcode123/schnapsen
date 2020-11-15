@@ -1,4 +1,4 @@
-import pool from '../repository/dbPoolConfig.js';
+import pool from '../repository/db_pool_config.js';
 import bcrypt from 'bcrypt';
 
 export default class RegisterService {
