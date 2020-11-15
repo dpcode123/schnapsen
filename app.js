@@ -17,10 +17,10 @@ const server = http.createServer(app);
 import socketio from 'socket.io';
 const io = socketio(server);
 
-import room_router from './routers/room_router.js';
-import loginRouter from './routers/LoginRouter.js';
-import registerRouter from './routers/RegisterRouter.js';
-import mainRouter from './routers/MainRouter.js';
+import roomRouter from './routers/room_router.js';
+import loginRouter from './routers/login_router.js';
+import registerRouter from './routers/register_router.js';
+import mainRouter from './routers/main_router.js';
 
 import passport from 'passport';
 import flash from 'express-flash';
