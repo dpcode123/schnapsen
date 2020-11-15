@@ -2,7 +2,7 @@ import RoomRepository from '../repository/RoomRepository.js';
 import GameService from '../services/GameService.js';
 import MoveHandlingService from '../services/MoveHandlingService.js';
 
-import { validateToken } from '../auth/socketJwt.js';
+import { validateToken } from '../auth/socket_jwt.js';
 import RoomStateDTO from '../dto/RoomStateDTO.js';
 import BummerlStateDTO from '../dto/BummerlStateDTO.js';
 import GameStateDTO from '../dto/GameStateDTO.js';

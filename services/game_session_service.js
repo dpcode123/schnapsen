@@ -1,4 +1,4 @@
-import { signToken } from '../auth/socketJwt.js';
+import { signToken } from '../auth/socket_jwt.js';
 export default class GameSessionService {
     constructor() {
         // Generates game session data with jwt token for socket.io

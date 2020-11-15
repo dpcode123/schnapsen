@@ -1,6 +1,6 @@
 import express from 'express';
 import RegisterController from '../controllers/register_controller.js';
-import { userNotAuthenticated } from '../auth/passportMiddleware.js';
+import { userNotAuthenticated } from '../auth/passport_middleware.js';
 
 const router = express.Router();
 const registerController = new RegisterController();
