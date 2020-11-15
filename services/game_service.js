@@ -1,4 +1,4 @@
-import PlayRoomService from '../services/PlayRoomService.js';
+import PlayRoomService from './play_room_service.js';
 import { getPlayerIndexInRoomBySocketId } from '../utils/util.js';
 
 const playRoomService = new PlayRoomService();

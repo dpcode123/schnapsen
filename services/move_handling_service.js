@@ -12,7 +12,7 @@ import {
 import RoomStateDTO from '../dto/RoomStateDTO.js';
 import BummerlStateDTO from '../dto/BummerlStateDTO.js';
 import GameStateDTO from '../dto/GameStateDTO.js';
-import MoveValidationService from '../services/MoveValidationService.js';
+import MoveValidationService from './move_validation_service.js';
 import OpponentMoveDTO from '../dto/OpponentMoveDTO.js';
 import Trick from '../model/Trick.js';
 

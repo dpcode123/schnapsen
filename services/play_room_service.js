@@ -1,7 +1,7 @@
 import RoomRepository from '../repository/RoomRepository.js';
 import PlayRoom from '../model/PlayRoom.js';
 import { getRandomIntInclusive } from '../utils/util.js';
-import GameSessionService from '../services/GameSessionService.js';
+import GameSessionService from './game_session_service.js';
 
 const roomRepository = new RoomRepository();
 const playRooms = roomRepository.getPlayRooms();
