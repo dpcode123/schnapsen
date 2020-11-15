@@ -3,6 +3,18 @@ const __dirname = path.resolve();
 import http from 'http';
 import express from 'express';
 import session from 'express-session';
+
+
+import redis from 'redis';
+import connectRedis from 'connect-redis';
+
+const RedisStore = connectRedis(session);
+
+const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+
+
+
+
 const app = express();
 const server = http.createServer(app);
 import socketio from 'socket.io';
@@ -15,6 +27,10 @@ import mainRouter from './routers/MainRouter.js';
 
 import passport from 'passport';
 import flash from 'express-flash';
+
+
+
+
 
 // Play sessions map
 const playSessions = new Map();
@@ -35,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session
 app.use(session({
+    store: new RedisStore({client: redisClient}),
     secret: process.env.SESSION_SECRET, 
     resave: false, 
     saveUninitialized: false,
