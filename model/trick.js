@@ -10,8 +10,6 @@
  * @param {number}trickPoints - 4-22; total points in trick
  */
 
-
-
 export default class Trick {
     constructor(trickNum, leadingPlayer, respondingPlayer, leadingCard, responseCard, trickWinnerId, trickWinnerIndex, trickPoints) {
     this.trickNum = trickNum;
