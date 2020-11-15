@@ -12,9 +12,6 @@ const RedisStore = connectRedis(session);
 
 const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 
-/** */
-
-
 const app = express();
 const server = http.createServer(app);
 import socketio from 'socket.io';
