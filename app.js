@@ -17,7 +17,7 @@ const server = http.createServer(app);
 import socketio from 'socket.io';
 const io = socketio(server);
 
-import roomRouter from './routers/RoomRouter.js';
+import room_router from './routers/room_router.js';
 import loginRouter from './routers/LoginRouter.js';
 import registerRouter from './routers/RegisterRouter.js';
 import mainRouter from './routers/MainRouter.js';
