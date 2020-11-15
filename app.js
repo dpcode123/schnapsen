@@ -25,8 +25,6 @@ import mainRouter from './routers/main_router.js';
 import passport from 'passport';
 import flash from 'express-flash';
 
-
-
 console.log("AAA");
 console.log(process.env.DB_PG_DATABASE);
 
