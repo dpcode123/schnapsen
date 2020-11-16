@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import Bummerl from './1bummerl.js';
+import Bummerl from './Bummerl.js';
 import Game from './Game.js';
 
 import { checkForMarriagesInHand } from '../schnaps/schnaps.js';

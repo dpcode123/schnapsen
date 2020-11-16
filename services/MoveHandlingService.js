@@ -14,7 +14,7 @@ import BummerlStateDTO from '../dto/BummerlStateDTO.js';
 import GameStateDTO from '../dto/GameStateDTO.js';
 import MoveValidationService from './MoveValidationService.js';
 import OpponentMoveDTO from '../dto/OpponentMoveDTO.js';
-import Trick from '../model/1trick.js';
+import Trick from '../model/Trick.js';
 
 export default class MoveHandlingService {
     constructor(io, socket) {

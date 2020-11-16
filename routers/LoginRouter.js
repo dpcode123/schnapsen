@@ -1,5 +1,5 @@
 import express from 'express';
-import LoginController from '../controllers/login_controller.js';
+import LoginController from '../controllers/LoginController.js';
 import { userNotAuthenticated } from '../auth/passport_middleware.js';
 
 const router = express.Router();

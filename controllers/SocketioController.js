@@ -1,4 +1,4 @@
-import RoomRepository from '../repository/room_repository.js';
+import RoomRepository from '../repository/RoomRepository.js';
 import GameService from '../services/GameService.js';
 import MoveHandlingService from '../services/MoveHandlingService.js';
 import { validateToken } from '../auth/socket_jwt.js';
