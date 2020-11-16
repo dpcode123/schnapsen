@@ -1,6 +1,7 @@
 export default function(bummerl, player) {
 
-    let gamePointsPlayer, gamePointsOpponent;
+    let gamePointsPlayer;
+    let gamePointsOpponent;
 
     if(player === 0){
         gamePointsPlayer = bummerl.gamePoints[0];

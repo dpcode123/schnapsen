@@ -24,7 +24,7 @@ function updateClientGameState(gameStateDTO) {
 function movePlayCard(cardPlace) {
 
     // get card(name) from selected card place
-    let cardName = cardPlace.getAttribute('data-card');
+    const cardName = cardPlace.getAttribute('data-card');
 
     if(game.thisPlayerOnTurn){
         // empty place in players hand

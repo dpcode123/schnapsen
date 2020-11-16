@@ -88,7 +88,7 @@ export default class Game {
         this.setTrumpCardAndSuit = function () {
 
             // get random card from deck
-            let randcard = randomCard(this.deck);
+            const randcard = randomCard(this.deck);
 
             // set trump card
             this.trumpCard = randcard;
@@ -105,7 +105,7 @@ export default class Game {
         this.dealRandomCardToPlayer = function (player){
 
             // get random card from deck
-            let randcard = randomCard(this.deck);
+            const randcard = randomCard(this.deck);
 
             // push that card to players hand
             this.cardsInHand[player].push(randcard);
@@ -147,8 +147,8 @@ export default class Game {
         // Checks if player is out (66+ points)
         this.gameOver = function(pIndex){
 
-            let winnerIndex = pIndex;
-            let isGameOver = this.playerPoints[pIndex] >= 66;
+            const winnerIndex = pIndex;
+            const isGameOver = this.playerPoints[pIndex] >= 66;
             let gamePoints = 0;
             
             // Game is over
@@ -285,7 +285,7 @@ export default class Game {
 
         // Removes card from players hand
         this.removeCardFromHand = function (cardName, player){
-            let cardIndex = this.cardsInHand[player].findIndex(object => object.name === cardName);
+            const cardIndex = this.cardsInHand[player].findIndex(object => object.name === cardName);
             this.cardsInHand[player].splice(cardIndex, 1);
         }
         

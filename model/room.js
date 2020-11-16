@@ -58,32 +58,29 @@ export default class PlayRoom {
         // Starts new game
         this.startGame = function () {
 
-            // new game number and opening player(0 or 1)
-            // if current game doesnt exist, next game is no.1 and opening player is random
             let nextGameNumber = 0;
             let nextGameOpeningPlayer = null;
 
+            // (current game exist) - Increment game number by 1; Invert opening player 0<->1
             if(this.game){
-                // increment game number by 1
                 nextGameNumber = ++this.game.num;
-
-                // invert opening player <0...1> for the next game
                 nextGameOpeningPlayer = 1 - this.game.openingPlayer
             }
+            // (current game doesnt exist) - Next game is no.1; Opening player is random
             else{
                 nextGameNumber = 1;
                 nextGameOpeningPlayer = Math.round(Math.random());
             }
             
-            // create new game
+            // Create new game
             this.game = new Game(nextGameNumber, nextGameOpeningPlayer);
 
-            // deal 3 cards, deal trump, deal 2 cards
+            // Deal 3 cards, deal trump, deal 2 cards
             this.game.dealCardsToPlayers(nextGameOpeningPlayer, 3);
             this.game.setTrumpCardAndSuit();
             this.game.dealCardsToPlayers(nextGameOpeningPlayer, 2);
 
-            // sort cards in hands; check for marriages
+            // Sort cards in hands; Check for marriages in hands
             for(let i=0; i<2; i++){
                 this.game.sortCardsByPointsAndSuit(this.game.cardsInHand[i]);
                 this.game.marriagesInHand[i] = checkForMarriagesInHand(this.game.cardsInHand[i], this.game.trumpSuit);
@@ -107,10 +104,9 @@ export default class PlayRoom {
             // check if bummerl is over(player has 7+ game points)
             let bummerlOver  = this.bummerl.bummerlOver(gameOver.winnerIndex);
 
+            // start new bummerl, increase bummerlsWon points for winning player
             if(bummerlOver){
-                // start new bummerl
                 this.startBummerl();
-                // increase bummerlsWon points for winning player
                 this.bummerlsWon[gameOver.winnerIndex] = this.bummerlsWon[gameOver.winnerIndex] + 1;
             }
         }

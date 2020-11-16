@@ -1,4 +1,4 @@
-import PlayRoomService from '../services/room_service.js';
+import PlayRoomService from '../services/RoomService.js';
 
 const playRoomService = new PlayRoomService();
 

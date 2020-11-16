@@ -14,7 +14,7 @@ export default class Bummerl {
 
         // check if bummerls is over (7+ game points)
         this.bummerlOver = function(pIndex){
-            let isBummerlOver = this.gamePoints[pIndex] >= 7;
+            const isBummerlOver = this.gamePoints[pIndex] >= 7;
             return isBummerlOver;
         }
     }

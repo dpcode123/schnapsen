@@ -1,13 +1,13 @@
 import RoomRepository from '../repository/room_repository.js';
 import PlayRoom from '../model/room.js';
 import { getRandomIntInclusive } from '../utils/util.js';
-import GameSessionService from './game_session_service.js';
+import GameSessionService from './GameSessionService.js';
 
 const roomRepository = new RoomRepository();
 const playRooms = roomRepository.getPlayRooms();
 const gameSessionService = new GameSessionService();
 
-export default class PlayRoomService {
+export default class RoomService {
     constructor() {
         this.createRoom = function(firstPlayer) {
             // generate random room id

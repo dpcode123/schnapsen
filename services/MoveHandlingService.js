@@ -12,7 +12,7 @@ import {
 import RoomStateDTO from '../dto/room_state_dto.js';
 import BummerlStateDTO from '../dto/bummerl_state_dto.js';
 import GameStateDTO from '../dto/game_state_dto.js';
-import MoveValidationService from './move_validation_service.js';
+import MoveValidationService from './MoveValidationService.js';
 import OpponentMoveDTO from '../dto/opponent_move_dto.js';
 import Trick from '../model/trick.js';
 
@@ -84,7 +84,6 @@ export default class MoveHandlingService {
                     const card = getCardByName(move.cardName);
 
                     // valid plays - all cards are valid for leading play
-                    //let validRespondingCards = playRoom.game.cardsInHand[otherPlayer(playerIndex)];
                     let validRespondingCards = 'all';
 
                     //  called marriage points
@@ -153,16 +152,16 @@ export default class MoveHandlingService {
                         playRoom.game.moveBuffer.responseMove = move;
 
                         // Calculate trick winner
-                        let trickWinnerId = calculateTrickWinner(playRoom.game.trumpSuit, playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
+                        const trickWinnerId = calculateTrickWinner(playRoom.game.trumpSuit, playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
 
                         // Calculate trick points
-                        let trickPoints = calculateTrickPoints(playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
+                        const trickPoints = calculateTrickPoints(playRoom.game.moveBuffer.leadMove, playRoom.game.moveBuffer.responseMove);
 
                         // Get trick winner index in room (0 or 1)
                         trickWinnerIndex = getPlayerIndexInRoomByUserId(playRoom, trickWinnerId);
 
                         // Create trick object
-                        let trick = new Trick(
+                        const trick = new Trick(
                             playRoom.game.trickNum,
                             playRoom.game.moveBuffer.leadMove.socketId, playRoom.game.moveBuffer.responseMove.socketId,
                             playRoom.game.moveBuffer.leadMove.cardName, playRoom.game.moveBuffer.responseMove.cardName,
@@ -210,7 +209,7 @@ export default class MoveHandlingService {
                     }
 
                     // create opponent's move DTO
-                    let opponentMoveDTO = new OpponentMoveDTO(
+                    const opponentMoveDTO = new OpponentMoveDTO(
                         move.moveType, move.trickNum, move.moveNum,
                         move.cardName, marriagePoints, validRespondingCards);
 

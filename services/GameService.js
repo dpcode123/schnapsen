@@ -1,4 +1,4 @@
-import RoomService from './room_service.js';
+import RoomService from './RoomService.js';
 import { getPlayerIndexInRoomBySocketId } from '../utils/util.js';
 
 const roomService = new RoomService();

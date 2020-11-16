@@ -24,10 +24,11 @@ import { getCardByName } from './cards.js';
  * 
  */
 export function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
-    let leadingCard = getCardByName(leadingPlay.cardName);
-    let responseCard = getCardByName(respondingPlay.cardName);
+    const leadingCard = getCardByName(leadingPlay.cardName);
+    const responseCard = getCardByName(respondingPlay.cardName);
 
-    let leadTrump, respTrump;
+    let leadTrump;
+    let respTrump;
     let winner;
 
     // check if leading and response cards are trumps
@@ -94,10 +95,10 @@ export function calculateTrickWinner(trumpSuit, leadingPlay, respondingPlay){
  */
 export function calculateTrickPoints(leadingPlay, respondingPlay){
 
-    let leadingCard = getCardByName(leadingPlay.cardName);
-    let responseCard = getCardByName(respondingPlay.cardName);
+    const leadingCard = getCardByName(leadingPlay.cardName);
+    const responseCard = getCardByName(respondingPlay.cardName);
 
-    let points = leadingCard.points + responseCard.points;
+    const points = leadingCard.points + responseCard.points;
 
     return points;
 }
@@ -215,19 +216,19 @@ export function calculateValidRespondingCards(leadingCard, cardsInRespondingHand
     let validRespondingCards = [];
 
     // responding player has same suit card in hand
-    let hasSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit);
+    const hasSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit);
     // cards of same suit in player's hand
-    let sameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit);
+    const sameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit);
 
     // responding player has stronger same suit card in hand
-    let hasStrongerSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    const hasStrongerSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
     // stronger cards of same suit in player's hand
-    let strongerSameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    const strongerSameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
 
     // responding player has trump in hand
-    let hasTrump = cardsInRespondingHand.some(c => c.suit === trumpSuit);
+    const hasTrump = cardsInRespondingHand.some(c => c.suit === trumpSuit);
     // trump cards in player's hand
-    let trumpCards = cardsInRespondingHand.filter(c => c.suit === trumpSuit);
+    const trumpCards = cardsInRespondingHand.filter(c => c.suit === trumpSuit);
 
     if(isDeckClosed || deckLength === 0){
         if(hasSameSuit){

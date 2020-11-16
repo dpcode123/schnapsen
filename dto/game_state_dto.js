@@ -3,7 +3,7 @@ import { otherPlayer } from '../utils/util.js';
 export default function(game, player) {
     
     let isThisPlayerOnTurn = false;
-    let opponentWonCardsFirstTrick = [];
+    const opponentWonCardsFirstTrick = [];
 
     // lead card player (on table)
     let leadCardOnTable = null;
@@ -20,7 +20,7 @@ export default function(game, player) {
     opponentWonCardsFirstTrick[1] = game.wonCards[otherPlayer(player)][1];
 
     // total number of won cards by opponent
-    let opponentTotalWonCardsNumber = game.wonCards[otherPlayer(player)].length;
+    const opponentTotalWonCardsNumber = game.wonCards[otherPlayer(player)].length;
 
     const dto = {
         num: game.num,

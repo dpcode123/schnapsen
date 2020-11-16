@@ -82,7 +82,7 @@ function updatePlayerWonOtherTricks(cards){
         putCardInElement(wonCardsAllTricksDisplayed[i], cards[i]);
     }
     
-    let lengthWithoutFirstTrick = cards.length - 2;
+    const lengthWithoutFirstTrick = cards.length - 2;
 
     // not toggled show all
     for(let i=0; i<lengthWithoutFirstTrick; i++){
@@ -100,7 +100,7 @@ function updateOpponentWonFirstTrick(cards){
 // Updates cards in tricks won by OPPONENT - other tricks
 function updateOpponentWonOtherTricks(totalNumberOfWonCards){
     // remove first 2 cards(1st trick)
-    let num = totalNumberOfWonCards - 2;
+    const num = totalNumberOfWonCards - 2;
         
     for(let i=0; i<num; i++){
         showElement(opponentWonCardsOtherTricksCardbacks[i]);
@@ -486,11 +486,6 @@ function updateClientGameScreen() {
 
 }
 
-
-
-
-
-
 // show all won tricks
 function toggleShowAllTricks() {
 
@@ -504,7 +499,6 @@ function toggleShowAllTricks() {
     }
 
     showAllWonTricks = true;
-    
     
 }
 
@@ -591,7 +585,7 @@ function throwCardOnTheTable(cardName){
  * @returns {number} position 0-4 
  */
 function getCardPositionInHandByName(cardName, playerHand){
-    let position = playerHand.findIndex(object => object.name === cardName);
+    const position = playerHand.findIndex(object => object.name === cardName);
     return position;
 }
 
@@ -601,13 +595,13 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
     // for each card in hand array, check if it's in valid responses array
     // if it is not, disable that card
     cardsInHand.forEach(cardInHand => {
-        let cardAvailable = validRespondingCards.some(responseCard => responseCard.name === cardInHand.name);
+        const cardAvailable = validRespondingCards.some(responseCard => responseCard.name === cardInHand.name);
         
         if(cardAvailable) {
             // card is valid; do nothing
         }
         else{
-            let cardIndex = getCardPositionInHandByName(cardInHand.name, cardsInHand);
+            const cardIndex = getCardPositionInHandByName(cardInHand.name, cardsInHand);
             showElement(forbiddenCardOverlay[cardIndex]);
         }
     });
@@ -650,10 +644,10 @@ trumpCard.addEventListener('click', function () {moveCloseDeck();}, false);
 
 
 // modal
-let modal = document.querySelector('.modal');
-let modalCloseButton = document.querySelector('.modal-close-button');
-let modalExitGameButton = document.getElementById('modal-exit-game-btn');
-let modalContinueGameButton = document.getElementById('modal-continue-game-btn');
+const modal = document.querySelector('.modal');
+const modalCloseButton = document.querySelector('.modal-close-button');
+const modalExitGameButton = document.getElementById('modal-exit-game-btn');
+const modalContinueGameButton = document.getElementById('modal-continue-game-btn');
 
 exitButton.addEventListener('click', toggleModal);
 exitButton.style.cursor = 'grab';
