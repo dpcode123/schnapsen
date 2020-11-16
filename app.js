@@ -49,7 +49,12 @@ app.use(session({
     secret: process.env.SESSION_SECRET, 
     resave: false, 
     saveUninitialized: false,
-    cookie: { sameSite: 'strict' }
+    cookie: { 
+        sameSite: 'strict', 
+        //secure: true, // only send cookie over https
+        httpOnly: true,
+        maxAge: 60000*60*24 // cookie expiry length in ms
+     }
 }));
 
 app.use(express.urlencoded({ extended: false }));

@@ -650,7 +650,7 @@ const modalExitGameButton = document.getElementById('modal-exit-game-btn');
 const modalContinueGameButton = document.getElementById('modal-continue-game-btn');
 
 exitButton.addEventListener('click', toggleModal);
-exitButton.style.cursor = 'grab';
+exitButton.style.cursor = 'pointer';
 
 modalCloseButton.addEventListener('click', toggleModal);
 window.addEventListener('click', windowOnClick);
