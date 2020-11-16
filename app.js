@@ -23,8 +23,8 @@ import roomRouter from './routers/RoomRouter.js';
 import loginRouter from './routers/LoginRouter.js';
 import registerRouter from './routers/RegisterRouter.js';
 import mainRouter from './routers/MainRouter.js';
-
-
+/** */
+console.log('222');
 // Play sessions map
 const playSessions = new Map();
 
