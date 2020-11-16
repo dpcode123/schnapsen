@@ -19,10 +19,10 @@ const server = http.createServer(app);
 
 const io = socketio(server);
 
-import roomRouter from './routers/room_router.js';
-import loginRouter from './routers/login_router.js';
-import registerRouter from './routers/register_router.js';
-import mainRouter from './routers/main_router.js';
+import roomRouter from './routers/RoomRouter.js';
+import loginRouter from './routers/LoginRouter.js';
+import registerRouter from './routers/RegisterRouter.js';
+import mainRouter from './routers/MainRouter.js';
 
 
 // Play sessions map
@@ -31,7 +31,7 @@ const playSessions = new Map();
 import initializePassport from './auth/passport_config.js';
 initializePassport(passport);
 
-import SocketioController from './controllers/socketio_controller.js';
+import SocketioController from './controllers/SocketioController.js';
 
 // View engine
 app.set('view engine', 'ejs');
