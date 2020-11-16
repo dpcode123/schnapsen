@@ -31,7 +31,7 @@ CARDS.push(new Card('A', 'tref', 11, 'a-tref'));
 
 
 // Gets all 20 cards
-export function getAllCards(){
+export function getAllCards() {
     return CARDS;
 }
 

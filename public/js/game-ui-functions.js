@@ -253,13 +253,13 @@ function updatePoints(points){
 }
 
 // Update player's and opponent's game points (0->7+)
-function updatePlayerAndOpponentGamePoints(){
+function updatePlayerAndOpponentGamePoints() {
     textPlayerGamePoints.textContent = bummerl.gamePointsPlayer;
     textOpponentGamePoints.textContent = bummerl.gamePointsOpponent;
 }
 
 // update player's and opponent's bummerl dots ●
-function updatePlayerAndOpponentBummerlDots(){
+function updatePlayerAndOpponentBummerlDots() {
 
     // clear
     textBummerlsLostPlayer.textContent = '';
@@ -354,11 +354,11 @@ function buttonHoverOut(button){
     }    
 }
 
-function setupGameScreenWaiting(){
+function setupGameScreenWaiting() {
     showElement(textAlert);
 }
 
-function cleanupGameScreen(){
+function cleanupGameScreen() {
     hideElement(textAlert);
     hideElement(textRoomId);
     hideElement(cardPlayedByPlayer);
@@ -374,7 +374,7 @@ function cleanupGameScreen(){
     hideElements(opponentWonCardsOtherTricksCardbacks);
 }
 
-function setupGameScreenStarted(){
+function setupGameScreenStarted() {
     cleanupGameScreen();
 
     showElements(cardsInHand);
@@ -397,7 +397,7 @@ function refreshPlayerOnTurnIndicator(isPlayerOnTurn) {
 }
 
 
-function updateClientGameScreen(){
+function updateClientGameScreen() {
 
     if(game.deckClosed) {
         // put trump card on top of deck

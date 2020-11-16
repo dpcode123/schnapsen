@@ -85,7 +85,7 @@ export default class Game {
         */
 
         // Sets trump(adut) card and suit
-        this.setTrumpCardAndSuit = function (){
+        this.setTrumpCardAndSuit = function () {
 
             // get random card from deck
             let randcard = randomCard(this.deck);
@@ -257,12 +257,12 @@ export default class Game {
 
 
         // Changes player on turn, 0 <-> 1
-        this.changePlayerOnTurn = function (){
+        this.changePlayerOnTurn = function () {
             this.playerOnTurn = otherPlayer(this.playerOnTurn);
         }
 
         // Increases move number
-        this.increaseMoveNumber = function (){
+        this.increaseMoveNumber = function () {
             this.moveNum = this.moveNum + 1;
         }
 

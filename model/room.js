@@ -36,7 +36,7 @@ export default class PlayRoom {
 
 
         // Starts new bummerl (and new game)
-        this.startBummerl = function (){
+        this.startBummerl = function () {
 
             // new bummerl number
             // if current bummerl doesnt exist, next bummerl is no.1

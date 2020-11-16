@@ -1,20 +1,22 @@
 import path from 'path';
-const __dirname = path.resolve();
 import http from 'http';
 import express from 'express';
 import session from 'express-session';
-
-
 import redis from 'redis';
 import connectRedis from 'connect-redis';
+import socketio from 'socket.io';
+import passport from 'passport';
+import flash from 'express-flash';
 
 const RedisStore = connectRedis(session);
-
-const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+const redisClient = redis.createClient(
+    process.env.REDIS_URL, 
+    {no_ready_check: true}
+);
 
 const app = express();
 const server = http.createServer(app);
-import socketio from 'socket.io';
+
 const io = socketio(server);
 
 import roomRouter from './routers/room_router.js';
@@ -22,13 +24,6 @@ import loginRouter from './routers/login_router.js';
 import registerRouter from './routers/register_router.js';
 import mainRouter from './routers/main_router.js';
 
-
-import passport from 'passport';
-import flash from 'express-flash';
-
-
-console.log("AAAasfasf");
-console.log(process.env.DB_PG_DATABASE);
 
 // Play sessions map
 const playSessions = new Map();
@@ -45,6 +40,7 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 
 // Static folder
+const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session
