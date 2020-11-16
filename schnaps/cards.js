@@ -1,4 +1,4 @@
-import Card from '../model/card.js';
+import Card from '../model/Card.js';
 const CARDS = [];
 
 // Herc
