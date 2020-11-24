@@ -1,8 +1,24 @@
 /**
+ * Client
+ */
+class GameClient {
+    constructor(username, userId, room, socketJwt) {
+        // constant properties
+        this.username = username;
+        this.userId = userId;
+        this.room = room;
+        this.socketJwt = socketJwt;
+        // mutable properties
+        this.canMakeMove = true;
+    }
+}
+
+
+/**
  * Play session (CLIENT SIDE)
  */
 class PlaySession {
-    constructor(playSessionDTO){
+    constructor(playSessionDTO) {
         this.room = playSessionDTO.room;
         this.status = playSessionDTO.status;
         this.playerName = playSessionDTO.playerName;
@@ -17,7 +33,7 @@ class PlaySession {
  * Bummerl (CLIENT SIDE)
  */
 class Bummerl {
-    constructor(bummerlDTO){
+    constructor(bummerlDTO) {
         this.num = bummerlDTO.num;
         this.status = bummerlDTO.status;
         this.gamePointsPlayer = bummerlDTO.gamePointsPlayer;
@@ -30,7 +46,7 @@ class Bummerl {
  * Game (CLIENT SIDE)
  */
 class Game {
-    constructor(gameStateDTO){
+    constructor(gameStateDTO) {
 
         // game number in bummerl (1...13)
         this.num = gameStateDTO.num;
@@ -53,7 +69,7 @@ class Game {
         // Lead(true) or Response(false)
         this.leadOrResponse = gameStateDTO.leadOrResponse;
 
-        // Lead card played (if current state is response, else null)
+        // Lead card played (if current state is response, otherwise null)
         this.leadCardOnTable = gameStateDTO.leadCardOnTable;
 
         // deck closed or out of cards
@@ -66,7 +82,7 @@ class Game {
         this.cardsInHand = gameStateDTO.cardsInHand;
 
         // is this player on turn or not
-        this.thisPlayerOnTurn = gameStateDTO.thisPlayerOnTurn;
+        this.isThisPlayerOnTurn = gameStateDTO.isThisPlayerOnTurn;
 
         // number of cards left in deck
         this.deckSize = gameStateDTO.deckSize;
@@ -89,7 +105,7 @@ class Game {
 /**
  * PlayerMove (CLIENT SIDE)
  * @param {string} roomId - unique game id (room id)
- * @param {number} userId - user id
+ * @param {number} userId - user id (from db)
  * @param {string} socketId - socket.io id
  * @param {number} moveNum - total move number in game, for both players (0,1,2...n)
  * @param {string} moveType - card, exchangeTrumpCard, closeDeck, foldHand
@@ -98,7 +114,7 @@ class Game {
  * @param {string} cardName - card played(card name: 'a-karo','j-pik') - only for moveType 'playCard'
  * */
 class PlayerMove {
-    constructor(roomId, userId, socketId, moveNum, moveType, trickNum, leadOrResponse, cardName){
+    constructor(roomId, userId, socketId, moveNum, moveType, trickNum, leadOrResponse, cardName) {
         this.roomId = roomId;
         this.userId = userId;
         this.socketId = socketId;

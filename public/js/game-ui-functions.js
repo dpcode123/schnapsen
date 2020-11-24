@@ -8,63 +8,61 @@
 // ********************************************************************************
 
 // Puts card in element
-function putCardInElement(cardElement, cardName){
+function putCardInElement(cardElement, cardName) {
     cardElement.setAttributeNS(null, 'data-card', cardName);
     cardElement.setAttributeNS(null, 'fill', `url(#${cardName})`);
 }
 
 // Removes card from element
-function removeCardFromElement(cardElement){
+function removeCardFromElement(cardElement) {
     cardElement.setAttributeNS(null, 'data-card', 'none');
     cardElement.setAttributeNS(null, 'fill', 'none');
 }
 
 // Updates all cards in player's hand
-function updateAllCardsInHand(cards){
+function updateAllCardsInHand(cards) {
     // remove all cards
-    for(let i = 0; i < 5; i++){
+    for(let i = 0; i < 5; i++) {
         removeCardFromElement(cardsInHand[i]);
     }
     // put cards in places
-    for(let i = 0; i < cards.length; i++){
+    for(let i = 0; i < cards.length; i++) {
         putCardInElement(cardsInHand[i], cards[i].name);
     }
 }
 
 // Updates all cards in opponent's hand
-function updateOpponentCards(numberOfCardsInHand){
+function updateOpponentCards(numberOfCardsInHand) {
     // hide all cards(5)
     hideElements(opponentCardsInHand);
 
     // display all cards(max 5)
-    for(let i = 0; i < numberOfCardsInHand; i++){
+    for(let i = 0; i < numberOfCardsInHand; i++) {
         showElement(opponentCardsInHand[i]);
     }
 }
 
 // Updates cards in tricks won by player
-function updatePlayerTricks(cards){
-    if(cards.length === 2){
+function updatePlayerTricks(cards) {
+    if(cards.length === 2) {
         updatePlayerWonFirstTrick(cards);
-    }
-    else if(cards.length > 2){
+    } else if(cards.length > 2) {
         updatePlayerWonOtherTricks(cards);
     }
 }
 // Updates cards in tricks won by OPPONENT
-function updateOpponentTricks(cardsInFirstTrick, totalNumberOfWonCards){
-    if(totalNumberOfWonCards === 2){
+function updateOpponentTricks(cardsInFirstTrick, totalNumberOfWonCards) {
+    if(totalNumberOfWonCards === 2) {
         updateOpponentWonFirstTrick(cardsInFirstTrick);
-    }
-    else if(totalNumberOfWonCards > 2){
+    } else if(totalNumberOfWonCards > 2) {
         updateOpponentWonOtherTricks(totalNumberOfWonCards);
     }
 }
 
 
 // Updates cards in tricks won by player - 1st trick
-function updatePlayerWonFirstTrick(cards){
-    for(let i=0; i<cards.length; i++){
+function updatePlayerWonFirstTrick(cards) {
+    for(let i=0; i<cards.length; i++) {
         showElement(wonCardsFirstTrick[i]);
 
         // not toggled show all
@@ -75,46 +73,46 @@ function updatePlayerWonFirstTrick(cards){
     }
 }
 // Updates cards in tricks won by player - other tricks
-function updatePlayerWonOtherTricks(cards){
+function updatePlayerWonOtherTricks(cards) {
 
     // toggled show all
-    for(let i=0; i<cards.length; i++){
+    for(let i=0; i<cards.length; i++) {
         putCardInElement(wonCardsAllTricksDisplayed[i], cards[i]);
     }
     
     const lengthWithoutFirstTrick = cards.length - 2;
 
     // not toggled show all
-    for(let i=0; i<lengthWithoutFirstTrick; i++){
+    for(let i=0; i<lengthWithoutFirstTrick; i++) {
         showElement(wonCardsOtherTricksCardbacks[i]);
     }
 }
 
 // Updates cards in tricks won by OPPONENT - 1st trick
-function updateOpponentWonFirstTrick(cards){
-    for(let i=0; i<cards.length; i++){
+function updateOpponentWonFirstTrick(cards) {
+    for(let i=0; i<cards.length; i++) {
         showElement(opponentWonCardsFirstTrick[i]);
         putCardInElement(opponentWonCardsFirstTrick[i], cards[i]);
     }
 }
 // Updates cards in tricks won by OPPONENT - other tricks
-function updateOpponentWonOtherTricks(totalNumberOfWonCards){
+function updateOpponentWonOtherTricks(totalNumberOfWonCards) {
     // remove first 2 cards(1st trick)
     const num = totalNumberOfWonCards - 2;
         
-    for(let i=0; i<num; i++){
+    for(let i=0; i<num; i++) {
         showElement(opponentWonCardsOtherTricksCardbacks[i]);
     }
 }
 
 // Removes(hides) cards from deck stack (when players draw a card)
-function updateCardsStackedInDeck(numberOfCardsInDeck){
-    for(let i = 0; i<9; i++){
-        if(i >= numberOfCardsInDeck){
+function updateCardsStackedInDeck(numberOfCardsInDeck) {
+    for(let i = 0; i<9; i++) {
+        if(i >= numberOfCardsInDeck) {
 
             hideElement(cardsInDeck[i]);
 
-            if(numberOfCardsInDeck === 0){
+            if(numberOfCardsInDeck === 0) {
                 hideElement(trumpCard);
             }
         }
@@ -130,10 +128,10 @@ function updateCardsStackedInDeck(numberOfCardsInDeck){
  * @param {*} playerHand - cards in player's hand
  * @param {*} marriages - marriages in player's hand
  */
-function updateMarriageIndicators(playerHand, marriages){
+function updateMarriageIndicators(playerHand, marriages) {
 
     // Clear display positions
-    for(let i=0; i<4; i++){
+    for(let i=0; i<4; i++) {
         marriagesIndicator[i].textContent = '';
     }
 
@@ -243,11 +241,11 @@ function updateMarriageIndicators(playerHand, marriages){
 
 
 // Updates player's points (0->66+)
-function updatePoints(points){
+function updatePoints(points) {
     // update
     textPoints.textContent = points;
     // display
-    if(points > 0){
+    if(points > 0) {
         showElement(textPoints);
     }
 }
@@ -266,34 +264,32 @@ function updatePlayerAndOpponentBummerlDots() {
     textBummerlsLostOpponent.textContent = '';
 
     // player
-    for(let i = 0; i < playSession.bummerlsLostPlayer; i++){
+    for(let i = 0; i < playSession.bummerlsLostPlayer; i++) {
         textBummerlsLostPlayer.textContent += '●';
     }
     // opponent
-    for(let i = 0; i < playSession.bummerlsLostOpponent; i++){
+    for(let i = 0; i < playSession.bummerlsLostOpponent; i++) {
         textBummerlsLostOpponent.textContent += '●';
     }
 }
 
 // Sets the indicator(background color) - that shows if player is on turn or not
-function setPlayerOnTurnIndicator(isPlayerOnTurn){
-    if(isPlayerOnTurn){
+function setPlayerOnTurnIndicator(isPlayerOnTurn) {
+    if(isPlayerOnTurn) {
         playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
-    }
-    else{
+    } else {
         playerOnTurnIndicator.setAttributeNS(null, 'fill', 'gray');
     }
 }
 
 // Sets the cards opacity - that shows if player is on turn or not
-function setPlayerOnTurnCardsOpacity(isPlayerOnTurn){
-    if(isPlayerOnTurn){
+function setPlayerOnTurnCardsOpacity(isPlayerOnTurn) {
+    if(isPlayerOnTurn) {
         cardsInHand.forEach(card => {
             card.style.opacity = 1;
             card.style.cursor = 'default';
         });
-    }
-    else{
+    } else {
         cardsInHand.forEach(card => {
             card.style.opacity = 0.95;
             card.style.cursor = 'default';
@@ -302,24 +298,24 @@ function setPlayerOnTurnCardsOpacity(isPlayerOnTurn){
 }
 
 // Shows one GUI element
-function showElement(element){
+function showElement(element) {
     element.setAttributeNS(null, 'visibility', 'visible');
 }
 
 // Shows an array of GUI elements
-function showElements(elements){
+function showElements(elements) {
     elements.forEach(element => {
         showElement(element);
     });
 }
 
 // Hides one GUI element
-function hideElement(element){
+function hideElement(element) {
     element.setAttributeNS(null, 'visibility', 'hidden');
 }
 
 // Hides an array of GUI element
-function hideElements(elements){
+function hideElements(elements) {
     elements.forEach(element => {
         hideElement(element);
     });
@@ -327,29 +323,29 @@ function hideElements(elements){
 
 
 // card hover functions
-function cardHover(cardPlace){
-    if(game.thisPlayerOnTurn){
+function cardHover(cardPlace) {
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
         cardPlace.style.opacity = 0.9;
         cardPlace.style.cursor = 'grab';
     }    
 }
-function cardHoverOut(cardPlace){
-    if(game.thisPlayerOnTurn){
+function cardHoverOut(cardPlace) {
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
         cardPlace.style.opacity = 1;
         cardPlace.style.cursor = 'default';
     }
 }
 
 // exchange trump card button - hover
-function buttonHover(button){
-    if(game.thisPlayerOnTurn){
+function buttonHover(button) {
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
         button.style.opacity = 1;
         button.style.cursor = 'grab';
     }    
 }
-function buttonHoverOut(button){
-    if(game.thisPlayerOnTurn){
-        button.style.opacity = 0.3;
+function buttonHoverOut(button) {
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+        button.style.opacity = 0.6;
         button.style.cursor = 'default';
     }    
 }
@@ -387,7 +383,7 @@ function setupGameScreenStarted() {
     showElement(textPlayerGamePoints);
     showElement(textOpponentGamePoints);
 
-    refreshPlayerOnTurnIndicator(game.thisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
 }
 
 // player on turn indicator: background color, cards opacity
@@ -406,8 +402,7 @@ function updateClientGameScreen() {
         // put text alert on top
         svg.removeChild(textAlert);
         svg.appendChild(textAlert);
-    }
-    else{
+    } else {
         // put trump card under the deck
         svg.removeChild(trumpCard);
         svg.appendChild(trumpCard);
@@ -422,7 +417,7 @@ function updateClientGameScreen() {
     cleanupGameScreen();
 
     // player on turn indicator: background color, cards opacity
-    refreshPlayerOnTurnIndicator(game.thisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
 
     // cards in player's hand
     updateAllCardsInHand(game.cardsInHand);
@@ -433,7 +428,7 @@ function updateClientGameScreen() {
     showElements(opponentCardsInHand);
     
     // game.trumpCard
-    if(game.trumpCard && game.trumpCard !== 'none'){
+    if(game.trumpCard && game.trumpCard !== 'none') {
         putCardInElement(trumpCard, game.trumpCard.name);
         showElement(trumpCard);
     }
@@ -444,15 +439,12 @@ function updateClientGameScreen() {
     // game.playerPoints
     updatePoints(game.playerPoints);
 
-    // played lead card (current play is response)
-    if(game.leadOrResponse === false){
-        // player is on turn 
-        if(game.thisPlayerOnTurn){
+    // lead card is already played this turn (current play is response)
+    if(game.leadOrResponse === false) {
+        if(game.isThisPlayerOnTurn) {
             putCardInElement(cardPlayedByOpponent, game.leadCardOnTable);
             showElement(cardPlayedByOpponent);
-        }
-        // opponent is on turn
-        else{
+        } else {
             putCardInElement(cardPlayedByPlayer, game.leadCardOnTable);
             showElement(cardPlayedByPlayer);
         }
@@ -480,7 +472,7 @@ function updateClientGameScreen() {
     showElement(textOpponentGamePoints);
 
     // player points (0-66+)
-    if(game.playerPoints > 0){showElement(textPoints);}
+    if(game.playerPoints > 0) {showElement(textPoints);}
 
     updatePlayerAndOpponentBummerlDots();
 
@@ -505,9 +497,7 @@ function toggleShowAllTricks() {
 // hide all won tricks
 function toggleHideAllTricks() {
     
-    if(showAllWonTricks){
-        console.log('toggleHideAllTricks: ' + showAllWonTricks);
-
+    if(showAllWonTricks) {
         hideAllTricks();
 
         delay(500).then(
@@ -519,22 +509,21 @@ function toggleHideAllTricks() {
 }
 
 
-// hide all won tricks
+// Hides all won tricks
 function hideAllTricks() {
 
     // show default tricks display
     if(game.playerWonCards.length === 2) {
         showElements(wonCardsFirstTrick);
-    }
-    else if(game.playerWonCards.length > 2) {
+    } else if(game.playerWonCards.length > 2) {
         showElements(wonCardsFirstTrick);
-        for(let i=0; i<(game.playerWonCards.length-2);i++){
+        for(let i=0; i<(game.playerWonCards.length-2);i++) {
             showElement(wonCardsOtherTricksCardbacks[i]);
         }
     }
+
     // hide all won cards
     hideElements(wonCardsAllTricksDisplayed);
-    
 }
 
 
@@ -542,10 +531,11 @@ function hideAllTricks() {
 function updateExchangeTrumpButton(playerHand, trumpSuit) {
 
     // if on turn and leading play and trump card not jack(already changed)
-    if(game.thisPlayerOnTurn && 
+    if(game.isThisPlayerOnTurn && 
+        gameClient.canMakeMove && 
         game.leadOrResponse && 
         game.trumpCard.tier !== "J" &&
-        game.deckSize > 0){
+        game.deckSize > 0) {
 
             // jack-trump card name
             const jackTrumpCardName = `j-${trumpSuit}`;
@@ -553,7 +543,7 @@ function updateExchangeTrumpButton(playerHand, trumpSuit) {
             // Jack's position in hand (0-4)
             jackPositionInHand = playerHand.findIndex(card => card.name === jackTrumpCardName);
 
-            if(jackPositionInHand !== -1){
+            if(jackPositionInHand !== -1) {
                 exchangeTrumpCardRect.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+32);
                 exchangeTrumpCardRect.setAttributeNS(null, 'y', parseInt((cardsInHand[jackPositionInHand].getAttribute('y')), 10)-30);
                 exchangeTrumpCardText.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+38);
@@ -561,8 +551,7 @@ function updateExchangeTrumpButton(playerHand, trumpSuit) {
                 exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'visible');
             }
         
-    }
-    else{
+    } else {
         exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'hidden');
     }
     
@@ -570,7 +559,7 @@ function updateExchangeTrumpButton(playerHand, trumpSuit) {
 
 
 // player plays a card (throws it in the middle of the table)
-function throwCardOnTheTable(cardName){
+function throwCardOnTheTable(cardName) {
     // update card image
     cardPlayedByPlayer.setAttributeNS(null, 'fill', `url(#${cardName})`);
 
@@ -584,12 +573,12 @@ function throwCardOnTheTable(cardName){
  * @param {*} playerHand 
  * @returns {number} position 0-4 
  */
-function getCardPositionInHandByName(cardName, playerHand){
+function getCardPositionInHandByName(cardName, playerHand) {
     const position = playerHand.findIndex(object => object.name === cardName);
     return position;
 }
 
-
+// Draws overlay over cards that are not allowed for responding play this turn
 function disableForbiddenCards(cardsInHand, validRespondingCards) {
 
     // for each card in hand array, check if it's in valid responses array
@@ -598,9 +587,8 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
         const cardAvailable = validRespondingCards.some(responseCard => responseCard.name === cardInHand.name);
         
         if(cardAvailable) {
-            // card is valid; do nothing
-        }
-        else{
+            // card is allowed for playing; do nothing
+        } else {
             const cardIndex = getCardPositionInHandByName(cardInHand.name, cardsInHand);
             showElement(forbiddenCardOverlay[cardIndex]);
         }
@@ -612,7 +600,7 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
 // ********************************************************************************
 
 // cards
-for(let i = 0; i<5; i++){
+for(let i = 0; i<5; i++) {
     cardsInHand[i].addEventListener('mouseover', function () {cardHover(cardsInHand[i]);}, false);
     cardsInHand[i].addEventListener('mouseout',  function () {cardHoverOut(cardsInHand[i]);}, false);
     cardsInHand[i].addEventListener('click',     function () {movePlayCard(cardsInHand[i]);}, false);

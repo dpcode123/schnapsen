@@ -11,7 +11,7 @@ function updateClientGameState(gameStateDTO) {
     game.deckClosed = gameStateDTO.deckClosed;
     game.playerPoints = gameStateDTO.playerPoints;
     game.cardsInHand = gameStateDTO.cardsInHand;
-    game.thisPlayerOnTurn = gameStateDTO.thisPlayerOnTurn;
+    game.isThisPlayerOnTurn = gameStateDTO.isThisPlayerOnTurn;
     game.deckSize = gameStateDTO.deckSize;
     game.playerWonCards = gameStateDTO.playerWonCards;
     game.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;
@@ -23,10 +23,10 @@ function updateClientGameState(gameStateDTO) {
 // Move - play card
 function movePlayCard(cardPlace) {
 
-    // get card(name) from selected card place
-    const cardName = cardPlace.getAttribute('data-card');
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+        // get card(name) from selected card place
+        const cardName = cardPlace.getAttribute('data-card');
 
-    if(game.thisPlayerOnTurn){
         // empty place in players hand
         emptyPlaceInHand(cardPlace);
 
@@ -34,9 +34,12 @@ function movePlayCard(cardPlace) {
         throwCardOnTheTable(cardName);
         
         // create PlayerMove object
-        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'playCard', 
+        const playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'playCard', 
                                         game.trickNum, game.leadOrResponse, cardName);
         
+        // change client state
+        gameClient.canMakeMove = false;
+
         // send move to server
         sendMove(playerMove);
 
@@ -50,9 +53,9 @@ function movePlayCard(cardPlace) {
 
 // Move - exchange trump card with jack
 function moveExchangeTrump() {
-    if(game.thisPlayerOnTurn){
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
         // create PlayerMove object
-        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'exchangeTrump', 
+        playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'exchangeTrump', 
                                         game.trickNum, game.leadOrResponse, null);
 
         // send move to server
@@ -62,9 +65,9 @@ function moveExchangeTrump() {
 
 // Move - close deck
 function moveCloseDeck() {
-    if(game.thisPlayerOnTurn && !game.deckClosed && game.deckSize > 0){
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove && !game.deckClosed && game.deckSize > 0) {
         // create PlayerMove object
-        playerMove = new PlayerMove(room, userId, socket.id, game.moveNum, 'closeDeck', 
+        playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'closeDeck', 
                                         game.trickNum, game.leadOrResponse, null);
 
         // send move to server
@@ -80,5 +83,6 @@ function emptyPlaceInHand(cardPlace) {
 
 // sends player move to server
 function sendMove(playerMove) {
+    const socketJwt = gameClient.socketJwt;
     socket.emit('clientMove', {socketJwt, playerMove});
 }

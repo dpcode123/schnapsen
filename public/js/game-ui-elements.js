@@ -191,7 +191,7 @@ playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
 playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 0.2);
 
 // Player cards
-for(let i=0; i<5; i++){
+for(let i=0; i<5; i++) {
     cardsInHand[i] = document.createElementNS(XMLNS, 'rect');
     cardsInHand[i].setAttributeNS(null, 'x', CARD_WIDTH*i);
     cardsInHand[i].setAttributeNS(null, 'y', PLAYER_CARDS_Y_POSITION);
@@ -207,7 +207,7 @@ for(let i=0; i<5; i++){
 }
 
 // Opponent cards
-for(let i=0; i<5; i++){
+for(let i=0; i<5; i++) {
     opponentCardsInHand[i] = document.createElementNS(XMLNS, 'rect');
     opponentCardsInHand[i].setAttributeNS(null, 'x', CARD_WIDTH*i);
     opponentCardsInHand[i].setAttributeNS(null, 'y', OPPONENT_CARDS_Y_POSITION);
@@ -258,7 +258,7 @@ uiMarriagePointsCalledOnCurrentMoveByOpponent = document.createElementNS(XMLNS, 
 uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'x', 290);
 uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'y', 300);
 uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'font-size', '36px');
-uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'fill', MARRIAGES_FONT_COLOR);
+uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'fill', 'blue');
 uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
 uiMarriagePointsCalledOnCurrentMoveByOpponent.textContent = '';
 
@@ -278,7 +278,7 @@ trumpCard.setAttributeNS(null, 'transform', 'rotate(270)');
 trumpCard.setAttributeNS(null, 'visibility', 'hidden');
 
 // Deck
-for(let i = 0; i<9; i++){
+for(let i = 0; i<9; i++) {
     cardsInDeck[i] = document.createElementNS(XMLNS, 'rect');
     cardsInDeck[i].setAttributeNS(null, 'x', DECK_CARDS_X_POSITION+(i*5));
     cardsInDeck[i].setAttributeNS(null, 'y', DECK_CARDS_Y_POSITION);
@@ -323,7 +323,7 @@ wonCardsFirstTrick[1].setAttributeNS(null, 'transform', 'rotate(-15)');
 wonCardsFirstTrick[1].setAttributeNS(null, 'visibility', 'hidden');
 
 // Won cards - other tricks - hidden - PLAYER
-for(let i=0; i<14; i++){
+for(let i=0; i<14; i++) {
     wonCardsOtherTricksCardbacks[i] = document.createElementNS(XMLNS, 'rect');
     wonCardsOtherTricksCardbacks[i].setAttributeNS(null, 'x', PLAYER_WON_TRICK_CARDS_HIDDEN_X_POSITION+(i*5));
     wonCardsOtherTricksCardbacks[i].setAttributeNS(null, 'y', PLAYER_WON_TRICK_CARDS_HIDDEN_Y_POSITION);
@@ -340,7 +340,7 @@ for(let i=0; i<14; i++){
 }
 
 // Won cards - all tricks (when SHOW ALL is toggled) - PLAYER - 1st row
-for(let i=0;i<5;i++){
+for(let i=0;i<5;i++) {
     wonCardsAllTricksDisplayed[i] = document.createElementNS(XMLNS, 'rect');
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'x', 750+(i*60));
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'y', + PLAYER_WON_TRICK_CARDS_SHOW_ALL_Y_POSITION);
@@ -355,7 +355,7 @@ for(let i=0;i<5;i++){
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'visibility', 'hidden');
 }
 // Won cards - all tricks (when SHOW ALL is toggled) - PLAYER - 2nd row
-for(let i=5;i<10;i++){
+for(let i=5;i<10;i++) {
     wonCardsAllTricksDisplayed[i] = document.createElementNS(XMLNS, 'rect');
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'x', 450+(i*60));
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'y', + PLAYER_WON_TRICK_CARDS_SHOW_ALL_Y_POSITION+100);
@@ -370,7 +370,7 @@ for(let i=5;i<10;i++){
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'visibility', 'hidden');
 }
 // Won cards - all tricks (when SHOW ALL is toggled) - PLAYER - 3rd row
-for(let i=10;i<16;i++){
+for(let i=10;i<16;i++) {
     wonCardsAllTricksDisplayed[i] = document.createElementNS(XMLNS, 'rect');
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'x', 150+(i*60));
     wonCardsAllTricksDisplayed[i].setAttributeNS(null, 'y', + PLAYER_WON_TRICK_CARDS_SHOW_ALL_Y_POSITION+200);
@@ -415,7 +415,7 @@ opponentWonCardsFirstTrick[1].setAttributeNS(null, 'transform', 'rotate(195)');
 opponentWonCardsFirstTrick[1].setAttributeNS(null, 'visibility', 'hidden');
 
 // Won cards - other tricks - hidden - OPPONENT
-for(let i=0; i<14; i++){
+for(let i=0; i<14; i++) {
     opponentWonCardsOtherTricksCardbacks[i] = document.createElementNS(XMLNS, 'rect');
     opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, 'x', OPPONENT_WON_TRICK_CARDS_HIDDEN_X_POSITION-(i*5));
     opponentWonCardsOtherTricksCardbacks[i].setAttributeNS(null, 'y', OPPONENT_WON_TRICK_CARDS_HIDDEN_Y_POSITION);
@@ -512,7 +512,7 @@ textBummerlsLostOpponent.textContent = '';
 
 // marriages(zvanja) - 20/40 - Positions 0,1,2,3
 // 0 - between 1st and 2nd card, 1 between 2nd and 3rd card...
-for(let i=0; i<4; i++){
+for(let i=0; i<4; i++) {
     marriagesIndicator[i] = document.createElementNS(XMLNS, 'text');
     marriagesIndicator[i].setAttributeNS(null, 'x', MARRIAGES_0_X_POSITION + (MARRIAGES_X_DISTANCE_TO_NEXT * i));
     marriagesIndicator[i].setAttributeNS(null, 'y', MARRIAGES_Y_POSITION);
@@ -522,7 +522,7 @@ for(let i=0; i<4; i++){
 }
 
 // unavailable(forbidden) cards - red overlay
-for(let i=0; i<5; i++){
+for(let i=0; i<5; i++) {
     forbiddenCardOverlay[i] = document.createElementNS(XMLNS, 'rect');
     forbiddenCardOverlay[i].setAttributeNS(null, 'x', cardsInHand[i].getAttribute('x'));
     forbiddenCardOverlay[i].setAttributeNS(null, 'y', cardsInHand[i].getAttribute('y'));
@@ -561,7 +561,7 @@ exchangeTrumpCardText.textContent = '<->';
 
 // change trump card button - group with rect and text elements
 exchangeTrumpCardButton = document.createElementNS(XMLNS, 'g');
-exchangeTrumpCardButton.setAttributeNS(null, 'opacity', 0.3);
+exchangeTrumpCardButton.setAttributeNS(null, 'opacity', 0.6);
 exchangeTrumpCardButton.setAttributeNS(null, 'visibility', 'hidden');
 
 // append to group

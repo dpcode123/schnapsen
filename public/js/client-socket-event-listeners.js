@@ -4,7 +4,6 @@
  * - bummerl
  * - game
  * - move
- * 
  */
 // ***************************************************************************
 
@@ -17,7 +16,7 @@ socket.on('sessionStarting', gameRoomId => {
 
 // Session state update
 socket.on('sessionStateUpdate', playSessionDTO => {
-    if(playSessionDTO.status === 'started'){
+    if(playSessionDTO.status === 'started') {
         playSession = new PlaySession(playSessionDTO);
         textPlayerName.textContent = playSession.playerName;
         textOpponentName.textContent = playSession.opponentName;
@@ -33,10 +32,13 @@ socket.on('sessionEnd', s => {
 
 // Bummerl start
 socket.on('bummerlStart', bummerlDTO => {
+    console.log('BUMMERL DTO:');
+    console.log(bummerlDTO);
     bummerl = new Bummerl(bummerlDTO);
     setupGameScreenWaiting();
     updatePlayerAndOpponentGamePoints();
     updatePlayerAndOpponentBummerlDots();
+    gameClient.canMakeMove = true;
 });
 
 // Bummerl state update
@@ -44,6 +46,7 @@ socket.on('bummerlStateUpdate', bummerlDTO => {
     bummerl = new Bummerl(bummerlDTO);
     updatePlayerAndOpponentGamePoints();
     updatePlayerAndOpponentBummerlDots();
+    gameClient.canMakeMove = true;
 });
 
 
@@ -52,9 +55,10 @@ socket.on('gameStateUpdate', gameStateDTO => {
     updateClientGameState(gameStateDTO);
     updatePoints(game.playerPoints);
 
-    refreshPlayerOnTurnIndicator(game.thisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
     updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
     updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+    gameClient.canMakeMove = true;
 });
 
 // Game state update - after trick
@@ -64,7 +68,7 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
 
     delay(1200).then(
         () => {
-            refreshPlayerOnTurnIndicator(game.thisPlayerOnTurn);
+            refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
             updatePoints(game.playerPoints);
             hideElement(cardPlayedByPlayer);
             hideElement(cardPlayedByOpponent);
@@ -77,6 +81,7 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
             hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+            gameClient.canMakeMove = true;
         }
     );
 });
@@ -99,6 +104,7 @@ socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
             hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            gameClient.canMakeMove = true;
         }
     );
 });
@@ -107,17 +113,17 @@ socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
 socket.on('gameStateUpdateAfterClosingDeck', gameStateDTO => {
     updateClientGameState(gameStateDTO);
     updateClientGameScreen();
+    gameClient.canMakeMove = true;
 });
 
 // Game over
 socket.on('gameOverDTO', gameOverDTO => {
     // add game points
-    if(gameOverDTO.isWinner){
+    if(gameOverDTO.isWinner) {
         bummerl.gamePointsPlayer += gameOverDTO.gamePoints;
         textAlert.textContent = `You won! ( ${gameOverDTO.gamePoints} )`;
         updatePoints(gameOverDTO.playerPointsAtEndOfGame);
-    }
-    else{
+    } else {
         bummerl.gamePointsOpponent += gameOverDTO.gamePoints;
         textAlert.textContent = `You lost! ( ${gameOverDTO.gamePoints} )`;
     }
@@ -131,7 +137,7 @@ socket.on('gameStart', gameStateDTO => {
     game = new Game(gameStateDTO);
 
     let delay_ms = 100;
-    if(game.num>1){delay_ms = 2500;}
+    if(game.num>1) {delay_ms = 2500;}
 
     delay(delay_ms).then(
         () => {
@@ -148,6 +154,7 @@ socket.on('gameStart', gameStateDTO => {
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
             hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            gameClient.canMakeMove = true;
         }
     );
     
@@ -155,12 +162,13 @@ socket.on('gameStart', gameStateDTO => {
 });
 
 
-// Player's move confirmation/validation from server
+/* // Player's move confirmation/validation from server
 socket.on('moveValid', isMoveValid => {
-});
+}); */
 
 // Player's move ERROR from server
-socket.on('moveInvalidError', moveInvalidError => {
+socket.on('moveInvalidError', errorMsg => {
+    console.log(errorMsg);
 });
 
 
@@ -171,20 +179,21 @@ socket.on('opponentMove', opponentMoveDTO => {
     hideElement(opponentCardsInHand[getRandomInt(5)]);
 
     // display marriage points called by opponent
-    if(opponentMoveDTO.marriagePoints > 0){
+    if(opponentMoveDTO.marriagePoints > 0) {
         uiMarriagePointsCalledOnCurrentMoveByOpponent.textContent = opponentMoveDTO.marriagePoints;
-        //uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'visible');
         showElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
     }
-    //else{uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');}
 
     // throw card on the table 
     putCardInElement(cardPlayedByOpponent, opponentMoveDTO.cardName);
     showElement(cardPlayedByOpponent);
 
     // disable/overlay unavailable(forbidden) response cards
-    if(opponentMoveDTO.validRespondingCards !== 'all'){
+    if(opponentMoveDTO.validRespondingCards !== 'all') {
         disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
     }
+
+    // player can make a move
+    gameClient.canMakeMove = true;
     
 });
