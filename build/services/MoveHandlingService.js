@@ -12,7 +12,7 @@ export default class MoveHandlingService {
         // Handle move - exchange trump
         this.exchangeTrump = (move, playerIndex, playRoom) => {
             try {
-                const isMoveValid = this.moveValidationService.closeDeck(move, playRoom);
+                const isMoveValid = this.moveValidationService.exchangeTrump(move, playRoom);
                 if (isMoveValid) {
                     // jack-trump card name
                     const jackTrumpCardName = `j-${playRoom.game.trumpSuit}`;

@@ -18,7 +18,8 @@ export default class GameSessionService {
             if (playRoom) {
                 const playerIndex: number | undefined = getPlayerIndexInRoomBySocketId(playRoom, socketId);
 
-                if (playerIndex){
+                if (playerIndex !== undefined){
+
                     // change player's socketId to 'disconnected'
                     playRoom.players[playerIndex]!.socketId = 'disconnected';
 

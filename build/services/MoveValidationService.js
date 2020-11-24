@@ -3,7 +3,9 @@ export default class MoveValidationService {
         // Validate move - exchange trump
         this.exchangeTrump = (move, playRoom) => {
             if (playRoom.game.moveBuffer.state === 'waitingForMove') {
-                return true;
+                if (playRoom.game.deck.length > 0) {
+                    return true;
+                }
             }
             return false;
         };

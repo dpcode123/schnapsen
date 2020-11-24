@@ -8,7 +8,7 @@ export default class GameSessionService {
                 const playRoom = roomService.getRoomByPlayersSocketId(socketId);
                 if (playRoom) {
                     const playerIndex = getPlayerIndexInRoomBySocketId(playRoom, socketId);
-                    if (playerIndex) {
+                    if (playerIndex !== undefined) {
                         // change player's socketId to 'disconnected'
                         playRoom.players[playerIndex].socketId = 'disconnected';
                         const io1 = this.io;

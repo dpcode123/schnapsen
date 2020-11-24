@@ -34,7 +34,7 @@ export default class MoveHandlingService {
     // Handle move - exchange trump
     exchangeTrump = (move: PlayerMove, playerIndex: number, playRoom: PlayRoom): void => {
         try {
-            const isMoveValid: boolean = this.moveValidationService.closeDeck(move, playRoom);
+            const isMoveValid: boolean = this.moveValidationService.exchangeTrump(move, playRoom);
 
             if (isMoveValid) {
                 // jack-trump card name

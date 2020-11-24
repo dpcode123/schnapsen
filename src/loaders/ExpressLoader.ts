@@ -17,18 +17,20 @@ export default class ExpressLoader {
 
     app: express.Application;
     server: http.Server;
-    RedisStore: connectRedis.RedisStore;
     redisClient: redis.RedisClient;
-
+    RedisStore: connectRedis.RedisStore;
+    redisStore: session.Store;
+    
     constructor() {
         this.app = express();
         this.server = http.createServer(this.app);
 
-        this.RedisStore = connectRedis(session);
         this.redisClient = redis.createClient(
             process.env.REDIS_URL!, 
             {no_ready_check: true}
         );
+        this.RedisStore = connectRedis(session);
+        this.redisStore = new this.RedisStore({client: this.redisClient});
 
         initializePassport(passport);
             
@@ -44,7 +46,7 @@ export default class ExpressLoader {
 
         // Session
         this.app.use(session({
-            store: new this.RedisStore({client: this.redisClient}),
+            store: this.redisStore,
             secret: process.env.SESSION_SECRET!, 
             resave: false, 
             saveUninitialized: false,
