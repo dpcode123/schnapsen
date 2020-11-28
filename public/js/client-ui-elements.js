@@ -60,8 +60,13 @@ const MARRIAGES_FONT_COLOR = '#52514e';
 // player name; game points(0-7)
 const PLAYER_NAME_AND_POINTS_FONT_SIZE = '28px';
 
-// card images folder
-const CARD_IMG_FOLDER = '../img/schnaps-custom';
+// card designs
+const PREFERRED_CARD_FACE = 1;
+const PREFERRED_CARD_BACK = 1;
+
+// card image folders
+const CARD_FACE_IMG_FOLDER = `../img/cards/face/${PREFERRED_CARD_FACE}`;
+const CARD_BACK_IMG_FOLDER = `../img/cards/back/${PREFERRED_CARD_BACK}`;
 
 
 // CARD PATTERNS
@@ -80,12 +85,14 @@ cardSuits.forEach(suit => {
         cardPatterns.push(tier + '-' + suit);
     });  
 });
+
 // add cardback pattern name to array
-cardPatterns.push('cardback');
+//cardPatterns.push('cardback');
 
 // card pattern - defs
 const defs = document.getElementById('defs');
 
+// patterns - card face
 cardPatterns.forEach(card => {
     const pattern = document.createElementNS(XMLNS, 'pattern');
     const image = document.createElementNS(XMLNS, 'image');
@@ -95,7 +102,7 @@ cardPatterns.forEach(card => {
     pattern.setAttributeNS(null, 'width', 1);
     pattern.setAttributeNS(null, 'height', 1);
 
-    image.setAttributeNS(null, 'href', `${CARD_IMG_FOLDER}/${card}.png`);
+    image.setAttributeNS(null, 'href', `${CARD_FACE_IMG_FOLDER}/${card}.png`);
     image.setAttributeNS(null, 'x', 0);
     image.setAttributeNS(null, 'y', 0);
     image.setAttributeNS(null, 'width', CARD_WIDTH);
@@ -105,12 +112,60 @@ cardPatterns.forEach(card => {
     defs.appendChild(pattern);
 });
 
+// pattern - card back
+const cardBackPattern = document.createElementNS(XMLNS, 'pattern');
+const cardBackimage = document.createElementNS(XMLNS, 'image');
+
+cardBackPattern.setAttributeNS(null, 'id', 'cardback');
+cardBackPattern.setAttributeNS(null, 'patternUnits', 'objectBoundingBox');
+cardBackPattern.setAttributeNS(null, 'width', 1);
+cardBackPattern.setAttributeNS(null, 'height', 1);
+
+cardBackimage.setAttributeNS(null, 'href', `${CARD_BACK_IMG_FOLDER}/cardback.png`);
+cardBackimage.setAttributeNS(null, 'x', 0);
+cardBackimage.setAttributeNS(null, 'y', 0);
+cardBackimage.setAttributeNS(null, 'width', CARD_WIDTH);
+cardBackimage.setAttributeNS(null, 'height', CARD_HEIGHT);
+
+cardBackPattern.appendChild(cardBackimage);
+defs.appendChild(cardBackPattern);
+
+
 
 // GUI ELEMENT CONSTANTS AND VARIABLES
 // ********************************************************************************
 
+// GUI variables
+// ********************************************************************************
+let clientGUI_cardPlayedByOpponent;
+let clientGUI_cardPlayedByPlayer;
+let clientGUI_cardsInDeck;
+let clientGUI_cardsInHand;
+let clientGUI_exchangeTrumpCardButton;
+let clientGUI_exitButton;
+let clientGUI_forbiddenCardOverlay;
+let clientGUI_marriagesCalledThisTrickByOpponent;
+let clientGUI_marriagesIndicator;
+let clientGUI_opponentCardsInHand;
+let clientGUI_opponentWonCardsFirstTrick;
+let clientGUI_opponentWonCardsOtherTricksCardbacks;
+let clientGUI_playerOnTurnIndicator;
+let clientGUI_textAlert;
+let clientGUI_textBummerlsLostOpponent;
+let clientGUI_textBummerlsLostPlayer;
+let clientGUI_textOpponentGamePoints;
+let clientGUI_textOpponentName;
+let clientGUI_textPlayerGamePoints;
+let clientGUI_textPlayerName;
+let clientGUI_textRoomId;
+let clientGUI_trumpCard;
+let clientGUI_wonCardsAllTricksDisplayed;
+let clientGUI_wonCardsFirstTrick;
+let clientGUI_wonCardsOtherTricksCardbacks;
+
 // All elements
 const ALL_GUI_ELEMENTS = [];
+
 
 // Player active (background color)
 let playerOnTurnIndicator;
@@ -124,7 +179,7 @@ let cardPlayedByPlayer;
 let cardPlayedByOpponent;
 
 // Marriage points (20 or 40) called on current move - by Opponent
-let uiMarriagePointsCalledOnCurrentMoveByOpponent;
+let marriagesCalledThisTrickByOpponent;
 
 // Trump card under the deck
 let trumpCard;
@@ -188,7 +243,7 @@ playerOnTurnIndicator.setAttributeNS(null, 'y', 0);
 playerOnTurnIndicator.setAttributeNS(null, 'width',  1080);
 playerOnTurnIndicator.setAttributeNS(null, 'height', 540);
 playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
-playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 0.2);
+playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 0.3);
 
 // Player cards
 for(let i=0; i<5; i++) {
@@ -254,13 +309,13 @@ cardPlayedByOpponent.setAttributeNS(null, 'visibility', 'hidden');
  
 
 // Marriage points (20 or 40) called on current move - by Opponent
-uiMarriagePointsCalledOnCurrentMoveByOpponent = document.createElementNS(XMLNS, 'text');
-uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'x', 290);
-uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'y', 300);
-uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'font-size', '36px');
-uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'fill', 'blue');
-uiMarriagePointsCalledOnCurrentMoveByOpponent.setAttributeNS(null, 'visibility', 'hidden');
-uiMarriagePointsCalledOnCurrentMoveByOpponent.textContent = '';
+marriagesCalledThisTrickByOpponent = document.createElementNS(XMLNS, 'text');
+marriagesCalledThisTrickByOpponent.setAttributeNS(null, 'x', 290);
+marriagesCalledThisTrickByOpponent.setAttributeNS(null, 'y', 300);
+marriagesCalledThisTrickByOpponent.setAttributeNS(null, 'font-size', '36px');
+marriagesCalledThisTrickByOpponent.setAttributeNS(null, 'fill', 'blue');
+marriagesCalledThisTrickByOpponent.setAttributeNS(null, 'visibility', 'hidden');
+marriagesCalledThisTrickByOpponent.textContent = '';
 
 // Trump card under the deck
 trumpCard = document.createElementNS(XMLNS, 'rect');
@@ -594,11 +649,11 @@ opponentCardsInHand.forEach(card => {
 });
 
 // played cards on the table
-ALL_GUI_ELEMENTS.push(cardPlayedByOpponent);
 ALL_GUI_ELEMENTS.push(cardPlayedByPlayer);
+ALL_GUI_ELEMENTS.push(cardPlayedByOpponent);
 
 // marriages called by opponent on current move
-ALL_GUI_ELEMENTS.push(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+ALL_GUI_ELEMENTS.push(marriagesCalledThisTrickByOpponent);
 
 // trump card
 ALL_GUI_ELEMENTS.push(trumpCard);

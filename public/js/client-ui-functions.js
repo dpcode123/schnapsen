@@ -1,7 +1,7 @@
 /** UI ELEMENTS ON THE GAME SCREEN
  * 
  * - Functions
- * - Event listeners
+ * - Add client event listeners
  */
 
 // FUNCTIONS
@@ -21,6 +21,7 @@ function removeCardFromElement(cardElement) {
 
 // Updates all cards in player's hand
 function updateAllCardsInHand(cards) {
+
     // remove all cards
     for(let i = 0; i < 5; i++) {
         removeCardFromElement(cardsInHand[i]);
@@ -33,25 +34,30 @@ function updateAllCardsInHand(cards) {
 
 // Updates all cards in opponent's hand
 function updateOpponentCards(numberOfCardsInHand) {
-    // hide all cards(5)
+
+    // hide all cards(cardbacks)
     hideElements(opponentCardsInHand);
 
-    // display all cards(max 5)
+    // display all cards(cardbacks)
     for(let i = 0; i < numberOfCardsInHand; i++) {
         showElement(opponentCardsInHand[i]);
     }
 }
 
+
 // Updates cards in tricks won by player
 function updatePlayerTricks(cards) {
+
     if(cards.length === 2) {
         updatePlayerWonFirstTrick(cards);
     } else if(cards.length > 2) {
         updatePlayerWonOtherTricks(cards);
     }
 }
+
 // Updates cards in tricks won by OPPONENT
 function updateOpponentTricks(cardsInFirstTrick, totalNumberOfWonCards) {
+
     if(totalNumberOfWonCards === 2) {
         updateOpponentWonFirstTrick(cardsInFirstTrick);
     } else if(totalNumberOfWonCards > 2) {
@@ -72,6 +78,7 @@ function updatePlayerWonFirstTrick(cards) {
         putCardInElement(wonCardsAllTricksDisplayed[i], cards[i]);
     }
 }
+
 // Updates cards in tricks won by player - other tricks
 function updatePlayerWonOtherTricks(cards) {
 
@@ -105,7 +112,7 @@ function updateOpponentWonOtherTricks(totalNumberOfWonCards) {
     }
 }
 
-// Removes(hides) cards from deck stack (when players draw a card)
+// Removes(hides) cards from deck stack (when players draw a card after trick)
 function updateCardsStackedInDeck(numberOfCardsInDeck) {
     for(let i = 0; i<9; i++) {
         if(i >= numberOfCardsInDeck) {
@@ -125,8 +132,8 @@ function updateCardsStackedInDeck(numberOfCardsInDeck) {
  * Updates marriage indicators in hand
  * - for each marriage get position in hand (0-4) of Queen
  * - [Pos.in.hand] = [Pos. of marriage display]
- * @param {*} playerHand - cards in player's hand
- * @param {*} marriages - marriages in player's hand
+ * @param playerHand - cards in player's hand
+ * @param marriages - marriages in player's hand
  */
 function updateMarriageIndicators(playerHand, marriages) {
 
@@ -250,7 +257,7 @@ function updatePoints(points) {
     }
 }
 
-// Update player's and opponent's game points (0->7+)
+// Updates player's and opponent's game points (0->7+)
 function updatePlayerAndOpponentGamePoints() {
     textPlayerGamePoints.textContent = bummerl.gamePointsPlayer;
     textOpponentGamePoints.textContent = bummerl.gamePointsOpponent;
@@ -322,15 +329,37 @@ function hideElements(elements) {
 }
 
 
-// card hover functions
+// card hover/out functions
 function cardHover(cardPlace) {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove;
+
+    if(elementActive) {
+        cardPlace.style.opacity = 0.9;
+        cardPlace.style.cursor = 'grab';
+    }     
+}
+function cardHoverOut(cardPlace) {
+    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove;
+
+    if(elementActive) {
+        cardPlace.style.opacity = 1;
+        cardPlace.style.cursor = 'default';
+    }
+}
+
+// trump card hover/out  functions
+function trumpCardHover(cardPlace) {
+    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove && game.leadOrResponse;
+
+    if(elementActive) {
         cardPlace.style.opacity = 0.9;
         cardPlace.style.cursor = 'grab';
     }    
 }
-function cardHoverOut(cardPlace) {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+function trumpCardHoverOut(cardPlace) {
+    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove&& game.leadOrResponse;
+
+    if(elementActive) {
         cardPlace.style.opacity = 1;
         cardPlace.style.cursor = 'default';
     }
@@ -338,7 +367,7 @@ function cardHoverOut(cardPlace) {
 
 // exchange trump card button - hover
 function buttonHover(button) {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+    if(game.isThisPlayerOnTurn && gameClient.canMakeMove && !game.deckClosed) {
         button.style.opacity = 1;
         button.style.cursor = 'grab';
     }    
@@ -361,7 +390,7 @@ function cleanupGameScreen() {
     hideElement(cardPlayedByOpponent);
     hideElement(trumpCard);
     hideElement(textPoints);
-    hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+    hideElement(marriagesCalledThisTrickByOpponent);
     hideElements(forbiddenCardOverlay);
     hideElements(wonCardsFirstTrick);
     hideElements(wonCardsOtherTricksCardbacks);
@@ -490,19 +519,19 @@ function toggleShowAllTricks() {
         showElement(wonCardsAllTricksDisplayed[i]);
     }
 
-    showAllWonTricks = true;
+    gameClient.showAllWonTricks = true;
     
 }
 
 // hide all won tricks
 function toggleHideAllTricks() {
     
-    if(showAllWonTricks) {
+    if(gameClient.showAllWonTricks) {
         hideAllTricks();
 
         delay(500).then(
             () => {
-                showAllWonTricks = false;
+                gameClient.showAllWonTricks = false;
             }
         );
     }
@@ -534,6 +563,7 @@ function updateExchangeTrumpButton(playerHand, trumpSuit) {
     if(game.isThisPlayerOnTurn && 
         gameClient.canMakeMove && 
         game.leadOrResponse && 
+        game.trumpCard !== undefined &&
         game.trumpCard.tier !== "J" &&
         game.deckSize > 0) {
 
@@ -624,8 +654,8 @@ exchangeTrumpCardButton.addEventListener('mouseout', function () {buttonHoverOut
 exchangeTrumpCardButton.addEventListener('click', function () {moveExchangeTrump();}, false);
 
 // close deck
-trumpCard.addEventListener('mouseover', function () {cardHover(trumpCard);}, false);
-trumpCard.addEventListener('mouseout',  function () {cardHoverOut(trumpCard);}, false);
+trumpCard.addEventListener('mouseover', function () {trumpCardHover(trumpCard);}, false);
+trumpCard.addEventListener('mouseout',  function () {trumpCardHoverOut(trumpCard);}, false);
 trumpCard.addEventListener('click', function () {moveCloseDeck();}, false);
 
 

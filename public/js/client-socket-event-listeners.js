@@ -55,7 +55,13 @@ socket.on('gameStateUpdate', gameStateDTO => {
     updateClientGameState(gameStateDTO);
     updatePoints(game.playerPoints);
 
-    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    // refresh client background only if next play is responding
+    if (gameStateDTO.leadOrResponse === false) {
+        refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    }
+    
+    console.log('gameStateUpdate');
+
     updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
     updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
     gameClient.canMakeMove = true;
@@ -69,6 +75,8 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
     delay(1200).then(
         () => {
             refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+            console.log('gameStateUpdateAfterTrick');
+
             updatePoints(game.playerPoints);
             hideElement(cardPlayedByPlayer);
             hideElement(cardPlayedByOpponent);
@@ -80,7 +88,7 @@ socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
             updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
-            hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+            hideElement(marriagesCalledThisTrickByOpponent);
             gameClient.canMakeMove = true;
         }
     );
@@ -102,7 +110,7 @@ socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
             putCardInElement(trumpCard, game.trumpCard.name);
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-            hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+            hideElement(marriagesCalledThisTrickByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
             gameClient.canMakeMove = true;
         }
@@ -152,7 +160,7 @@ socket.on('gameStart', gameStateDTO => {
             setupGameScreenStarted();
             updateAllCardsInHand(game.cardsInHand);
             updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-            hideElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+            hideElement(marriagesCalledThisTrickByOpponent);
             updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
             gameClient.canMakeMove = true;
         }
@@ -180,8 +188,8 @@ socket.on('opponentMove', opponentMoveDTO => {
 
     // display marriage points called by opponent
     if(opponentMoveDTO.marriagePoints > 0) {
-        uiMarriagePointsCalledOnCurrentMoveByOpponent.textContent = opponentMoveDTO.marriagePoints;
-        showElement(uiMarriagePointsCalledOnCurrentMoveByOpponent);
+        marriagesCalledThisTrickByOpponent.textContent = opponentMoveDTO.marriagePoints;
+        showElement(marriagesCalledThisTrickByOpponent);
     }
 
     // throw card on the table 

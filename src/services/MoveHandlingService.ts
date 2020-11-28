@@ -38,16 +38,16 @@ export default class MoveHandlingService {
 
             if (isMoveValid) {
                 // jack-trump card name
-                const jackTrumpCardName: string = `j-${playRoom.game!.trumpSuit}`;
+                const jackTrumpCardName: string = `j-${playRoom.game?.trumpSuit}`;
 
                 // jack-trump card object
                 const jackTrumpCard: Card = getCardByName(jackTrumpCardName)!;
 
                 // remove jack in trump suit from player's hand
-                playRoom.game!.removeCardFromHand(jackTrumpCardName, playerIndex);
+                playRoom.game?.removeCardFromHand(jackTrumpCardName, playerIndex);
 
                 // push current trump card to player's hand
-                playRoom.game!.cardsInHand[playerIndex].push(playRoom.game!.trumpCard!);
+                playRoom.game?.cardsInHand[playerIndex].push(playRoom.game?.trumpCard!);
 
                 // set jack as trump card
                 playRoom.game!.trumpCard = jackTrumpCard;
@@ -99,7 +99,7 @@ export default class MoveHandlingService {
                 playRoom.game!.moveBuffer.state = 'processingMove';
 
                 // create card object from cardName
-                const card: Card = getCardByName(move.cardName)!;
+                const card: Card | undefined = getCardByName(move.cardName);
 
                 // valid plays - all cards are valid for leading play
                 let validRespondingCards: Card[] | string = 'all';
@@ -242,7 +242,7 @@ export default class MoveHandlingService {
                     // change player on turn
                     playRoom.game!.changePlayerOnTurn();
 
-                    // change lead/response
+                    // change lead <-> response
                     playRoom.game!.leadOrResponse = !playRoom.game!.leadOrResponse;
 
                     // update clients

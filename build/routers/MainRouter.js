@@ -3,11 +3,12 @@ import { userAuthenticated } from '../auth/passport_middleware.js';
 const router = express.Router();
 // Index page
 router.get('/', userAuthenticated, (req, res) => {
-    res.render('index');
-});
-// Protected page
-router.get('/protected-page', userAuthenticated, (req, res) => {
-    res.render('protected-page');
+    res.render('index', {
+        userdata: {
+            username: req.session.passport.user.username,
+            id: req.session.passport.user.id,
+        }
+    });
 });
 // Join page
 router.get('/join-room', userAuthenticated, (req, res) => {

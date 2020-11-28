@@ -40,9 +40,9 @@ export function getRandomCardFromDeck(deck: Card[]): Card {
 }
 
 // Gets card by name
-export function getCardByName(cardName: string): Card {
+export function getCardByName(cardName: string): Card | undefined {
     const card = CARDS.find(object => object.name === cardName);
-    return card!;
+    return card;
 }
 
 // Removes card from deck

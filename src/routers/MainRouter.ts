@@ -6,13 +6,13 @@ const router: Router = express.Router();
 
 // Index page
 router.get('/', userAuthenticated, (req: CustomRequest, res: CustomResponse): void => {
-    res.render('index');
+    res.render('index', {
+        userdata: {
+            username: req.session.passport.user.username,
+            id: req.session.passport.user.id,
+        }
+    });
 });
-
-// Protected page
-router.get('/protected-page', userAuthenticated, (req: CustomRequest, res: CustomResponse): void => {
-    res.render('protected-page');
-})
 
 // Join page
 router.get('/join-room', userAuthenticated, (req: CustomRequest, res: CustomResponse): void => {

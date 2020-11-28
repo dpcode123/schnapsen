@@ -8,8 +8,12 @@ class GameClient {
         this.userId = userId;
         this.room = room;
         this.socketJwt = socketJwt;
+
         // mutable properties
         this.canMakeMove = true;
+
+        // UI states
+        this.showAllWonTricks = false;
     }
 }
 

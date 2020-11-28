@@ -4,15 +4,19 @@
 
     <div class="form-container">
         <header class="join-header">
-            <h1>Šnaps</h1>
+            <h1>Schnapsen</h1>
         </header>
-        <main class="main-form">
+
+        <main class="main-container">
+            <% if (userdata) { %>
+                <h2>Welcome <%= userdata.username %>!</h2>
+            <% } %>
+
             <a class="main-link" href="/room/create">Create Game</a>
             <a class="main-link" href="/join-room">Join Game</a>
-            <p><a href="/login">Login</a></p>
-            <p><a href="/register">Register</a></p>
-            <p><a href="/protected">protected</a></p>
-            <p><a href="/protected-page">protected-page</a></p>
+            <hr>
+            <a class="main-link" href="/settings">Settings</a>
+            <a class="main-link" href="/logout">Logout</a>
         </main>
     </div>
 

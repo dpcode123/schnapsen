@@ -30,75 +30,81 @@ export default class SocketEventHandlingService {
     }
 
     init = (socketJwt: string): void => {
-        
-        // validate token; extract payload
-        let tokenPayload: GameConnectionObject | undefined = validateToken(socketJwt);
-        
-        // if token valid
-        if (tokenPayload) {
-            // get socket.io session id
-            const socketId: string = this.socket.id;
 
-            // get room id
-            const roomId: string = tokenPayload.roomId;
-
-            // join to socket.io room
-            this.socket.join(roomId);
-
-            // get room object
-            const playRoom: PlayRoom | undefined = roomRepository.getPlayRoomById(roomId);
-            
-            if (playRoom && socketEventValidationService.validate(tokenPayload, playRoom)) {
-
-                // CLIENT REFRESHED PAGE (user was added before and now has socketId === disconnected)
-                if (playRoom.players[tokenPayload.playerInRoom] && 
-                    playRoom.players[tokenPayload.playerInRoom]!.socketId === 'disconnected') {
+        try {
+            // validate token; extract payload
+            let tokenPayload: GameConnectionObject | undefined = validateToken(socketJwt);
                     
-                    // assign new socketid to player in room
-                    playRoom.players[tokenPayload.playerInRoom]!.socketId = socketId;
+            // if token valid
+            if (tokenPayload) {
+                // get socket.io session id
+                const socketId: string = this.socket.id;
 
-                    // update client
-                    this.io.to(socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, tokenPayload.playerInRoom).getDTO());
-                    this.io.to(socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, tokenPayload.playerInRoom).getDTO());
-                    this.io.to(socketId).emit('gameStateUpdateAfterClientRefresh', new GameStateDTO(playRoom.game, tokenPayload.playerInRoom).getDTO());
-                } else {
-                    // assign socketid to player in room
-                    playRoom.players[tokenPayload.playerInRoom]!.socketId = socketId;
-                    
-                    // (only first player is in room) / (room is full - 2 users)
-                    if (!playRoom.players[1]) {
-                        this.io.to(roomId).emit('sessionStarting', roomId);
-                    } else if (playRoom.players[0] && playRoom.players[1]) {
+                // get room id
+                const roomId: string = tokenPayload.roomId;
 
-                        // (session is not already 'started' or 'finished')
-                        if (playRoom.status === 'starting') {
+                // join to socket.io room
+                this.socket.join(roomId);
 
-                            // change play session status; update clients
-                            playRoom.status = 'started';
-                            for(let i=0; i<2; i++) {
-                                this.io.to(playRoom.players[i]!.socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, i).getDTO());
-                            }
-                            
-                            // start 1st bummerl; update clients
-                            playRoom.startBummerl();
-                            for(let i=0; i<2; i++) {
-                                this.io.to(playRoom.players[i]!.socketId).emit('bummerlStart', new BummerlStateDTO(playRoom.bummerl, i).getDTO());
-                            }
+                // get room object
+                const playRoom: PlayRoom | undefined = roomRepository.getPlayRoomById(roomId);
+                
+                if (playRoom && socketEventValidationService.validate(tokenPayload, playRoom)) {
 
-                            // start 1st game; update clients
-                            playRoom.startGame();
-                            for(let i=0; i<2; i++) {
-                                this.io.to(playRoom.players[i]!.socketId).emit('gameStart', new GameStateDTO(playRoom.game, i).getDTO());
+                    // CLIENT REFRESHED PAGE (user was added before and now has socketId === disconnected)
+                    if (playRoom.players[tokenPayload.playerInRoom] && 
+                        playRoom.players[tokenPayload.playerInRoom]!.socketId === 'disconnected') {
+                        
+                        // assign new socketid to player in room
+                        playRoom.players[tokenPayload.playerInRoom]!.socketId = socketId;
+
+                        // update client
+                        this.io.to(socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, tokenPayload.playerInRoom).getDTO());
+                        this.io.to(socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, tokenPayload.playerInRoom).getDTO());
+                        this.io.to(socketId).emit('gameStateUpdateAfterClientRefresh', new GameStateDTO(playRoom.game, tokenPayload.playerInRoom).getDTO());
+                    } else {
+                        // assign socketid to player in room
+                        playRoom.players[tokenPayload.playerInRoom]!.socketId = socketId;
+                        
+                        // (only first player is in room) / (room is full - 2 users)
+                        if (!playRoom.players[1]) {
+                            this.io.to(roomId).emit('sessionStarting', roomId);
+                        } else if (playRoom.players[0] && playRoom.players[1]) {
+
+                            // (session is not already 'started' or 'finished')
+                            if (playRoom.status === 'starting') {
+
+                                // change play session status; update clients
+                                playRoom.status = 'started';
+                                for(let i=0; i<2; i++) {
+                                    this.io.to(playRoom.players[i]!.socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, i).getDTO());
+                                }
+                                
+                                // start 1st bummerl; update clients
+                                playRoom.startBummerl();
+                                for(let i=0; i<2; i++) {
+                                    this.io.to(playRoom.players[i]!.socketId).emit('bummerlStart', new BummerlStateDTO(playRoom.bummerl, i).getDTO());
+                                }
+
+                                // start 1st game; update clients
+                                playRoom.startGame();
+                                for(let i=0; i<2; i++) {
+                                    this.io.to(playRoom.players[i]!.socketId).emit('gameStart', new GameStateDTO(playRoom.game, i).getDTO());
+                                }
                             }
                         }
                     }
+                } else {
+                    console.log('ERROR: Payload data != room data');
                 }
             } else {
-                console.log('ERROR: Payload data != room data');
-            }
-        } else {
-            console.log('ERROR: Token not valid');
+                console.log('ERROR: Token not valid');
+            }            
+        } catch (error) {
+            
         }
+        
+        
     }
 
     disconnect = (socketId: string): void  => {

@@ -11,17 +11,18 @@ export default class MoveHandlingService {
     constructor(io, socket) {
         // Handle move - exchange trump
         this.exchangeTrump = (move, playerIndex, playRoom) => {
+            var _a, _b, _c, _d;
             try {
                 const isMoveValid = this.moveValidationService.exchangeTrump(move, playRoom);
                 if (isMoveValid) {
                     // jack-trump card name
-                    const jackTrumpCardName = `j-${playRoom.game.trumpSuit}`;
+                    const jackTrumpCardName = `j-${(_a = playRoom.game) === null || _a === void 0 ? void 0 : _a.trumpSuit}`;
                     // jack-trump card object
                     const jackTrumpCard = getCardByName(jackTrumpCardName);
                     // remove jack in trump suit from player's hand
-                    playRoom.game.removeCardFromHand(jackTrumpCardName, playerIndex);
+                    (_b = playRoom.game) === null || _b === void 0 ? void 0 : _b.removeCardFromHand(jackTrumpCardName, playerIndex);
                     // push current trump card to player's hand
-                    playRoom.game.cardsInHand[playerIndex].push(playRoom.game.trumpCard);
+                    (_c = playRoom.game) === null || _c === void 0 ? void 0 : _c.cardsInHand[playerIndex].push((_d = playRoom.game) === null || _d === void 0 ? void 0 : _d.trumpCard);
                     // set jack as trump card
                     playRoom.game.trumpCard = jackTrumpCard;
                     // sort cards in hands; check for marriages; update clients
@@ -164,7 +165,7 @@ export default class MoveHandlingService {
                         playRoom.game.increaseMoveNumber();
                         // change player on turn
                         playRoom.game.changePlayerOnTurn();
-                        // change lead/response
+                        // change lead <-> response
                         playRoom.game.leadOrResponse = !playRoom.game.leadOrResponse;
                         // update clients
                         for (let i = 0; i < 2; i++) {

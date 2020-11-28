@@ -27,21 +27,21 @@ import { getCardByName } from './cards.js';
  */
 export function calculateTrickWinner(trumpSuit: string, leadingMove: PlayerMove, respondingMove: PlayerMove): number {
 
-    const leadingCard: Card = getCardByName(leadingMove.cardName);
-    const respondingCard: Card = getCardByName(respondingMove.cardName);
+    const leadingCard: Card | undefined = getCardByName(leadingMove.cardName);
+    const respondingCard: Card | undefined = getCardByName(respondingMove.cardName);
 
     let isLeadingCardTrump: boolean;
     let isRespondingCardTrump: boolean;
     let winnerUserId: number = 0;
 
     // check if leading card is trump
-    if (leadingCard.suit === trumpSuit) {
+    if (leadingCard?.suit === trumpSuit) {
         isLeadingCardTrump = true;
     } else {
         isLeadingCardTrump = false;
     }
     // check if responding card is trump
-    if (respondingCard.suit === trumpSuit) {
+    if (respondingCard?.suit === trumpSuit) {
         isRespondingCardTrump = true;
     } else {
         isRespondingCardTrump = false;
@@ -52,9 +52,9 @@ export function calculateTrickWinner(trumpSuit: string, leadingMove: PlayerMove,
         //### Response NOT trump
         if (!isRespondingCardTrump) {
             //### Same suits
-            if (leadingCard.suit === respondingCard.suit) {
+            if (leadingCard?.suit === respondingCard?.suit) {
                 // {compare values}
-                if (leadingCard.points > respondingCard.points) {
+                if (leadingCard?.points! > respondingCard?.points!) {
                     winnerUserId = leadingMove.userId;
                 } else {
                     winnerUserId = respondingMove.userId;
@@ -82,7 +82,7 @@ export function calculateTrickWinner(trumpSuit: string, leadingMove: PlayerMove,
         //### Response TRUMP
         else if (isRespondingCardTrump) {
             // {compare values}
-            if (leadingCard.points > respondingCard.points) {
+            if (leadingCard?.points! > respondingCard?.points!) {
                 winnerUserId = leadingMove.userId;
             } else {
                 winnerUserId = respondingMove.userId;
@@ -103,10 +103,10 @@ export function calculateTrickWinner(trumpSuit: string, leadingMove: PlayerMove,
  */
 export function calculateTrickPoints(leadingMove: PlayerMove, respondingMove: PlayerMove): number {
 
-    const leadingCard: Card = getCardByName(leadingMove.cardName);
-    const respondingCard: Card = getCardByName(respondingMove.cardName);
+    const leadingCard: Card | undefined = getCardByName(leadingMove.cardName);
+    const respondingCard: Card | undefined = getCardByName(respondingMove.cardName);
 
-    const points: number = leadingCard.points + respondingCard.points;
+    const points: number = leadingCard?.points! + respondingCard?.points!;
 
     return points;
 }
@@ -125,10 +125,10 @@ export function checkForMarriagesInHand(playerHand: Card[], trumpSuit: string): 
     const marriagesInHand: CardsMarriage[] = [];
 
     // Queen and King pair in same suit
-    const marriageHearts: [Card, Card] = [getCardByName('q-herc'), getCardByName('k-herc')];
-    const marriageDiamonds: [Card, Card] = [getCardByName('q-karo'), getCardByName('k-karo')];
-    const marriageSpades: [Card, Card] = [getCardByName('q-pik'), getCardByName('k-pik')];
-    const marriageClubs: [Card, Card] = [getCardByName('q-tref'), getCardByName('k-tref')];
+    const marriageHearts: [Card, Card] = [getCardByName('q-herc')!, getCardByName('k-herc')!];
+    const marriageDiamonds: [Card, Card] = [getCardByName('q-karo')!, getCardByName('k-karo')!];
+    const marriageSpades: [Card, Card] = [getCardByName('q-pik')!, getCardByName('k-pik')!];
+    const marriageClubs: [Card, Card] = [getCardByName('q-tref')!, getCardByName('k-tref')!];
 
     // check if all of the elements(both cards in pair) exist in array(playerHand)
     const hasMarriageHearts: boolean = marriageHearts.every(card => playerHand.includes(card));
@@ -138,46 +138,34 @@ export function checkForMarriagesInHand(playerHand: Card[], trumpSuit: string): 
 
     // add marriage(s) suit and points to array if there are any
     if (hasMarriageHearts) {
-        if (trumpSuit === 'herc') {
-            marriagesInHand.push({suit: 'herc', points: 40});
-        } else {
-            marriagesInHand.push({suit: 'herc', points: 20});
-        }
+        let points = (trumpSuit === 'herc') ? 40 : 20;
+        marriagesInHand.push({suit: 'herc', points: points});
     };
 
     if (hasMarriageDiamonds) {
-        if (trumpSuit === 'karo') {
-            marriagesInHand.push({suit: 'karo', points: 40});
-        } else {
-            marriagesInHand.push({suit: 'karo', points: 20});
-        }
+        let points = (trumpSuit === 'karo') ? 40 : 20;
+        marriagesInHand.push({suit: 'karo', points: points});
     };
 
     if (hasMarriageSpades) {
-        if (trumpSuit === 'pik') {
-            marriagesInHand.push({suit: 'pik', points: 40});
-        } else {
-            marriagesInHand.push({suit: 'pik', points: 20});
-        }
+        let points = (trumpSuit === 'pik') ? 40 : 20;
+        marriagesInHand.push({suit: 'pik', points: points});
     };
 
     if (hasMarriageClubs) {
-        if (trumpSuit === 'tref') {
-            marriagesInHand.push({suit: 'tref', points: 40});
-        } else {
-            marriagesInHand.push({suit: 'tref', points: 20});
-        }
+        let points = (trumpSuit === 'tref') ? 40 : 20;
+        marriagesInHand.push({suit: 'tref', points: points});
     };
 
     return marriagesInHand;
 }
 
 
-export function checkPlayedCardMarriagePoints(card: Card, marriagesInHand: CardsMarriage[]): number {
+export function checkPlayedCardMarriagePoints(card: Card | undefined, marriagesInHand: CardsMarriage[]): number {
 
     let marriagePoints: number = 0;
 
-    if (marriagesInHand.length > 0 && (card.tier === 'Q' || card.tier === 'K' )) {
+    if (marriagesInHand.length > 0 && (card?.tier === 'Q' || card?.tier === 'K' )) {
 
         marriagesInHand.forEach(marriage => {
             if (marriage.suit === card.suit) {
@@ -219,7 +207,7 @@ export function checkPlayedCardMarriagePoints(card: Card, marriagesInHand: Cards
  * 
  */
 export function calculateValidRespondingCards(
-        leadingCard: Card, 
+        leadingCard: Card | undefined, 
         cardsInRespondingHand: Card[], 
         trumpSuit: string, 
         isDeckClosed: boolean, 
@@ -230,14 +218,14 @@ export function calculateValidRespondingCards(
     let validRespondingCards: Card[] = [];
 
     // responding player has same suit card in hand
-    const hasSameSuit: boolean = cardsInRespondingHand.some(c => c.suit === leadingCard.suit);
+    const hasSameSuit: boolean = cardsInRespondingHand.some(c => c.suit === leadingCard?.suit);
     // cards of same suit in responding player's hand
-    const sameSuitCards: Card[] = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit);
+    const sameSuitCards: Card[] = cardsInRespondingHand.filter(c => c.suit === leadingCard?.suit);
 
     // responding player has stronger same suit card in hand
-    const hasStrongerSameSuit: boolean = cardsInRespondingHand.some(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    const hasStrongerSameSuit: boolean = cardsInRespondingHand.some(c => c.suit === leadingCard?.suit && c.points > leadingCard?.points);
     // stronger cards of same suit in responding player's hand
-    const strongerSameSuitCards: Card[] = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    const strongerSameSuitCards: Card[] = cardsInRespondingHand.filter(c => c.suit === leadingCard?.suit && c.points > leadingCard?.points);
 
     // responding player has trump in hand
     const hasTrump = cardsInRespondingHand.some(c => c.suit === trumpSuit);

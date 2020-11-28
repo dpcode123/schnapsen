@@ -46,23 +46,20 @@ export default class RoomService {
         getRoomByPlayersSocketId(socketId: string): PlayRoom | undefined {
             let room: any;
         
-            // loop through all rooms
+            // loop through all rooms; if there are any players in that room
+            // check if there is player with that socket id in room 
             playRooms.forEach(playRoom => {
-                // if there are any players in room
                 if (playRoom.players.length > 0) {
-                    // if there is any player in room with that socket id
                     try {
-                        if (playRoom.players.filter(player => player!.socketId === socketId).length === 1) {
-                            room = playRoom;
+                        for (let i = 0; i < playRoom.players.length; i++) {
+                            if (playRoom.players[i] !== undefined && playRoom.players[i]!.socketId === socketId) {
+                                room = playRoom;
+                                break;
+                            }
                         }
                     } catch (error) {
                         console.error(error);
                     }
-                    /* playRoom.players.forEach(player => {
-                        if (player !== undefined && player.socketId === socketId) {
-                            room = playRoom;
-                        }
-                    }); */
                 }
             });
             return room;

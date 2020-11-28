@@ -29,14 +29,14 @@ export function calculateTrickWinner(trumpSuit, leadingMove, respondingMove) {
     let isRespondingCardTrump;
     let winnerUserId = 0;
     // check if leading card is trump
-    if (leadingCard.suit === trumpSuit) {
+    if ((leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.suit) === trumpSuit) {
         isLeadingCardTrump = true;
     }
     else {
         isLeadingCardTrump = false;
     }
     // check if responding card is trump
-    if (respondingCard.suit === trumpSuit) {
+    if ((respondingCard === null || respondingCard === void 0 ? void 0 : respondingCard.suit) === trumpSuit) {
         isRespondingCardTrump = true;
     }
     else {
@@ -47,9 +47,9 @@ export function calculateTrickWinner(trumpSuit, leadingMove, respondingMove) {
         //### Response NOT trump
         if (!isRespondingCardTrump) {
             //### Same suits
-            if (leadingCard.suit === respondingCard.suit) {
+            if ((leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.suit) === (respondingCard === null || respondingCard === void 0 ? void 0 : respondingCard.suit)) {
                 // {compare values}
-                if (leadingCard.points > respondingCard.points) {
+                if ((leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.points) > (respondingCard === null || respondingCard === void 0 ? void 0 : respondingCard.points)) {
                     winnerUserId = leadingMove.userId;
                 }
                 else {
@@ -78,7 +78,7 @@ export function calculateTrickWinner(trumpSuit, leadingMove, respondingMove) {
         //### Response TRUMP
         else if (isRespondingCardTrump) {
             // {compare values}
-            if (leadingCard.points > respondingCard.points) {
+            if ((leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.points) > (respondingCard === null || respondingCard === void 0 ? void 0 : respondingCard.points)) {
                 winnerUserId = leadingMove.userId;
             }
             else {
@@ -98,7 +98,7 @@ export function calculateTrickWinner(trumpSuit, leadingMove, respondingMove) {
 export function calculateTrickPoints(leadingMove, respondingMove) {
     const leadingCard = getCardByName(leadingMove.cardName);
     const respondingCard = getCardByName(respondingMove.cardName);
-    const points = leadingCard.points + respondingCard.points;
+    const points = (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.points) + (respondingCard === null || respondingCard === void 0 ? void 0 : respondingCard.points);
     return points;
 }
 /**
@@ -123,46 +123,30 @@ export function checkForMarriagesInHand(playerHand, trumpSuit) {
     const hasMarriageClubs = marriageClubs.every(card => playerHand.includes(card));
     // add marriage(s) suit and points to array if there are any
     if (hasMarriageHearts) {
-        if (trumpSuit === 'herc') {
-            marriagesInHand.push({ suit: 'herc', points: 40 });
-        }
-        else {
-            marriagesInHand.push({ suit: 'herc', points: 20 });
-        }
+        let points = (trumpSuit === 'herc') ? 40 : 20;
+        marriagesInHand.push({ suit: 'herc', points: points });
     }
     ;
     if (hasMarriageDiamonds) {
-        if (trumpSuit === 'karo') {
-            marriagesInHand.push({ suit: 'karo', points: 40 });
-        }
-        else {
-            marriagesInHand.push({ suit: 'karo', points: 20 });
-        }
+        let points = (trumpSuit === 'karo') ? 40 : 20;
+        marriagesInHand.push({ suit: 'karo', points: points });
     }
     ;
     if (hasMarriageSpades) {
-        if (trumpSuit === 'pik') {
-            marriagesInHand.push({ suit: 'pik', points: 40 });
-        }
-        else {
-            marriagesInHand.push({ suit: 'pik', points: 20 });
-        }
+        let points = (trumpSuit === 'pik') ? 40 : 20;
+        marriagesInHand.push({ suit: 'pik', points: points });
     }
     ;
     if (hasMarriageClubs) {
-        if (trumpSuit === 'tref') {
-            marriagesInHand.push({ suit: 'tref', points: 40 });
-        }
-        else {
-            marriagesInHand.push({ suit: 'tref', points: 20 });
-        }
+        let points = (trumpSuit === 'tref') ? 40 : 20;
+        marriagesInHand.push({ suit: 'tref', points: points });
     }
     ;
     return marriagesInHand;
 }
 export function checkPlayedCardMarriagePoints(card, marriagesInHand) {
     let marriagePoints = 0;
-    if (marriagesInHand.length > 0 && (card.tier === 'Q' || card.tier === 'K')) {
+    if (marriagesInHand.length > 0 && ((card === null || card === void 0 ? void 0 : card.tier) === 'Q' || (card === null || card === void 0 ? void 0 : card.tier) === 'K')) {
         marriagesInHand.forEach(marriage => {
             if (marriage.suit === card.suit) {
                 marriagePoints = marriage.points;
@@ -202,13 +186,13 @@ export function calculateValidRespondingCards(leadingCard, cardsInRespondingHand
     // cards that player can play as a responding card                                                
     let validRespondingCards = [];
     // responding player has same suit card in hand
-    const hasSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit);
+    const hasSameSuit = cardsInRespondingHand.some(c => c.suit === (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.suit));
     // cards of same suit in responding player's hand
-    const sameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit);
+    const sameSuitCards = cardsInRespondingHand.filter(c => c.suit === (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.suit));
     // responding player has stronger same suit card in hand
-    const hasStrongerSameSuit = cardsInRespondingHand.some(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    const hasStrongerSameSuit = cardsInRespondingHand.some(c => c.suit === (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.suit) && c.points > (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.points));
     // stronger cards of same suit in responding player's hand
-    const strongerSameSuitCards = cardsInRespondingHand.filter(c => c.suit === leadingCard.suit && c.points > leadingCard.points);
+    const strongerSameSuitCards = cardsInRespondingHand.filter(c => c.suit === (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.suit) && c.points > (leadingCard === null || leadingCard === void 0 ? void 0 : leadingCard.points));
     // responding player has trump in hand
     const hasTrump = cardsInRespondingHand.some(c => c.suit === trumpSuit);
     // trump cards in responding player's hand

@@ -8,7 +8,7 @@ import { Player } from '../ts/interfaces.js';
 
 export default class PlayRoom {
 
-    uuid: string;
+    playSessionUuid: string;
     room: string;
     status: string;
     players: (Player | undefined)[];
@@ -18,9 +18,9 @@ export default class PlayRoom {
 
     constructor(room: string, player1: Player) {
         // unique room uuid
-        this.uuid = uuidv4();
+        this.playSessionUuid = uuidv4();
 
-        // socket.io room id
+        // room id (and socket.io room id)
         this.room = room;
 
         // status (starting, started, finished)

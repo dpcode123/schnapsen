@@ -10,8 +10,8 @@ export default class PlayRoom {
         this.game = undefined;
         this.bummerlsWon = [0, 0];
         // unique room uuid
-        this.uuid = uuidv4();
-        // socket.io room id
+        this.playSessionUuid = uuidv4();
+        // room id (and socket.io room id)
         this.room = room;
         // status (starting, started, finished)
         this.status = 'starting';
