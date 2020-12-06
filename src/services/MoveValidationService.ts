@@ -44,19 +44,29 @@ export default class MoveValidationService {
     // Validate move - play card
     // - if state is 'waitingForMove'
     // - if that card is in players hand
+    // - if player is on turn
     playCard = (move: PlayerMove, playRoom: PlayRoom): boolean => {
+
+        playRoom.game?.playerOnTurn
 
         const playerIndex: number | undefined = getPlayerIndexInRoomByUserId(playRoom, move.userId);
         const playedCard: Card | undefined = getCardByName(move.cardName);
         let isCardInPlayersHand: boolean | undefined;
+        let isPlayerOnTurn: boolean | undefined;
 
-        if(playerIndex !== undefined && playedCard){
+        if (playerIndex !== undefined && playedCard){
             const cardsInPlayersHand: Card[] | undefined = playRoom.game?.cardsInHand[playerIndex];
             isCardInPlayersHand = cardsInPlayersHand?.some(c => c === playedCard);
         }
 
+        if (playerIndex !== undefined && playRoom.game?.playerOnTurn === playerIndex) {
+            isPlayerOnTurn = true;
+        }
+
+
         if (playRoom.game!.moveBuffer.state === 'waitingForMove' &&
-            isCardInPlayersHand) {
+            isCardInPlayersHand && 
+            isPlayerOnTurn) {
                 return true;
         }
         return false;

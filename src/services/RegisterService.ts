@@ -1,10 +1,6 @@
 import pool from '../repository/db_pool_config.js';
 import bcrypt from 'bcrypt';
-import { CustomRequest, CustomResponse } from '../ts/interfaces.js';
-
-type RegisterError = {
-    message: string;
-};
+import { CustomRequest, CustomResponse, RegisterError } from '../ts/interfaces.js';
 
 
 export default class RegisterService {
@@ -26,6 +22,9 @@ export default class RegisterService {
                 if (password !== password2) {
                     errors.push({ message: 'Passwords do not match' });
                 }
+                
+                console.log(errors);
+                
 
                 if (errors.length > 0) {
                     res.render('register', { errors, username, email, password, password2 });
@@ -37,12 +36,13 @@ export default class RegisterService {
                         (err, results) => {
                             if (err) {
                                 console.log(err);
-                                //return res.render('register', { message: 'Username already exist' });
+                                req.flash('error', 'ERROR: Registration failed - try again.');
                                 return res.redirect('/register');
                             }
 
                             if (results.rows.length > 0) {
-                                return res.render('register', { message: 'Username already exist' });
+                                req.flash('error', 'ERROR: Username already exist');
+                                return res.render('register');
                             } else {
                                 pool.query(
                                     `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id`,
@@ -51,8 +51,7 @@ export default class RegisterService {
                                             console.log(err);
                                             return res.redirect('/register');
                                         }
-                                        console.log(results.rows);
-                                        req.flash('success_msg', 'You are now registered. Please log in');
+                                        req.flash('success', 'You are now registered. Please log in.');
                                         res.redirect('/login');
                                     }
                                 );

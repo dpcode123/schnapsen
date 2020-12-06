@@ -13,7 +13,14 @@ export default class GameSessionService {
             // jwt token for socket.io connection
             const socketJwt = signToken(gameConnectionObject);
             // game session data
-            const gameSessionData = { u: player.username, i: player.id, r: roomId, t: socketJwt };
+            const gameSessionData = {
+                username: player.username,
+                userId: player.id,
+                roomId: roomId,
+                token: socketJwt,
+                userCardFace: player.cardface_design_id,
+                userCardBack: player.cardback_design_id
+            };
             return gameSessionData;
         };
     }

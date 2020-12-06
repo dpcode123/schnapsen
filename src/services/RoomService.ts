@@ -27,20 +27,35 @@ export default class RoomService {
             }
         }
         
-        // Adds second player to existing room
+        // 
+        /**
+         * Adds second player to existing room 
+         * - if:
+         *      - room exist 
+         *      - first player is set
+         *      - second player is not set
+         *      - 1st and 2nd player are not the same
+         * @param roomId 
+         * @param secondPlayer 
+         * @returns GameSessionData | undefined
+         */
         joinRoom(roomId: string, secondPlayer: Player): GameSessionData | undefined {
             // get room (or false if room doesnt exist)
             const playRoom: PlayRoom | undefined = roomRepository.getPlayRoomById(roomId);
-        
-            if (playRoom) {
-                if (playRoom.players[0] && !playRoom.players[1]) {
-                    // (if room exist, first player is set, second is not set): add second[1] player to room
+            
+            if (playRoom && 
+                playRoom.players[0] && 
+                !playRoom.players[1] && 
+                playRoom.players[0].id !== secondPlayer.id) {
+                    // add second player to room
                     playRoom.players[1] = secondPlayer;
+                    // return game session data
                     return gameSessionService.generateGameSessionData(secondPlayer, 1, roomId);
-                }
             }
             return;
         }
+            
+        
         
         // Returns room object by socket id of a player
         getRoomByPlayersSocketId(socketId: string): PlayRoom | undefined {

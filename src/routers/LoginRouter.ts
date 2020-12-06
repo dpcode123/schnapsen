@@ -10,6 +10,7 @@ router.get('/', userNotAuthenticated, (req: CustomRequest, res: CustomResponse):
     res.render('login');
 });
 
+
 router.post('/', userNotAuthenticated, loginController.loginUser());
 
 export default router;

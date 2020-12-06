@@ -2,12 +2,14 @@
  * Client
  */
 class GameClient {
-    constructor(username, userId, room, socketJwt) {
+    constructor(username, userId, room, socketJwt, cardFace, cardBack) {
         // constant properties
         this.username = username;
         this.userId = userId;
         this.room = room;
         this.socketJwt = socketJwt;
+        this.cardFace = cardFace;
+        this.cardBack = cardBack;
 
         // mutable properties
         this.canMakeMove = true;

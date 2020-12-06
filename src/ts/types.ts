@@ -29,8 +29,10 @@ export type GameConnectionObject = {
 }
 
 export type GameSessionData = {
-    u: string, 
-    i: number, 
-    r: string, 
-    t: string,
+    username: string, 
+    userId: number, 
+    roomId: string, 
+    token: string,
+    userCardFace: number,
+    userCardBack: number
 }

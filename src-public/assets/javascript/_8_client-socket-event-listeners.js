@@ -16,7 +16,7 @@ socket.on('sessionStarting', gameRoomId => {
 
 // Session state update
 socket.on('sessionStateUpdate', playSessionDTO => {
-    if(playSessionDTO.status === 'started') {
+    if (playSessionDTO.status === 'started') {
         playSession = new PlaySession(playSessionDTO);
         textPlayerName.textContent = playSession.playerName;
         textOpponentName.textContent = playSession.opponentName;
@@ -127,7 +127,7 @@ socket.on('gameStateUpdateAfterClosingDeck', gameStateDTO => {
 // Game over
 socket.on('gameOverDTO', gameOverDTO => {
     // add game points
-    if(gameOverDTO.isWinner) {
+    if (gameOverDTO.isWinner) {
         bummerl.gamePointsPlayer += gameOverDTO.gamePoints;
         textAlert.textContent = `You won! ( ${gameOverDTO.gamePoints} )`;
         updatePoints(gameOverDTO.playerPointsAtEndOfGame);
@@ -145,7 +145,7 @@ socket.on('gameStart', gameStateDTO => {
     game = new Game(gameStateDTO);
 
     let delay_ms = 100;
-    if(game.num>1) {delay_ms = 2500;}
+    if (game.num>1) {delay_ms = 2500;}
 
     delay(delay_ms).then(
         () => {
@@ -187,7 +187,7 @@ socket.on('opponentMove', opponentMoveDTO => {
     hideElement(opponentCardsInHand[getRandomInt(5)]);
 
     // display marriage points called by opponent
-    if(opponentMoveDTO.marriagePoints > 0) {
+    if (opponentMoveDTO.marriagePoints > 0) {
         marriagesCalledThisTrickByOpponent.textContent = opponentMoveDTO.marriagePoints;
         showElement(marriagesCalledThisTrickByOpponent);
     }
@@ -197,7 +197,7 @@ socket.on('opponentMove', opponentMoveDTO => {
     showElement(cardPlayedByOpponent);
 
     // disable/overlay unavailable(forbidden) response cards
-    if(opponentMoveDTO.validRespondingCards !== 'all') {
+    if (opponentMoveDTO.validRespondingCards !== 'all') {
         disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
     }
 

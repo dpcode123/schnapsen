@@ -19,11 +19,10 @@ function updateClientGameState(gameStateDTO) {
     game.marriagesInHand = gameStateDTO.marriagesInHand;
 }
 
-
 // Move - play card
 function movePlayCard(cardPlace) {
 
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+    if (game.isThisPlayerOnTurn && gameClient.canMakeMove) {
         // get card(name) from selected card place
         const cardName = cardPlace.getAttribute('data-card');
 
@@ -53,7 +52,7 @@ function movePlayCard(cardPlace) {
 
 // Move - exchange trump card with jack
 function moveExchangeTrump() {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+    if (game.isThisPlayerOnTurn && gameClient.canMakeMove) {
         // create PlayerMove object
         playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'exchangeTrump', 
                                         game.trickNum, game.leadOrResponse, null);
@@ -65,12 +64,12 @@ function moveExchangeTrump() {
 
 // Move - close deck
 function moveCloseDeck() {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove && !game.deckClosed && game.deckSize > 0) {
-        // create PlayerMove object
-        playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'closeDeck', 
-                                        game.trickNum, game.leadOrResponse, null);
-
-        // send move to server
+    if (isPlayerAllowedToMakeMove('closeDeck')) {
+        // create player move object
+        playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, 
+                                    game.moveNum, 'closeDeck', 
+                                    game.trickNum, game.leadOrResponse, null);
+        // send to server
         sendMove(playerMove);
     }
 }

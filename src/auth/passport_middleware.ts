@@ -2,7 +2,7 @@ import { CustomRequest, CustomResponse } from "../ts/interfaces";
 
 export function userAuthenticated (req: CustomRequest, res: CustomResponse, next: () => any) {
     if (req.isAuthenticated()) {
-    return next();
+        return next();
     }
     res.redirect('/login');
 }

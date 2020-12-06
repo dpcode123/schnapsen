@@ -1,44 +1,46 @@
 import passportLocal from 'passport-local';
 import bcrypt from 'bcrypt';
-import pool from '../repository/db_pool_config.js';
+import UserRepository from '../repository/UserRepository.js';
 const LocalStrategy = passportLocal.Strategy;
+const userRepository = new UserRepository();
 export default function initializePassport(passport) {
     const authenticateUser = (username, password, done) => {
-        pool.query(`SELECT * FROM users WHERE LOWER(username) = LOWER($1)`, [username], (err, results) => {
-            if (err) {
-                throw err;
-            }
-            console.log(results.rows);
-            if (results.rows.length > 0) {
-                const user = results.rows[0];
+        let dbUser = userRepository.getUserByUsername(username);
+        dbUser.then((user) => {
+            if (user) {
+                // User found
                 bcrypt.compare(password, user.password, (err, isMatch) => {
                     if (err) {
                         console.log(err);
                     }
                     if (isMatch) {
+                        // password ok
                         return done(null, user);
                     }
                     else {
-                        //password is incorrect
-                        return done(null, false, { message: "Password is incorrect" });
+                        // password is incorrect
+                        return done(null, false, { message: "Login failed! Check your username and password and try again." });
                     }
                 });
             }
             else {
-                // No user
-                return done(null, false, { message: "No user with that username" });
+                // No user found
+                return done(null, false, { message: "Login failed! Check your username and password and try again." });
             }
         });
     };
     passport.use(new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, authenticateUser));
     passport.serializeUser((user, done) => done(null, { id: user.id, username: user.username }));
     passport.deserializeUser((serializedUser, done) => {
-        pool.query(`SELECT * FROM users WHERE id = $1`, [serializedUser.id], (err, results) => {
-            if (err) {
-                return done(err);
+        let dbUser = userRepository.getUserById(serializedUser.id);
+        dbUser.then((user) => {
+            if (user) {
+                console.log(`ID is ${user.id}`);
+                return done(null, user);
             }
-            console.log(`ID is ${results.rows[0].id}`);
-            return done(null, results.rows[0]);
+            else {
+                return done('Error - user not found');
+            }
         });
     });
 }

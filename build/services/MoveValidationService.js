@@ -31,20 +31,24 @@ export default class MoveValidationService {
         // Validate move - play card
         // - if state is 'waitingForMove'
         // - if that card is in players hand
+        // - if player is on turn
         this.playCard = (move, playRoom) => {
-            var _a;
+            var _a, _b, _c;
+            (_a = playRoom.game) === null || _a === void 0 ? void 0 : _a.playerOnTurn;
             const playerIndex = getPlayerIndexInRoomByUserId(playRoom, move.userId);
             const playedCard = getCardByName(move.cardName);
             let isCardInPlayersHand;
-            console.log(playerIndex);
-            console.log(playedCard);
+            let isPlayerOnTurn;
             if (playerIndex !== undefined && playedCard) {
-                const cardsInPlayersHand = (_a = playRoom.game) === null || _a === void 0 ? void 0 : _a.cardsInHand[playerIndex];
+                const cardsInPlayersHand = (_b = playRoom.game) === null || _b === void 0 ? void 0 : _b.cardsInHand[playerIndex];
                 isCardInPlayersHand = cardsInPlayersHand === null || cardsInPlayersHand === void 0 ? void 0 : cardsInPlayersHand.some(c => c === playedCard);
-                console.log('true');
+            }
+            if (playerIndex !== undefined && ((_c = playRoom.game) === null || _c === void 0 ? void 0 : _c.playerOnTurn) === playerIndex) {
+                isPlayerOnTurn = true;
             }
             if (playRoom.game.moveBuffer.state === 'waitingForMove' &&
-                isCardInPlayersHand) {
+                isCardInPlayersHand &&
+                isPlayerOnTurn) {
                 return true;
             }
             return false;

@@ -2,11 +2,27 @@
 
 <body>
 
-    <div class="form-container">
+    <div class="page-container">
         <header class="join-header">
             <h1>Schnapsen</h1>
         </header>
+
         <main class="main-container">
+
+            <div class="server-messages">
+                <% if (messages.error) { %>
+                    <p class="error">
+                        <%= messages.error %>
+                    </p>
+                <% } %>
+
+                <% if (messages.success) { %>
+                    <p class="success">
+                        <%= messages.success %>
+                    </p>
+                <% } %>
+            </div>
+
             <form action="/login" method="POST">
                 <div class="form-control">
                     <label for="username">Username</label>
@@ -26,7 +42,7 @@
                         required
                     />
                 </div>
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="main-link-dark">Login</button>
             </form>
             <p class="register-link"><a href="/register">Register</a></p>
         </main>

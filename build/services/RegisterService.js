@@ -25,6 +25,7 @@ export default class RegisterService {
                     if (password !== password2) {
                         errors.push({ message: 'Passwords do not match' });
                     }
+                    console.log(errors);
                     if (errors.length > 0) {
                         res.render('register', { errors, username, email, password, password2 });
                     }
@@ -33,11 +34,12 @@ export default class RegisterService {
                         pool.query(`SELECT * FROM users WHERE LOWER(username) = LOWER($1)`, [username], (err, results) => {
                             if (err) {
                                 console.log(err);
-                                //return res.render('register', { message: 'Username already exist' });
+                                req.flash('error', 'ERROR: Registration failed - try again.');
                                 return res.redirect('/register');
                             }
                             if (results.rows.length > 0) {
-                                return res.render('register', { message: 'Username already exist' });
+                                req.flash('error', 'ERROR: Username already exist');
+                                return res.render('register');
                             }
                             else {
                                 pool.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id`, [username, email, hashedPassword], (err, results) => {
@@ -45,8 +47,7 @@ export default class RegisterService {
                                         console.log(err);
                                         return res.redirect('/register');
                                     }
-                                    console.log(results.rows);
-                                    req.flash('success_msg', 'You are now registered. Please log in');
+                                    req.flash('success', 'You are now registered. Please log in.');
                                     res.redirect('/login');
                                 });
                             }

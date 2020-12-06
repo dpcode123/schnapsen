@@ -13,7 +13,7 @@ export default class RoomController {
     createRoom = (req: CustomRequest, res: CustomResponse): void => {
         // logged in user
         const player: Player = req.session.passport.user;
-    
+        
         // create random room, add player to room 
         const gameSessionData: GameSessionData | undefined = this.roomService.createRoom(player);
     

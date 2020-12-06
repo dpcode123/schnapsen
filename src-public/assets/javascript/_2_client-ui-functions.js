@@ -48,9 +48,9 @@ function updateOpponentCards(numberOfCardsInHand) {
 // Updates cards in tricks won by player
 function updatePlayerTricks(cards) {
 
-    if(cards.length === 2) {
+    if (cards.length === 2) {
         updatePlayerWonFirstTrick(cards);
-    } else if(cards.length > 2) {
+    } else if (cards.length > 2) {
         updatePlayerWonOtherTricks(cards);
     }
 }
@@ -58,9 +58,9 @@ function updatePlayerTricks(cards) {
 // Updates cards in tricks won by OPPONENT
 function updateOpponentTricks(cardsInFirstTrick, totalNumberOfWonCards) {
 
-    if(totalNumberOfWonCards === 2) {
+    if (totalNumberOfWonCards === 2) {
         updateOpponentWonFirstTrick(cardsInFirstTrick);
-    } else if(totalNumberOfWonCards > 2) {
+    } else if (totalNumberOfWonCards > 2) {
         updateOpponentWonOtherTricks(totalNumberOfWonCards);
     }
 }
@@ -115,11 +115,11 @@ function updateOpponentWonOtherTricks(totalNumberOfWonCards) {
 // Removes(hides) cards from deck stack (when players draw a card after trick)
 function updateCardsStackedInDeck(numberOfCardsInDeck) {
     for(let i = 0; i<9; i++) {
-        if(i >= numberOfCardsInDeck) {
+        if (i >= numberOfCardsInDeck) {
 
             hideElement(cardsInDeck[i]);
 
-            if(numberOfCardsInDeck === 0) {
+            if (numberOfCardsInDeck === 0) {
                 hideElement(trumpCard);
             }
         }
@@ -252,7 +252,7 @@ function updatePoints(points) {
     // update
     textPoints.textContent = points;
     // display
-    if(points > 0) {
+    if (points > 0) {
         showElement(textPoints);
     }
 }
@@ -282,16 +282,16 @@ function updatePlayerAndOpponentBummerlDots() {
 
 // Sets the indicator(background color) - that shows if player is on turn or not
 function setPlayerOnTurnIndicator(isPlayerOnTurn) {
-    if(isPlayerOnTurn) {
-        playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
+    if (isPlayerOnTurn) {
+        playerOnTurnIndicator.setAttributeNS(null, 'fill', PLAYER_BACKGROUND_COLOR_ACTIVE);
     } else {
-        playerOnTurnIndicator.setAttributeNS(null, 'fill', 'gray');
+        playerOnTurnIndicator.setAttributeNS(null, 'fill', PLAYER_BACKGROUND_COLOR_PASSIVE);
     }
 }
 
 // Sets the cards opacity - that shows if player is on turn or not
 function setPlayerOnTurnCardsOpacity(isPlayerOnTurn) {
-    if(isPlayerOnTurn) {
+    if (isPlayerOnTurn) {
         cardsInHand.forEach(card => {
             card.style.opacity = 1;
             card.style.cursor = 'default';
@@ -329,55 +329,114 @@ function hideElements(elements) {
 }
 
 
-// card hover/out functions
-function cardHover(cardPlace) {
-    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove;
 
-    if(elementActive) {
+
+function isPlayerAllowedToMakeMove(moveType) {
+    let isMoveAllowed = false;
+
+    switch (moveType) {
+        case 'playCard':
+            if (game.isThisPlayerOnTurn === true && 
+                gameClient.canMakeMove === true ) {
+                    isMoveAllowed = true;
+                }
+            break;
+
+        case 'closeDeck':
+            if (game.isThisPlayerOnTurn === true && 
+                gameClient.canMakeMove === true && 
+                game.leadOrResponse === true && 
+                game.deckClosed === false &&
+                game.deckSize > 0) {
+                    isMoveAllowed = true;
+                }
+            break;
+
+        case 'exchangeTrump':
+            if (game.isThisPlayerOnTurn === true && 
+                gameClient.canMakeMove === true && 
+                game.deckClosed === false) {
+                    isMoveAllowed = true;
+                }
+            break;
+
+        default:
+            break;
+    }
+
+    return isMoveAllowed;
+}
+
+
+// cards in hand - hover/out functions
+function cardHover(cardPlace) {
+    const isMoveAllowed = isPlayerAllowedToMakeMove('playCard');
+
+    if (isMoveAllowed) {
         cardPlace.style.opacity = 0.9;
         cardPlace.style.cursor = 'grab';
-    }     
+    } else {
+        cardPlace.style.cursor = 'not-allowed';
+    }
 }
 function cardHoverOut(cardPlace) {
-    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove;
+    const isMoveAllowed = isPlayerAllowedToMakeMove('playCard');
 
-    if(elementActive) {
+    if (isMoveAllowed) {
         cardPlace.style.opacity = 1;
         cardPlace.style.cursor = 'default';
     }
 }
 
-// trump card hover/out  functions
-function trumpCardHover(cardPlace) {
-    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove && game.leadOrResponse;
 
-    if(elementActive) {
-        cardPlace.style.opacity = 0.9;
-        cardPlace.style.cursor = 'grab';
-    }    
-}
-function trumpCardHoverOut(cardPlace) {
-    const elementActive = game.isThisPlayerOnTurn && gameClient.canMakeMove&& game.leadOrResponse;
+// exchange trump card button - hover/out functions
+function hoverExchangeTrump(button) {
+    const isMoveAllowed = isPlayerAllowedToMakeMove('exchangeTrump');
 
-    if(elementActive) {
-        cardPlace.style.opacity = 1;
-        cardPlace.style.cursor = 'default';
-    }
-}
-
-// exchange trump card button - hover
-function buttonHover(button) {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove && !game.deckClosed) {
+    if (isMoveAllowed) {
         button.style.opacity = 1;
         button.style.cursor = 'grab';
-    }    
+    }
 }
-function buttonHoverOut(button) {
-    if(game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+function hoverOutExchangeTrump(button) {
+    const isMoveAllowed = isPlayerAllowedToMakeMove('exchangeTrump');
+
+    if (isMoveAllowed) {
         button.style.opacity = 0.6;
         button.style.cursor = 'default';
     }    
 }
+
+
+// close deck by clicking on trump card - hover/out functions
+function hoverCloseDeck(cardPlace) {
+    const isMoveAllowed = isPlayerAllowedToMakeMove('closeDeck');
+
+    if (isMoveAllowed) {
+        cardPlace.style.opacity = 0.9;
+        cardPlace.style.cursor = 'grab';
+    } else {
+        cardPlace.style.cursor = 'not-allowed';
+    }
+}
+function hoverOutCloseDeck(cardPlace) {
+    const isMoveAllowed = isPlayerAllowedToMakeMove('closeDeck');
+
+    if (isMoveAllowed) {
+        cardPlace.style.opacity = 1;
+        cardPlace.style.cursor = 'default';
+    }
+}
+
+
+// exchange trump card button - hover/out functions
+function hoverForbiddenCardOverlay(cardOverlay) {
+    cardOverlay.style.cursor = 'not-allowed';
+}
+function hoverOutForbiddenCardOverlay(cardOverlay) {
+    cardOverlay.style.cursor = 'default';
+}
+
 
 function setupGameScreenWaiting() {
     showElement(textAlert);
@@ -424,7 +483,7 @@ function refreshPlayerOnTurnIndicator(isPlayerOnTurn) {
 
 function updateClientGameScreen() {
 
-    if(game.deckClosed) {
+    if (game.deckClosed) {
         // put trump card on top of deck
         svg.removeChild(trumpCard);
         svg.appendChild(trumpCard);
@@ -457,7 +516,7 @@ function updateClientGameScreen() {
     showElements(opponentCardsInHand);
     
     // game.trumpCard
-    if(game.trumpCard && game.trumpCard !== 'none') {
+    if (game.trumpCard && game.trumpCard !== 'none') {
         putCardInElement(trumpCard, game.trumpCard.name);
         showElement(trumpCard);
     }
@@ -469,8 +528,8 @@ function updateClientGameScreen() {
     updatePoints(game.playerPoints);
 
     // lead card is already played this turn (current play is response)
-    if(game.leadOrResponse === false) {
-        if(game.isThisPlayerOnTurn) {
+    if (game.leadOrResponse === false) {
+        if (game.isThisPlayerOnTurn) {
             putCardInElement(cardPlayedByOpponent, game.leadCardOnTable);
             showElement(cardPlayedByOpponent);
         } else {
@@ -501,7 +560,7 @@ function updateClientGameScreen() {
     showElement(textOpponentGamePoints);
 
     // player points (0-66+)
-    if(game.playerPoints > 0) {showElement(textPoints);}
+    if (game.playerPoints > 0) {showElement(textPoints);}
 
     updatePlayerAndOpponentBummerlDots();
 
@@ -526,7 +585,7 @@ function toggleShowAllTricks() {
 // hide all won tricks
 function toggleHideAllTricks() {
     
-    if(gameClient.showAllWonTricks) {
+    if (gameClient.showAllWonTricks) {
         hideAllTricks();
 
         delay(500).then(
@@ -542,9 +601,9 @@ function toggleHideAllTricks() {
 function hideAllTricks() {
 
     // show default tricks display
-    if(game.playerWonCards.length === 2) {
+    if (game.playerWonCards.length === 2) {
         showElements(wonCardsFirstTrick);
-    } else if(game.playerWonCards.length > 2) {
+    } else if (game.playerWonCards.length > 2) {
         showElements(wonCardsFirstTrick);
         for(let i=0; i<(game.playerWonCards.length-2);i++) {
             showElement(wonCardsOtherTricksCardbacks[i]);
@@ -560,7 +619,7 @@ function hideAllTricks() {
 function updateExchangeTrumpButton(playerHand, trumpSuit) {
 
     // if on turn and leading play and trump card not jack(already changed)
-    if(game.isThisPlayerOnTurn && 
+    if (game.isThisPlayerOnTurn && 
         gameClient.canMakeMove && 
         game.leadOrResponse && 
         game.trumpCard !== undefined &&
@@ -573,7 +632,7 @@ function updateExchangeTrumpButton(playerHand, trumpSuit) {
             // Jack's position in hand (0-4)
             jackPositionInHand = playerHand.findIndex(card => card.name === jackTrumpCardName);
 
-            if(jackPositionInHand !== -1) {
+            if (jackPositionInHand !== -1) {
                 exchangeTrumpCardRect.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+32);
                 exchangeTrumpCardRect.setAttributeNS(null, 'y', parseInt((cardsInHand[jackPositionInHand].getAttribute('y')), 10)-30);
                 exchangeTrumpCardText.setAttributeNS(null, 'x', parseInt((cardsInHand[jackPositionInHand].getAttribute('x')), 10)+38);
@@ -616,7 +675,7 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
     cardsInHand.forEach(cardInHand => {
         const cardAvailable = validRespondingCards.some(responseCard => responseCard.name === cardInHand.name);
         
-        if(cardAvailable) {
+        if (cardAvailable) {
             // card is allowed for playing; do nothing
         } else {
             const cardIndex = getCardPositionInHandByName(cardInHand.name, cardsInHand);
@@ -626,60 +685,3 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
 }
 
 
-// ADDING EVENT LISTENERS
-// ********************************************************************************
-
-// cards
-for(let i = 0; i<5; i++) {
-    cardsInHand[i].addEventListener('mouseover', function () {cardHover(cardsInHand[i]);}, false);
-    cardsInHand[i].addEventListener('mouseout',  function () {cardHoverOut(cardsInHand[i]);}, false);
-    cardsInHand[i].addEventListener('click',     function () {movePlayCard(cardsInHand[i]);}, false);
-}
-/*
-textPoints.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
-textPoints.addEventListener('mouseout', function () {toggleHideAllTricks();}, false);
-textPoints.style.cursor = 'grabbing';
-*/
-wonCardsFirstTrick.forEach(element => {
-    element.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
-});
-
-wonCardsAllTricksDisplayed.forEach(element => {
-    element.addEventListener('mouseout', function () {toggleHideAllTricks();}, false);
-    element.addEventListener('mouseover', function () {toggleShowAllTricks();}, false);
-});
-
-exchangeTrumpCardButton.addEventListener('mouseover', function () {buttonHover(exchangeTrumpCardButton);}, false);
-exchangeTrumpCardButton.addEventListener('mouseout', function () {buttonHoverOut(exchangeTrumpCardButton);}, false);
-exchangeTrumpCardButton.addEventListener('click', function () {moveExchangeTrump();}, false);
-
-// close deck
-trumpCard.addEventListener('mouseover', function () {trumpCardHover(trumpCard);}, false);
-trumpCard.addEventListener('mouseout',  function () {trumpCardHoverOut(trumpCard);}, false);
-trumpCard.addEventListener('click', function () {moveCloseDeck();}, false);
-
-
-
-
-// modal
-const modal = document.querySelector('.modal');
-const modalCloseButton = document.querySelector('.modal-close-button');
-const modalExitGameButton = document.getElementById('modal-exit-game-btn');
-const modalContinueGameButton = document.getElementById('modal-continue-game-btn');
-
-exitButton.addEventListener('click', toggleModal);
-exitButton.style.cursor = 'pointer';
-
-modalCloseButton.addEventListener('click', toggleModal);
-window.addEventListener('click', windowOnClick);
-modalContinueGameButton.addEventListener('click', toggleModal);
-
-function toggleModal() {
-    modal.classList.toggle('show-modal');
-}
-
-function windowOnClick(event) {
-    if (event.target === modal) {
-        toggleModal();
-    }
-}

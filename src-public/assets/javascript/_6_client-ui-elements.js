@@ -16,7 +16,7 @@
 const svg = document.getElementById('svg-content');
 
 
-// CONSTANTS - Namespace, positions, sizes
+// CONSTANTS - Namespace, positions, sizes, colors
 // ********************************************************************************
 
 // XML namespace
@@ -61,13 +61,16 @@ const MARRIAGES_FONT_COLOR = '#52514e';
 const PLAYER_NAME_AND_POINTS_FONT_SIZE = '28px';
 
 // card designs
-const PREFERRED_CARD_FACE = 1;
-const PREFERRED_CARD_BACK = 1;
+const PREFERRED_CARD_FACE = gameClient.cardFace;
+const PREFERRED_CARD_BACK = gameClient.cardBack;
 
 // card image folders
 const CARD_FACE_IMG_FOLDER = `../img/cards/face/${PREFERRED_CARD_FACE}`;
 const CARD_BACK_IMG_FOLDER = `../img/cards/back/${PREFERRED_CARD_BACK}`;
 
+// colors
+const PLAYER_BACKGROUND_COLOR_ACTIVE = '#97c39d';
+const PLAYER_BACKGROUND_COLOR_PASSIVE = '#b0bdbd';
 
 // CARD PATTERNS
 // ********************************************************************************
@@ -242,8 +245,8 @@ playerOnTurnIndicator.setAttributeNS(null, 'x', 0);
 playerOnTurnIndicator.setAttributeNS(null, 'y', 0);
 playerOnTurnIndicator.setAttributeNS(null, 'width',  1080);
 playerOnTurnIndicator.setAttributeNS(null, 'height', 540);
-playerOnTurnIndicator.setAttributeNS(null, 'fill', 'green');
-playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 0.3);
+playerOnTurnIndicator.setAttributeNS(null, 'fill', PLAYER_BACKGROUND_COLOR_ACTIVE);
+playerOnTurnIndicator.setAttributeNS(null, 'fill-opacity', 1);
 
 // Player cards
 for(let i=0; i<5; i++) {

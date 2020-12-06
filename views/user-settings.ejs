@@ -5,8 +5,10 @@
     <div class="page-container">
         <header class="join-header">
             <h1>Schnapsen</h1>
+            <hr>
+            <h2>User settings</h2>
         </header>
-        
+
         <main class="main-container">
 
             <div class="server-messages">
@@ -23,7 +25,7 @@
                 <% } %>
             </div>
 
-            <form action="/register" method="POST">
+            <form action="/user-settings" method="POST">
                 <div class="form-control">
                     <label for="username">Username</label>
                     <input
@@ -31,34 +33,44 @@
                         name="username"
                         id="username"
                         placeholder="Enter name..."
+                        value="<%= userdata.username %>"
+                        disabled
                         required
                     />
+
                     <label for="email">Email</label>
                     <input
                         type="email"
                         name="email"
                         id="email"
                         placeholder="Enter email..."
+                        value="<%= userdata.email %>"
+                        disabled
                         required
                     />
-                    <label for="password">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="Enter password..."
-                        required
-                    />
-                    <label for="password2">Confirm password</label>
-                    <input
-                        type="password"
-                        name="password2"
-                        id="password2"
-                        placeholder="Confirm password..."
-                        required
-                    />
+
+                    <label for="cardface">Card Face</label>
+                    <select name="cardface" id="cardface">
+                        <%
+                        cardFaceDesigns.forEach(element => {
+                            var selected = ( element.id === userdata.cardface_design_id ) ? "selected" : "";
+                            %><option value="<%= element.id %>" <%= selected %>><%= element.name %></option><%
+                        }) 
+                        %>
+                    </select>
+
+                    <label for="cardback">Card Back</label>
+                    <select name="cardback" id="cardback">
+                        <%
+                        cardBackDesigns.forEach(element => {
+                            var selected = ( element.id === userdata.cardback_design_id ) ? "selected" : "";
+                            %><option value="<%= element.id %>" <%= selected %>><%= element.name %></option><%
+                        }) 
+                        %>
+                    </select>
+
                 </div>
-                <button type="submit" class="main-link-dark">Register</button>
+                <button type="submit" class="main-link-dark">Save</button>
             </form>
             <p><a class="back-link" href="/">Back</a></p>
         </main>

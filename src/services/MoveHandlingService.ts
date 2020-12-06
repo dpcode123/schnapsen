@@ -258,10 +258,6 @@ export default class MoveHandlingService {
                         // deal 1 card to each player
                         playRoom.game!.dealCardsToPlayers(trickWinnerIndex!, 1);
 
-                        console.log(playRoom.game!.cardsInHand);
-                        console.log(trickWinnerIndex!);
-                        
-
                         // sort cards in hands; check for marriages; update clients
                         for (let i = 0; i < 2; i++) {
                             playRoom.game!.sortCardsByPointsAndSuit(playRoom.game!.cardsInHand[i]);

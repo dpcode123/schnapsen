@@ -20,20 +20,16 @@
     </svg>    
 
     <script>
-        const passedUsername = JSON.parse('<%- JSON.stringify(u) %>');
-        const passedUserId = JSON.parse('<%- JSON.stringify(i) %>');
-        const passedRoom = JSON.parse('<%- JSON.stringify(r) %>');
-        const passedSocketJwt = JSON.parse('<%- JSON.stringify(t) %>');
+        const passedUsername = JSON.parse('<%- JSON.stringify(username) %>');
+        const passedUserId = JSON.parse('<%- JSON.stringify(userId) %>');
+        const passedRoom = JSON.parse('<%- JSON.stringify(roomId) %>');
+        const passedSocketJwt = JSON.parse('<%- JSON.stringify(token) %>');
+        const passedUserCardFace = JSON.parse('<%- JSON.stringify(userCardFace) %>');
+        const passedUserCardBack = JSON.parse('<%- JSON.stringify(userCardBack) %>');
     </script>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/client-ui-elements.js"></script>
-    <script src="js/client-ui-functions.js"></script>
-    <script src="js/client-models.js"></script>
-    <script src="js/client.js"></script>
-    <script src="js/client-socket-event-listeners.js"></script>
-    <script src="js/client-game-functions.js"></script>
-    <script src="js/client-util.js"></script>
+    <script src="js/script.js"></script>
     
 </body>
 

@@ -20,16 +20,29 @@ export default class RoomService {
             return gameSessionService.generateGameSessionData(firstPlayer, 0, randomId);
         }
     }
-    // Adds second player to existing room
+    // 
+    /**
+     * Adds second player to existing room
+     * - if:
+     *      - room exist
+     *      - first player is set
+     *      - second player is not set
+     *      - 1st and 2nd player are not the same
+     * @param roomId
+     * @param secondPlayer
+     * @returns GameSessionData | undefined
+     */
     joinRoom(roomId, secondPlayer) {
         // get room (or false if room doesnt exist)
         const playRoom = roomRepository.getPlayRoomById(roomId);
-        if (playRoom) {
-            if (playRoom.players[0] && !playRoom.players[1]) {
-                // (if room exist, first player is set, second is not set): add second[1] player to room
-                playRoom.players[1] = secondPlayer;
-                return gameSessionService.generateGameSessionData(secondPlayer, 1, roomId);
-            }
+        if (playRoom &&
+            playRoom.players[0] &&
+            !playRoom.players[1] &&
+            playRoom.players[0].id !== secondPlayer.id) {
+            // add second player to room
+            playRoom.players[1] = secondPlayer;
+            // return game session data
+            return gameSessionService.generateGameSessionData(secondPlayer, 1, roomId);
         }
         return;
     }

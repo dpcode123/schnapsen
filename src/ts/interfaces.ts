@@ -1,6 +1,10 @@
 export interface User {
     id: number,
     username: string,
+    email: string,
+    password: string,
+    cardface_design_id: number,
+    cardback_design_id: number,
 }
 
 export interface Player extends User{
@@ -18,3 +22,7 @@ export interface CustomResponse extends Express.Response {
     redirect(url: string): void;
     status(statusCode: number): any;
 }
+
+export interface RegisterError {
+    message: string;
+};

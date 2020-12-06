@@ -1,0 +1,149 @@
+/* Main */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+@mixin link-btn {
+	cursor: pointer;
+	padding: 8px 12px;
+	border: 0;
+	font-size: 1.2rem;
+	display: block;
+	width: 100%;
+	text-decoration: none;
+	text-align: center;
+	margin: 2rem 0;
+
+	&:hover {
+		opacity: 0.9;
+	}
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+	background: $lightColor;
+	//background: rgb(12, 12, 12);
+}
+
+hr {
+	color: rgb(192, 192, 192);
+}
+
+.page-container {
+	hr {
+		margin: 1rem 0;
+	}
+}
+
+.main-link {
+	@include link-btn();
+	background: $lightColor;
+	color: #000;
+}
+
+.main-link-dark {
+	@include link-btn();
+	background: rgb(20, 20, 20);
+	color: $lightColor;
+	font-size: 1.4rem;
+}
+
+.back-link {
+	@include link-btn();
+	background-color: $darkRedColor;
+	color: #fff;
+	display: inline;
+}
+
+.register-link {
+	margin-top: 20px;
+
+	a {
+		color: #000;
+		font-size: 18px;
+	}
+}
+
+input[disabled] {
+	cursor: not-allowed;
+}
+
+
+
+.page-container {
+	max-width: 480px;
+	margin: 80px auto;
+	color: #fff;
+}
+
+.join-header {
+	text-align: center;
+	padding: 16px;
+	background: $darkColorA;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+.main-container {
+	padding: 30px 40px;
+	background: $darkColorB;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+
+	h2 {
+		margin-bottom: 30px;
+	}
+	
+	p {
+		margin: 20px 0;
+	}
+
+	.form-control {
+		margin-bottom: 20px;
+	}
+	
+	label {
+		display: block;
+		margin-bottom: 0.5rem;
+		margin-top: 1.5rem;
+	}
+	
+	input {
+		font-size: 16px;
+		padding: 5px;
+		height: 40px;
+		width: 100%;
+	}
+	
+	select {
+		font-size: 16px;
+		padding: 5px;
+		height: 40px;
+		width: 100%;
+	}
+	
+	.btn {
+		margin: 2rem 0;
+		width: 100%;
+	}
+
+	
+
+	.server-messages{
+		p {
+			margin-bottom: 1rem;
+			font-size: 1.4rem;
+		}
+		.error {
+			color: $darkRedColor;
+		}
+		.success {
+			color: black;
+		}
+	}
+
+	
+}

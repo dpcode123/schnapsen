@@ -2,7 +2,13 @@
 const socket = io();
 
 // Game client
-const gameClient = new GameClient(passedUsername, passedUserId, passedRoom, passedSocketJwt);
+const gameClient = new GameClient(
+    passedUsername, 
+    passedUserId, 
+    passedRoom, 
+    passedSocketJwt,
+    passedUserCardFace,
+    passedUserCardBack);
 
 // Session, Bummerl, Game objects
 let playSession;

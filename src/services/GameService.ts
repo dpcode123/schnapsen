@@ -7,7 +7,7 @@ export default class GameSessionService {
     
     io: any;
 
-    constructor(io?){
+    constructor(io?) {
         this.io = io;
     }    
 
