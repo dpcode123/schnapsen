@@ -2,6 +2,8 @@ export default class Bummerl {
     num: number;
     status: string;
     gamePoints: number[];
+    timeStarted: number;
+    timeFinished: number = 0;
 
     constructor(num: number) {
         // Bummerl num (1...n)
@@ -15,7 +17,11 @@ export default class Bummerl {
         this.gamePoints = [];
         this.gamePoints[0] = 0;
         this.gamePoints[1] = 0;
+
+        // time started
+        this.timeStarted = Math.round(Date.now()/1000);
     }
+
 
     // check if bummerls is over (7+ game points)
     bummerlOver(playerIndex: number): boolean {

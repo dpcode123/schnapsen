@@ -10,17 +10,7 @@
         <main class="main-container">
 
             <div class="server-messages">
-                <% if (messages.error) { %>
-                    <p class="error">
-                        <%= messages.error %>
-                    </p>
-                <% } %>
-
-                <% if (messages.success) { %>
-                    <p class="success">
-                        <%= messages.success %>
-                    </p>
-                <% } %>
+                <%- include('partials/messages') %>
             </div>
 
             <form action="/register" method="POST">

@@ -4,7 +4,7 @@ import { getCardByName } from './cards.js';
 
 /**
  * @description CALCULATES TRICK WINNER
- * @param trumpSuit - Trump suit in current game
+ * @param trumpSuit - Trump suit in current deal
  * @param leadingMove - First play in trick
  * @param respondingMove - Second play in trick
  * @returns User id
@@ -183,8 +183,8 @@ export function checkPlayedCardMarriagePoints(card: Card | undefined, marriagesI
  * @description CALCULATES VALID RESPONDING CARDS
  * @param leadingCard - First(leading) card in trick
  * @param cardsInRespondingHand - Cards in other player's hand
- * @param trumpSuit - Trump suit in current game
- * @param isDeckClosed - Is deck in current game closed
+ * @param trumpSuit - Trump suit in current deal
+ * @param isDeckClosed - Is deck in current deal closed
  * @param deckLength - Number of cards in deck
  * @returns Cards that player is allowed to play
  * 

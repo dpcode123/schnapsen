@@ -3,7 +3,7 @@ import PlayRoom from '../model/PlayRoom.js';
 import { getPlayerIndexInRoomBySocketId } from '../utils/util.js';
 const roomService = new RoomService();
 
-export default class GameSessionService {
+export default class DisconnectService {
     
     io: any;
 

@@ -6,13 +6,13 @@ export default class SettingsRepository {
     constructor() { }
 
     async getCardBackDesigns(): Promise<any | undefined> {
-        const dbQuery: string = `SELECT * FROM cardback_designs`;
+        const dbQuery: string = `SELECT * FROM cardback_designs;`;
 
         return await this.selectQuery(dbQuery);
     }
 
     async getCardFaceDesigns(): Promise<any | undefined> {
-        const dbQuery: string = `SELECT * FROM cardface_designs`;
+        const dbQuery: string = `SELECT * FROM cardface_designs;`;
 
         return await this.selectQuery(dbQuery);
     }
@@ -25,9 +25,9 @@ export default class SettingsRepository {
     }
 
 
+    // PRIVATE METHODS
 
     private async selectQuery(dbQuery: string): Promise<any | undefined> {
-
         return await pool.query(dbQuery)
             .then(results => {
                 if(results.rowCount > 0) {
@@ -44,7 +44,6 @@ export default class SettingsRepository {
     }
 
     private async updateQuery(dbQuery: string, queryParamsArray: number[]): Promise<boolean> {
-
         return await pool.query(dbQuery, queryParamsArray)
             .then(results => {
                 if(results.rowCount === 1) {

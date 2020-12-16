@@ -2,16 +2,16 @@ import passportLocal from 'passport-local';
 import bcrypt from 'bcrypt';
 import { PassportStatic } from 'passport';
 import { User } from '../ts/interfaces.js';
-import UserRepository from '../repository/UserRepository.js';
+import UserSelectRepository from '../repository/UserSelectRepository.js';
 
 const LocalStrategy = passportLocal.Strategy;
-const userRepository = new UserRepository();
+const userSelectRepository = new UserSelectRepository();
 
 export default function initializePassport(passport: PassportStatic): void {
 
     const authenticateUser = (username: string, password: string, done: any) => {
 
-        let dbUser: Promise<User> = userRepository.getUserByUsername(username);
+        let dbUser: Promise<User | undefined> = userSelectRepository.getUserByUsername(username);
 
         dbUser.then(
             (user) => {
@@ -23,6 +23,7 @@ export default function initializePassport(passport: PassportStatic): void {
                         }
                         if (isMatch) {
                             // password ok
+                            console.log(user);
                             return done(null, user);
                         } else {
                             // password is incorrect
@@ -49,7 +50,8 @@ export default function initializePassport(passport: PassportStatic): void {
             email: user.email,
             password: user.password,
             cardface_design_id: user.cardface_design_id,
-            cardback_design_id: user.cardback_design_id
+            cardback_design_id: user.cardback_design_id,
+            roles: user.roles
         })
     );
 
@@ -57,7 +59,7 @@ export default function initializePassport(passport: PassportStatic): void {
 
     passport.deserializeUser((serializedUser: User, done) => {
 
-        let dbUser: Promise<User> = userRepository.getUserById(serializedUser.id);
+        let dbUser: Promise<User | undefined> = userSelectRepository.getUserById(serializedUser.id);
 
         dbUser.then(
             (user) => {

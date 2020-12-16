@@ -57,7 +57,7 @@ const MARRIAGES_Y_POSITION = 320;
 const MARRIAGES_FONT_SIZE = '24px';
 const MARRIAGES_FONT_COLOR = '#52514e';
 
-// player name; game points(0-7)
+// player name; gamepoints(0-7)
 const PLAYER_NAME_AND_POINTS_FONT_SIZE = '28px';
 
 // card designs
@@ -500,7 +500,7 @@ textRoomId.textContent = '';
 // Text alert
 textAlert = document.createElementNS(XMLNS, 'text');
 textAlert.setAttributeNS(null, 'x', 150);
-textAlert.setAttributeNS(null, 'y', 200);
+textAlert.setAttributeNS(null, 'y', 310);
 textAlert.setAttributeNS(null, 'font-size', '72px');
 textAlert.setAttributeNS(null, 'fill', 'black');
 textAlert.textContent = '';
@@ -694,7 +694,7 @@ opponentWonCardsOtherTricksCardbacks.forEach(card => {
 // room id
 ALL_GUI_ELEMENTS.push(textRoomId);
 
-// game status
+// text alert
 ALL_GUI_ELEMENTS.push(textAlert);
 
 // points

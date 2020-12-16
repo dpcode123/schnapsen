@@ -1,11 +1,11 @@
 import RoomRepository from '../repository/RoomRepository.js';
-import GameService from './GameService.js';
-import PlaySessionService from './PlaySessionService.js';
+import DisconnectService from './DisconnectService.js';
+import RoomSessionService from './RoomSessionService.js';
 import MoveHandlingService from './MoveHandlingService.js';
 import { validateToken } from '../auth/socket_jwt.js';
 import RoomStateDTO from '../dto/RoomStateDTO.js';
 import BummerlStateDTO from '../dto/BummerlStateDTO.js';
-import GameStateDTO from '../dto/GameStateDTO.js';
+import GameStateDTO from '../dto/DealStateDTO.js';
 import SocketEventValidationService from './SocketEventValidationService.js';
 import PlayRoom from '../model/PlayRoom.js';
 import { GameConnectionObject, MoveEntity, PlayerMove } from '../ts/types.js';
@@ -17,15 +17,15 @@ export default class SocketEventHandlingService {
 
     io: any;
     socket: any;
-    gameService: GameService;
-    playSessionService: PlaySessionService;
+    disconnectService: DisconnectService;
+    roomSessionService: RoomSessionService;
     moveHandlingService: MoveHandlingService;
 
     constructor(io, socket) {
         this.io = io;
         this.socket = socket;
-        this.gameService = new GameService(io);
-        this.playSessionService = new PlaySessionService();
+        this.disconnectService = new DisconnectService(io);
+        this.roomSessionService = new RoomSessionService();
         this.moveHandlingService = new MoveHandlingService(io, socket);
     }
 
@@ -61,7 +61,7 @@ export default class SocketEventHandlingService {
                         // update client
                         this.io.to(socketId).emit('sessionStateUpdate', new RoomStateDTO(playRoom, tokenPayload.playerInRoom).getDTO());
                         this.io.to(socketId).emit('bummerlStateUpdate', new BummerlStateDTO(playRoom.bummerl, tokenPayload.playerInRoom).getDTO());
-                        this.io.to(socketId).emit('gameStateUpdateAfterClientRefresh', new GameStateDTO(playRoom.game, tokenPayload.playerInRoom).getDTO());
+                        this.io.to(socketId).emit('dealStateUpdateAfterClientRefresh', new GameStateDTO(playRoom.deal, tokenPayload.playerInRoom).getDTO());
                     } else {
                         // assign socketid to player in room
                         playRoom.players[tokenPayload.playerInRoom]!.socketId = socketId;
@@ -86,10 +86,10 @@ export default class SocketEventHandlingService {
                                     this.io.to(playRoom.players[i]!.socketId).emit('bummerlStart', new BummerlStateDTO(playRoom.bummerl, i).getDTO());
                                 }
 
-                                // start 1st game; update clients
-                                playRoom.startGame();
+                                // start 1st deal; update clients
+                                playRoom.startDeal();
                                 for(let i=0; i<2; i++) {
-                                    this.io.to(playRoom.players[i]!.socketId).emit('gameStart', new GameStateDTO(playRoom.game, i).getDTO());
+                                    this.io.to(playRoom.players[i]!.socketId).emit('gameStart', new GameStateDTO(playRoom.deal, i).getDTO());
                                 }
                             }
                         }
@@ -108,7 +108,7 @@ export default class SocketEventHandlingService {
     }
 
     disconnect = (socketId: string): void  => {
-        this.gameService.disconnect(socketId);
+        this.disconnectService.disconnect(socketId);
     }
 
     clientMove = (moveDTO: MoveEntity): void  => {

@@ -1,23 +1,31 @@
 import { v4 as uuidv4 } from 'uuid';
 import Bummerl from './Bummerl.js';
-import Game from './Game.js';
+import Deal from './Deal.js';
 import { checkForMarriagesInHand } from '../schnaps/schnaps.js';
-import GameOverDTO from '../dto/GameOverDTO.js';
+import DealOverDTO from '../dto/DealOverDTO.js';
 import { otherPlayer} from '../utils/util.js';
 import { Player } from '../ts/interfaces.js';
+import GameHistoryService from '../services/GameHistoryService.js';
 
 export default class PlayRoom {
+
+    gameHistoryService: GameHistoryService;
 
     playSessionUuid: string;
     room: string;
     status: string;
     players: (Player | undefined)[];
     bummerl: Bummerl | undefined = undefined;
-    game: Game | undefined = undefined;
-    bummerlsWon: number[] = [0, 0]
+    deal: Deal | undefined = undefined;
+    bummerlsWon: number[] = [0, 0];
+    
+    
 
     constructor(room: string, player1: Player) {
-        // unique room uuid
+
+        this.gameHistoryService = new GameHistoryService();
+
+        // unique play session uuid
         this.playSessionUuid = uuidv4();
 
         // room id (and socket.io room id)
@@ -32,7 +40,7 @@ export default class PlayRoom {
         this.players[1] = undefined;
     }
 
-    // Starts new bummerl (and new game)
+    // Starts new bummerl (and new deal)
     startBummerl(): void {
 
         // new bummerl number
@@ -46,63 +54,85 @@ export default class PlayRoom {
         }      
 
         // creates new bummerl
-        this.bummerl = new Bummerl(nextBummerlNumber);
-        
+        this.bummerl = new Bummerl(nextBummerlNumber);  
+    }
+
+    // End bummerl
+    endBummerl(winnerIndex) {
+
+        // set bummerl finished time
+        this.bummerl!.timeFinished = Math.round(Date.now()/1000);
+
+
+        // get winning player's id and gamepoints
+        const bummerlWinner = {
+            id: this.players[winnerIndex]?.id,
+            gamePoints: this.bummerl?.gamePoints[winnerIndex]
+        };
+        // get losing player's id and gamepoints
+        const bummerlLoser = {
+            id: this.players[otherPlayer(winnerIndex)]?.id,
+            gamePoints: this.bummerl?.gamePoints[otherPlayer(winnerIndex)]
+        }
+
+        // save to game history
+        this.gameHistoryService.saveBummerl(this.bummerl, bummerlWinner, bummerlLoser, this.playSessionUuid);
     }
 
 
-    // Starts new game
-    startGame(): void {
+    // Starts new deal
+    startDeal(): void {
 
-        let nextGameNumber: number = 0;
-        let nextGameOpeningPlayer: number;
+        let nextDealNumber: number = 0;
+        let nextDealOpeningPlayer: number;
 
-        // (current game exist): increment game number by 1; invert opening player 0<->1
-        // (current game doesnt exist): next game is no.1; opening player is random 0 or 1
-        if (this.game) {
-            nextGameNumber = ++this.game.num;
-            nextGameOpeningPlayer = 1 - this.game.openingPlayer;
+        // (current deal exist): increment deal number by 1; invert opening player 0<->1
+        // (current deal doesnt exist): next deal is no.1; opening player is random 0 or 1
+        if (this.deal) {
+            nextDealNumber = ++this.deal.num;
+            nextDealOpeningPlayer = 1 - this.deal.openingPlayer;
         } else {
-            nextGameNumber = 1;
-            nextGameOpeningPlayer = Math.round(Math.random());
+            nextDealNumber = 1;
+            nextDealOpeningPlayer = Math.round(Math.random());
         }
         
-        // Create new game
-        this.game = new Game(nextGameNumber, nextGameOpeningPlayer);
+        // Create new deal
+        this.deal = new Deal(nextDealNumber, nextDealOpeningPlayer);
 
         // Deal 3 cards, deal trump, deal 2 cards
-        this.game.dealCardsToPlayers(nextGameOpeningPlayer, 3);
-        this.game.setTrumpCardAndSuit();
-        this.game.dealCardsToPlayers(nextGameOpeningPlayer, 2);
+        this.deal.dealCardsToPlayers(nextDealOpeningPlayer, 3);
+        this.deal.setTrumpCardAndSuit();
+        this.deal.dealCardsToPlayers(nextDealOpeningPlayer, 2);
 
         // Sort cards in hands; Check for marriages in hands
         for(let i=0; i<2; i++) {
-            this.game.sortCardsByPointsAndSuit(this.game.cardsInHand[i]);
-            this.game.marriagesInHand[i] = checkForMarriagesInHand(this.game.cardsInHand[i], this.game.trumpSuit!);
+            this.deal.sortCardsByPointsAndSuit(this.deal.cardsInHand[i]);
+            this.deal.marriagesInHand[i] = checkForMarriagesInHand(this.deal.cardsInHand[i], this.deal.trumpSuit!);
         }
     }
 
-    // Ends current game
-    endGame(gameOver, io): void {
-        // add game points (1, 2 or 3) to winner
-        this.bummerl!.gamePoints[gameOver.winnerIndex] += gameOver.gamePoints;
+    // Ends current deal
+    endDeal(dealOver, io): void {
+        // add gamepoints (1, 2 or 3) to winner
+        this.bummerl!.gamePoints[dealOver.winnerIndex] += dealOver.gamePoints;
 
-        // change game status
-        this.game!.status = 'finished';
+        // change deal status
+        this.deal!.status = 'finished';
 
-        // update game winner
-        io.to(this.players[gameOver.winnerIndex]!.socketId).emit('gameOverDTO', new GameOverDTO(gameOver, true).getDTO());
+        // update client - deal winner
+        io.to(this.players[dealOver.winnerIndex]!.socketId).emit('dealOverDTO', new DealOverDTO(dealOver, true).getDTO());
 
-        // update game loser
-        io.to(this.players[otherPlayer(gameOver.winnerIndex)]!.socketId).emit('gameOverDTO', new GameOverDTO(gameOver, false).getDTO());
+        // update client - deal loser
+        io.to(this.players[otherPlayer(dealOver.winnerIndex)]!.socketId).emit('dealOverDTO', new DealOverDTO(dealOver, false).getDTO());
         
-        // check if bummerl is over(player has 7+ game points)
-        let bummerlOver  = this.bummerl!.bummerlOver(gameOver.winnerIndex);
+        // check if bummerl is over(player has 7+ gamepoints)
+        let bummerlOver  = this.bummerl!.bummerlOver(dealOver.winnerIndex);
 
-        // start new bummerl, increase bummerlsWon points for winning player
+        // end bummerl, start new bummerl, increase bummerlsWon points for winning player
         if (bummerlOver) {
+            this.endBummerl(dealOver.winnerIndex);
             this.startBummerl();
-            this.bummerlsWon[gameOver.winnerIndex] = this.bummerlsWon[gameOver.winnerIndex] + 1;
+            this.bummerlsWon[dealOver.winnerIndex] = this.bummerlsWon[dealOver.winnerIndex] + 1;
         }
     }
     

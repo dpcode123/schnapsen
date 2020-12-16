@@ -1,6 +1,6 @@
 import RoomService from '../services/RoomService.js';
 import { Player, CustomRequest, CustomResponse } from '../ts/interfaces.js';
-import { GameSessionData } from '../ts/types.js';
+import { RoomSessionData } from '../ts/types.js';
 
 export default class RoomController {
 
@@ -15,13 +15,13 @@ export default class RoomController {
         const player: Player = req.session.passport.user;
         
         // create random room, add player to room 
-        const gameSessionData: GameSessionData | undefined = this.roomService.createRoom(player);
+        const roomSessionData: RoomSessionData | undefined = this.roomService.createRoom(player);
     
-        if (gameSessionData) {
+        if (roomSessionData) {
             // (room is created and first player is joined to room)
             // add to express session and redirect to game page
-            req.session.gameSessionData = gameSessionData;
-            res.redirect(`/game`);
+            req.session.roomSessionData = roomSessionData;
+            res.redirect(`/play`);
         } else {
             res.redirect(`/`);
         }
@@ -35,13 +35,13 @@ export default class RoomController {
         const roomId: string = req.query.roomId;
     
         // join player to room and return game session data
-        const gameSessionData: GameSessionData | undefined = this.roomService.joinRoom(roomId, player);
+        const roomSessionData: RoomSessionData | undefined = this.roomService.joinRoom(roomId, player);
     
-        if (gameSessionData) {
+        if (roomSessionData) {
             // (room exist and second player is joined to room)
             // add to express session and redirect to game page
-            req.session.gameSessionData = gameSessionData;
-            res.redirect(`/game`);
+            req.session.roomSessionData = roomSessionData;
+            res.redirect(`/play`);
         } else {
             res.redirect(`/`);
         }  

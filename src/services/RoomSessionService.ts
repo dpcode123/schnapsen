@@ -1,14 +1,13 @@
 import { signToken } from '../auth/socket_jwt.js';
 import { Player } from '../ts/interfaces.js';
-import { GameConnectionObject, GameSessionData } from '../ts/types.js';
+import { GameConnectionObject, RoomSessionData } from '../ts/types.js';
 
-export default class GameSessionService {
+export default class RoomSessionService {
 
-    constructor(){
-    }
+    constructor() { }
 
     // Generates game session data with jwt token for socket.io
-    generateGameSessionData = function (player: Player, playerIndex: number, roomId: string): GameSessionData {
+    generateRoomSessionData = function (player: Player, playerIndex: number, roomId: string): RoomSessionData {
 
         // create connection object for jwt
         const gameConnectionObject: GameConnectionObject = {
@@ -22,7 +21,7 @@ export default class GameSessionService {
         const socketJwt: string = signToken(gameConnectionObject);
 
         // game session data
-        const gameSessionData: GameSessionData = {
+        const roomSessionData: RoomSessionData = {
             username: player.username, 
             userId: player.id, 
             roomId: roomId, 
@@ -31,6 +30,6 @@ export default class GameSessionService {
             userCardBack: player.cardback_design_id
         };
 
-        return gameSessionData;
+        return roomSessionData;
     }
 }

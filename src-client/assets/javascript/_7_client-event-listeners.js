@@ -40,8 +40,8 @@ for(let i = 0; i<5; i++) {
 // modal
 const modal = document.querySelector('.modal');
 const modalCloseButton = document.querySelector('.modal-close-button');
-const modalExitGameButton = document.getElementById('modal-exit-game-btn');
-const modalContinueGameButton = document.getElementById('modal-continue-game-btn');
+const modalExitGameButton = document.getElementById('modal-exit-btn');
+const modalContinueGameButton = document.getElementById('modal-continue-btn');
 
 exitButton.addEventListener('click', toggleModal);
 exitButton.style.cursor = 'pointer';

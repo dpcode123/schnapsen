@@ -1,19 +1,16 @@
 /**
-  * Fisher-Yates shuffle
-  * https://bost.ocks.org/mike/shuffle/
-  * https://blog.codinghorror.com/the-danger-of-naivete/
-  * https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
-  */
+ * Fisher-Yates shuffle
+ */
 export function shuffle(array) {
-    var m = array.length, t, i;
-    // While there remain elements to shuffle…
+    let m = array.length;
+    // While there are remaining elements to shuffle
     while (m) {
-        // Pick a remaining element…
-        i = Math.floor(Math.random() * m--);
-        // And swap it with the current element.
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
+        // get random element index
+        const r = Math.floor(Math.random() * m--);
+        // swap it with current element
+        const t = array[m];
+        array[m] = array[r];
+        array[r] = t;
     }
     return array;
 }

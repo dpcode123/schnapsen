@@ -19,9 +19,9 @@ export default class MoveValidationService {
     // - if deck is not closed by player
     // - if move is leading
     exchangeTrump = (move: PlayerMove, playRoom: PlayRoom): boolean => {
-        if (playRoom.game!.moveBuffer.state === 'waitingForMove' &&
-            playRoom.game!.deck.length > 0 &&
-            playRoom.game!.deckClosedByPlayer === undefined &&    
+        if (playRoom.deal!.moveBuffer.state === 'waitingForMove' &&
+            playRoom.deal!.deck.length > 0 &&
+            playRoom.deal!.deckClosedByPlayer === undefined &&    
             move.leadOrResponse === true) {
                 return true;
         }
@@ -33,8 +33,8 @@ export default class MoveValidationService {
     // - if there are cards in deck
     // - if move is leading
     closeDeck = (move: PlayerMove, playRoom: PlayRoom): boolean => {
-        if (playRoom.game!.moveBuffer.state === 'waitingForMove' &&
-            playRoom.game!.deck.length > 0 &&    
+        if (playRoom.deal!.moveBuffer.state === 'waitingForMove' &&
+            playRoom.deal!.deck.length > 0 &&    
             move.leadOrResponse === true) {                
                 return true;
         }
@@ -47,7 +47,7 @@ export default class MoveValidationService {
     // - if player is on turn
     playCard = (move: PlayerMove, playRoom: PlayRoom): boolean => {
 
-        playRoom.game?.playerOnTurn
+        playRoom.deal?.playerOnTurn
 
         const playerIndex: number | undefined = getPlayerIndexInRoomByUserId(playRoom, move.userId);
         const playedCard: Card | undefined = getCardByName(move.cardName);
@@ -55,16 +55,16 @@ export default class MoveValidationService {
         let isPlayerOnTurn: boolean | undefined;
 
         if (playerIndex !== undefined && playedCard){
-            const cardsInPlayersHand: Card[] | undefined = playRoom.game?.cardsInHand[playerIndex];
+            const cardsInPlayersHand: Card[] | undefined = playRoom.deal?.cardsInHand[playerIndex];
             isCardInPlayersHand = cardsInPlayersHand?.some(c => c === playedCard);
         }
 
-        if (playerIndex !== undefined && playRoom.game?.playerOnTurn === playerIndex) {
+        if (playerIndex !== undefined && playRoom.deal?.playerOnTurn === playerIndex) {
             isPlayerOnTurn = true;
         }
 
 
-        if (playRoom.game!.moveBuffer.state === 'waitingForMove' &&
+        if (playRoom.deal!.moveBuffer.state === 'waitingForMove' &&
             isCardInPlayersHand && 
             isPlayerOnTurn) {
                 return true;

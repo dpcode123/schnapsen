@@ -8,7 +8,7 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
-  background: #0c0c0c; }
+  background: #e9e7e7; }
 
 hr {
   color: silver; }
@@ -57,7 +57,7 @@ hr {
   text-decoration: none;
   text-align: center;
   margin: 2rem 0;
-  background-color: #941212;
+  background-color: #3f0000;
   color: #fff;
   display: inline; }
   .back-link:hover {
@@ -116,11 +116,11 @@ input[disabled] {
     margin-bottom: 1rem;
     font-size: 1.4rem; }
   .main-container .server-messages .error {
-    color: #941212; }
+    color: #fff; }
   .main-container .server-messages .success {
     color: black; }
 
-/* Game page */
+/* Play page */
 .svg-container {
   position: relative;
   height: 0;

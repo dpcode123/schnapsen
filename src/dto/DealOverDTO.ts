@@ -1,4 +1,4 @@
-export default class GameOverDTO {
+export default class DealOverDTO {
 
     dto: {
         gamePoints: number,
@@ -6,11 +6,11 @@ export default class GameOverDTO {
         playerPointsAtEndOfGame: number,
     };
 
-    constructor(gameOver: any, isWinner: boolean) {
+    constructor(dealOver: any, isWinner: boolean) {
         this.dto = {
-            gamePoints: gameOver.gamePoints,
+            gamePoints: dealOver.gamePoints,
             isWinner: isWinner,
-            playerPointsAtEndOfGame: gameOver.playerPointsAtEndOfGame,
+            playerPointsAtEndOfGame: dealOver.playerPointsAtEndOfGame,
         };
     }
     

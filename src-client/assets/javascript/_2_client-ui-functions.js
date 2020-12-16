@@ -257,7 +257,7 @@ function updatePoints(points) {
     }
 }
 
-// Updates player's and opponent's game points (0->7+)
+// Updates player's and opponent's deal points (0->7+)
 function updatePlayerAndOpponentGamePoints() {
     textPlayerGamePoints.textContent = bummerl.gamePointsPlayer;
     textOpponentGamePoints.textContent = bummerl.gamePointsOpponent;
@@ -336,26 +336,26 @@ function isPlayerAllowedToMakeMove(moveType) {
 
     switch (moveType) {
         case 'playCard':
-            if (game.isThisPlayerOnTurn === true && 
+            if (deal.isThisPlayerOnTurn === true && 
                 gameClient.canMakeMove === true ) {
                     isMoveAllowed = true;
                 }
             break;
 
         case 'closeDeck':
-            if (game.isThisPlayerOnTurn === true && 
+            if (deal.isThisPlayerOnTurn === true && 
                 gameClient.canMakeMove === true && 
-                game.leadOrResponse === true && 
-                game.deckClosed === false &&
-                game.deckSize > 0) {
+                deal.leadOrResponse === true && 
+                deal.deckClosed === false &&
+                deal.deckSize > 0) {
                     isMoveAllowed = true;
                 }
             break;
 
         case 'exchangeTrump':
-            if (game.isThisPlayerOnTurn === true && 
+            if (deal.isThisPlayerOnTurn === true && 
                 gameClient.canMakeMove === true && 
-                game.deckClosed === false) {
+                deal.deckClosed === false) {
                     isMoveAllowed = true;
                 }
             break;
@@ -463,7 +463,7 @@ function setupGameScreenStarted() {
 
     showElements(cardsInHand);
     showElements(opponentCardsInHand);
-    putCardInElement(trumpCard, game.trumpCard.name);
+    putCardInElement(trumpCard, deal.trumpCard.name);
     showElement(trumpCard);
     showElements(cardsInDeck);
     showElement(textPlayerName);
@@ -471,7 +471,7 @@ function setupGameScreenStarted() {
     showElement(textPlayerGamePoints);
     showElement(textOpponentGamePoints);
 
-    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
 }
 
 // player on turn indicator: background color, cards opacity
@@ -483,7 +483,7 @@ function refreshPlayerOnTurnIndicator(isPlayerOnTurn) {
 
 function updateClientGameScreen() {
 
-    if (game.deckClosed) {
+    if (deal.deckClosed) {
         // put trump card on top of deck
         svg.removeChild(trumpCard);
         svg.appendChild(trumpCard);
@@ -505,62 +505,62 @@ function updateClientGameScreen() {
     cleanupGameScreen();
 
     // player on turn indicator: background color, cards opacity
-    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
 
     // cards in player's hand
-    updateAllCardsInHand(game.cardsInHand);
+    updateAllCardsInHand(deal.cardsInHand);
     showElements(cardsInHand);
 
     // cards in opponent's hand
-    updateOpponentCards(game.cardsInHand.length);
+    updateOpponentCards(deal.cardsInHand.length);
     showElements(opponentCardsInHand);
     
-    // game.trumpCard
-    if (game.trumpCard && game.trumpCard !== 'none') {
-        putCardInElement(trumpCard, game.trumpCard.name);
+    // deal.trumpCard
+    if (deal.trumpCard && deal.trumpCard !== 'none') {
+        putCardInElement(trumpCard, deal.trumpCard.name);
         showElement(trumpCard);
     }
 
-    // game.trumpSuit (button for exchanging trump card with jack card)
-    updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+    // deal.trumpSuit (button for exchanging trump card with jack card)
+    updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
 
-    // game.playerPoints
-    updatePoints(game.playerPoints);
+    // deal.playerPoints
+    updatePoints(deal.playerPoints);
 
     // lead card is already played this turn (current play is response)
-    if (game.leadOrResponse === false) {
-        if (game.isThisPlayerOnTurn) {
-            putCardInElement(cardPlayedByOpponent, game.leadCardOnTable);
+    if (deal.leadOrResponse === false) {
+        if (deal.isThisPlayerOnTurn) {
+            putCardInElement(cardPlayedByOpponent, deal.leadCardOnTable);
             showElement(cardPlayedByOpponent);
         } else {
-            putCardInElement(cardPlayedByPlayer, game.leadCardOnTable);
+            putCardInElement(cardPlayedByPlayer, deal.leadCardOnTable);
             showElement(cardPlayedByPlayer);
         }
     }
 
-    // game.marriagesInHand
-    updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+    // deal.marriagesInHand
+    updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
     
     // cards in deck    
-    updateCardsStackedInDeck(game.deckSize);
+    updateCardsStackedInDeck(deal.deckSize);
     showElements(cardsInDeck);
 
     // player tricks
-    updatePlayerTricks(game.playerWonCards);
+    updatePlayerTricks(deal.playerWonCards);
 
     // opponent tricks
-    updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
+    updateOpponentTricks(deal.opponentWonCardsFirstTrick, deal.opponentTotalWonCardsNumber);
 
     // player and opponent names
     showElement(textPlayerName);
     showElement(textOpponentName);
 
-    // player and opponent game points (0-7+)
+    // player and opponent deal points (0-7+)
     showElement(textPlayerGamePoints);
     showElement(textOpponentGamePoints);
 
     // player points (0-66+)
-    if (game.playerPoints > 0) {showElement(textPoints);}
+    if (deal.playerPoints > 0) {showElement(textPoints);}
 
     updatePlayerAndOpponentBummerlDots();
 
@@ -574,7 +574,7 @@ function toggleShowAllTricks() {
     hideElements(wonCardsOtherTricksCardbacks);
     
     // show all won cards
-    for(let i=0; i<game.playerWonCards.length; i++) {
+    for(let i=0; i<deal.playerWonCards.length; i++) {
         showElement(wonCardsAllTricksDisplayed[i]);
     }
 
@@ -601,11 +601,11 @@ function toggleHideAllTricks() {
 function hideAllTricks() {
 
     // show default tricks display
-    if (game.playerWonCards.length === 2) {
+    if (deal.playerWonCards.length === 2) {
         showElements(wonCardsFirstTrick);
-    } else if (game.playerWonCards.length > 2) {
+    } else if (deal.playerWonCards.length > 2) {
         showElements(wonCardsFirstTrick);
-        for(let i=0; i<(game.playerWonCards.length-2);i++) {
+        for(let i=0; i<(deal.playerWonCards.length-2);i++) {
             showElement(wonCardsOtherTricksCardbacks[i]);
         }
     }
@@ -619,12 +619,12 @@ function hideAllTricks() {
 function updateExchangeTrumpButton(playerHand, trumpSuit) {
 
     // if on turn and leading play and trump card not jack(already changed)
-    if (game.isThisPlayerOnTurn && 
+    if (deal.isThisPlayerOnTurn && 
         gameClient.canMakeMove && 
-        game.leadOrResponse && 
-        game.trumpCard !== undefined &&
-        game.trumpCard.tier !== "J" &&
-        game.deckSize > 0) {
+        deal.leadOrResponse && 
+        deal.trumpCard !== undefined &&
+        deal.trumpCard.tier !== "J" &&
+        deal.deckSize > 0) {
 
             // jack-trump card name
             const jackTrumpCardName = `j-${trumpSuit}`;

@@ -1,61 +1,23 @@
-import UserDTO from "../dto/UserDTO.js";
-import SettingsRepository from "../repository/SettingsRepository.js";
-import { CustomRequest, CustomResponse } from "../ts/interfaces";
+import express, { Router } from 'express';
+import { isUserAuthenticated, isUserNotAuthenticated } from '../auth/passport_middleware.js';
+import UserSettingsService from '../services/UserSettingsService.js';
+import { CustomRequest, CustomResponse } from '../ts/interfaces.js';
 
+const userSettingsService = new UserSettingsService();
 
 export default class UserSettingsController {
 
-    settingsRepository: SettingsRepository;
+    userSettingsService: UserSettingsService;
 
-    constructor() {
-        this.settingsRepository = new SettingsRepository();
+    constructor() { 
+        this.userSettingsService = new UserSettingsService();
     }
 
-    
-
-    getSettings = async (req: CustomRequest, res: CustomResponse) => {
-        
-        const userDTO: UserDTO = new UserDTO(req.session.passport.user);
-        const cardFaceDesigns: Promise<any | undefined> = await this.settingsRepository.getCardFaceDesigns();
-        const cardBackDesigns: Promise<any | undefined> = await this.settingsRepository.getCardBackDesigns();
-
-        if (cardFaceDesigns && cardBackDesigns) {
-            res.render('user-settings', {
-                userdata: userDTO,
-                cardFaceDesigns: cardFaceDesigns,
-                cardBackDesigns: cardBackDesigns
-            });
-        } else {
-            res.redirect('/');
-        }
-
-        
+    getSettings = (req: CustomRequest, res: CustomResponse) => {
+        return this.userSettingsService.getSettings(req, res);
     }
 
-    updateSettings = async (req: CustomRequest, res: CustomResponse) => {
-
-        const userId = req.session.passport.user.id;
-
-        // get submitted ids from request body and parse them to integer
-        let cardface = parseInt(req.body.cardface, 10);
-        let cardback = parseInt(req.body.cardback, 10);
-
-        // if they are not valid set them to 1
-        if(isNaN(cardface)) { cardface = 1; }
-        if(isNaN(cardback)) { cardback = 1; }
-
-        // update user in database
-        const queryResult: boolean = await this.settingsRepository.updateCardBackDesigns(cardface, cardback, userId);
-        
-        if (queryResult) {
-            // update user's session
-            req.session.passport.user.cardface_design_id = cardface;
-            req.session.passport.user.cardback_design_id = cardback;
-        } else {
-            console.log('Error updating user card design preferences');
-        }
-
-        res.redirect('/user-settings');
+    updateSettings = (req: CustomRequest, res: CustomResponse) => {
+        return this.userSettingsService.updateSettings(req, res);
     }
-
 }

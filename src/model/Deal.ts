@@ -11,7 +11,7 @@ import Trick from './Trick.js';
 
 const ALL_CARDS: ReadonlyArray<Card> = getAllCards();
 
-export default class Game {
+export default class Deal {
 
     num: number;
     moveBuffer: any;
@@ -32,10 +32,12 @@ export default class Game {
     cardsInHand: Card[][];
     marriagesInHand: any[];
     wonCards: Card[][];
+    
 
     constructor(num: number, openingPlayer: number) {
-        // game number: (1...13)
-        // 13 is max number of games played in bummerl,
+
+        // deal number: (1...13)
+        // 13 is max number of deals played in bummerl,
         // if final score is 7:6 or 6:7 and every win was for only 1 point
         this.num = num;
 
@@ -46,7 +48,7 @@ export default class Game {
         // cards deck
         this.deck = shuffle([...ALL_CARDS]);
 
-        // game state (started, finished)
+        // deal state (started, finished)
         this.status = 'started';
 
         // opening player(first player) 0 or 1
@@ -156,14 +158,14 @@ export default class Game {
     }
 
     // Checks if player is out (66+ points)
-    gameOver(playerIndex: number): any {
+    dealOver(playerIndex: number): any {
 
         const winnerIndex = playerIndex;
-        const isGameOver = this.playerPoints[playerIndex] >= 66;
+        const isDealOver = this.playerPoints[playerIndex] >= 66;
         let gamePoints = 0;
         
-        // Game is over
-        if (isGameOver) {
+        // Deal is over
+        if (isDealOver) {
 
             // deck is closed
             if (this.deckClosed && this.deckClosedByPlayer !== undefined) {
@@ -206,16 +208,16 @@ export default class Game {
 
         return {
             winnerIndex: winnerIndex,
-            isGameOver: isGameOver,
+            isDealOver: isDealOver,
             gamePoints: gamePoints,
             playerPointsAtEndOfGame: this.playerPoints[playerIndex],
         };
     }
 
     // after last trick
-    gameOverLastTrick(playerIndex: number): any {
+    dealOverLastTrick(playerIndex: number): any {
 
-        const isGameOver = true;
+        const isDealOver = true;
         let gamePoints = 0;
         let winnerIndex;
 
@@ -260,7 +262,7 @@ export default class Game {
 
         return {
             winnerIndex: winnerIndex,
-            isGameOver: isGameOver,
+            isDealOver: isDealOver,
             gamePoints: gamePoints,
             playerPointsAtEndOfGame: this.playerPoints[playerIndex],
         };

@@ -49,71 +49,71 @@ class Bummerl {
 
 
 /**
- * Game (CLIENT SIDE)
+ * Deal (CLIENT SIDE)
  */
-class Game {
-    constructor(gameStateDTO) {
+class Deal {
+    constructor(dealStateDTO) {
 
-        // game number in bummerl (1...13)
-        this.num = gameStateDTO.num;
+        //  number in bummerl (1...13)
+        this.num = dealStateDTO.num;
 
         // player on turn: 0/1
-        this.playerOnTurn = gameStateDTO.playerOnTurn;
+        this.playerOnTurn = dealStateDTO.playerOnTurn;
 
         // trump card
-        this.trumpCard = gameStateDTO.trumpCard;
+        this.trumpCard = dealStateDTO.trumpCard;
 
         // trump suit
-        this.trumpSuit = gameStateDTO.trumpSuit;
+        this.trumpSuit = dealStateDTO.trumpSuit;
 
         // trick number: 1-10
-        this.trickNum = gameStateDTO.trickNum;
+        this.trickNum = dealStateDTO.trickNum;
 
         // move number
-        this.moveNum = gameStateDTO.moveNum;
+        this.moveNum = dealStateDTO.moveNum;
 
         // Lead(true) or Response(false)
-        this.leadOrResponse = gameStateDTO.leadOrResponse;
+        this.leadOrResponse = dealStateDTO.leadOrResponse;
 
         // Lead card played (if current state is response, otherwise null)
-        this.leadCardOnTable = gameStateDTO.leadCardOnTable;
+        this.leadCardOnTable = dealStateDTO.leadCardOnTable;
 
         // deck closed or out of cards
-        this.deckClosed = gameStateDTO.deckClosed;
+        this.deckClosed = dealStateDTO.deckClosed;
 
         // points for player: 0-66
-        this.playerPoints = gameStateDTO.playerPoints;
+        this.playerPoints = dealStateDTO.playerPoints;
 
         // cards in player hands
-        this.cardsInHand = gameStateDTO.cardsInHand;
+        this.cardsInHand = dealStateDTO.cardsInHand;
 
         // is this player on turn or not
-        this.isThisPlayerOnTurn = gameStateDTO.isThisPlayerOnTurn;
+        this.isThisPlayerOnTurn = dealStateDTO.isThisPlayerOnTurn;
 
         // number of cards left in deck
-        this.deckSize = gameStateDTO.deckSize;
+        this.deckSize = dealStateDTO.deckSize;
 
         // won tricks(cards) by player
-        this.playerWonCards = gameStateDTO.playerWonCards;
+        this.playerWonCards = dealStateDTO.playerWonCards;
 
         // won 1st trick(2 cards) by opponent
-        this.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;
+        this.opponentWonCardsFirstTrick = dealStateDTO.opponentWonCardsFirstTrick;
 
         // total number of cards in opponent won tricks
-        this.opponentTotalWonCardsNumber = gameStateDTO.opponentTotalWonCardsNumber;
+        this.opponentTotalWonCardsNumber = dealStateDTO.opponentTotalWonCardsNumber;
 
         // marriages
-        this.marriagesInHand = gameStateDTO.marriagesInHand;
+        this.marriagesInHand = dealStateDTO.marriagesInHand;
     }
 }
 
 
 /**
  * PlayerMove (CLIENT SIDE)
- * @param {string} roomId - unique game id (room id)
+ * @param {string} roomId - room id
  * @param {number} userId - user id (from db)
  * @param {string} socketId - socket.io id
- * @param {number} moveNum - total move number in game, for both players (0,1,2...n)
+ * @param {number} moveNum - total move number in , for both players (0,1,2...n)
  * @param {string} moveType - card, exchangeTrumpCard, closeDeck, foldHand
  * @param {number} trickNum - trick number, 1-10
  * @param {boolean} leadOrResponse - TRUE-lead play(1st card played in trick), FALSE-response play(2nd card)
@@ -390,7 +390,7 @@ function updatePoints(points) {
     }
 }
 
-// Updates player's and opponent's game points (0->7+)
+// Updates player's and opponent's deal points (0->7+)
 function updatePlayerAndOpponentGamePoints() {
     textPlayerGamePoints.textContent = bummerl.gamePointsPlayer;
     textOpponentGamePoints.textContent = bummerl.gamePointsOpponent;
@@ -469,26 +469,26 @@ function isPlayerAllowedToMakeMove(moveType) {
 
     switch (moveType) {
         case 'playCard':
-            if (game.isThisPlayerOnTurn === true && 
+            if (deal.isThisPlayerOnTurn === true && 
                 gameClient.canMakeMove === true ) {
                     isMoveAllowed = true;
                 }
             break;
 
         case 'closeDeck':
-            if (game.isThisPlayerOnTurn === true && 
+            if (deal.isThisPlayerOnTurn === true && 
                 gameClient.canMakeMove === true && 
-                game.leadOrResponse === true && 
-                game.deckClosed === false &&
-                game.deckSize > 0) {
+                deal.leadOrResponse === true && 
+                deal.deckClosed === false &&
+                deal.deckSize > 0) {
                     isMoveAllowed = true;
                 }
             break;
 
         case 'exchangeTrump':
-            if (game.isThisPlayerOnTurn === true && 
+            if (deal.isThisPlayerOnTurn === true && 
                 gameClient.canMakeMove === true && 
-                game.deckClosed === false) {
+                deal.deckClosed === false) {
                     isMoveAllowed = true;
                 }
             break;
@@ -596,7 +596,7 @@ function setupGameScreenStarted() {
 
     showElements(cardsInHand);
     showElements(opponentCardsInHand);
-    putCardInElement(trumpCard, game.trumpCard.name);
+    putCardInElement(trumpCard, deal.trumpCard.name);
     showElement(trumpCard);
     showElements(cardsInDeck);
     showElement(textPlayerName);
@@ -604,7 +604,7 @@ function setupGameScreenStarted() {
     showElement(textPlayerGamePoints);
     showElement(textOpponentGamePoints);
 
-    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
 }
 
 // player on turn indicator: background color, cards opacity
@@ -616,7 +616,7 @@ function refreshPlayerOnTurnIndicator(isPlayerOnTurn) {
 
 function updateClientGameScreen() {
 
-    if (game.deckClosed) {
+    if (deal.deckClosed) {
         // put trump card on top of deck
         svg.removeChild(trumpCard);
         svg.appendChild(trumpCard);
@@ -638,62 +638,62 @@ function updateClientGameScreen() {
     cleanupGameScreen();
 
     // player on turn indicator: background color, cards opacity
-    refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
 
     // cards in player's hand
-    updateAllCardsInHand(game.cardsInHand);
+    updateAllCardsInHand(deal.cardsInHand);
     showElements(cardsInHand);
 
     // cards in opponent's hand
-    updateOpponentCards(game.cardsInHand.length);
+    updateOpponentCards(deal.cardsInHand.length);
     showElements(opponentCardsInHand);
     
-    // game.trumpCard
-    if (game.trumpCard && game.trumpCard !== 'none') {
-        putCardInElement(trumpCard, game.trumpCard.name);
+    // deal.trumpCard
+    if (deal.trumpCard && deal.trumpCard !== 'none') {
+        putCardInElement(trumpCard, deal.trumpCard.name);
         showElement(trumpCard);
     }
 
-    // game.trumpSuit (button for exchanging trump card with jack card)
-    updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+    // deal.trumpSuit (button for exchanging trump card with jack card)
+    updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
 
-    // game.playerPoints
-    updatePoints(game.playerPoints);
+    // deal.playerPoints
+    updatePoints(deal.playerPoints);
 
     // lead card is already played this turn (current play is response)
-    if (game.leadOrResponse === false) {
-        if (game.isThisPlayerOnTurn) {
-            putCardInElement(cardPlayedByOpponent, game.leadCardOnTable);
+    if (deal.leadOrResponse === false) {
+        if (deal.isThisPlayerOnTurn) {
+            putCardInElement(cardPlayedByOpponent, deal.leadCardOnTable);
             showElement(cardPlayedByOpponent);
         } else {
-            putCardInElement(cardPlayedByPlayer, game.leadCardOnTable);
+            putCardInElement(cardPlayedByPlayer, deal.leadCardOnTable);
             showElement(cardPlayedByPlayer);
         }
     }
 
-    // game.marriagesInHand
-    updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+    // deal.marriagesInHand
+    updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
     
     // cards in deck    
-    updateCardsStackedInDeck(game.deckSize);
+    updateCardsStackedInDeck(deal.deckSize);
     showElements(cardsInDeck);
 
     // player tricks
-    updatePlayerTricks(game.playerWonCards);
+    updatePlayerTricks(deal.playerWonCards);
 
     // opponent tricks
-    updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
+    updateOpponentTricks(deal.opponentWonCardsFirstTrick, deal.opponentTotalWonCardsNumber);
 
     // player and opponent names
     showElement(textPlayerName);
     showElement(textOpponentName);
 
-    // player and opponent game points (0-7+)
+    // player and opponent deal points (0-7+)
     showElement(textPlayerGamePoints);
     showElement(textOpponentGamePoints);
 
     // player points (0-66+)
-    if (game.playerPoints > 0) {showElement(textPoints);}
+    if (deal.playerPoints > 0) {showElement(textPoints);}
 
     updatePlayerAndOpponentBummerlDots();
 
@@ -707,7 +707,7 @@ function toggleShowAllTricks() {
     hideElements(wonCardsOtherTricksCardbacks);
     
     // show all won cards
-    for(let i=0; i<game.playerWonCards.length; i++) {
+    for(let i=0; i<deal.playerWonCards.length; i++) {
         showElement(wonCardsAllTricksDisplayed[i]);
     }
 
@@ -734,11 +734,11 @@ function toggleHideAllTricks() {
 function hideAllTricks() {
 
     // show default tricks display
-    if (game.playerWonCards.length === 2) {
+    if (deal.playerWonCards.length === 2) {
         showElements(wonCardsFirstTrick);
-    } else if (game.playerWonCards.length > 2) {
+    } else if (deal.playerWonCards.length > 2) {
         showElements(wonCardsFirstTrick);
-        for(let i=0; i<(game.playerWonCards.length-2);i++) {
+        for(let i=0; i<(deal.playerWonCards.length-2);i++) {
             showElement(wonCardsOtherTricksCardbacks[i]);
         }
     }
@@ -752,12 +752,12 @@ function hideAllTricks() {
 function updateExchangeTrumpButton(playerHand, trumpSuit) {
 
     // if on turn and leading play and trump card not jack(already changed)
-    if (game.isThisPlayerOnTurn && 
+    if (deal.isThisPlayerOnTurn && 
         gameClient.canMakeMove && 
-        game.leadOrResponse && 
-        game.trumpCard !== undefined &&
-        game.trumpCard.tier !== "J" &&
-        game.deckSize > 0) {
+        deal.leadOrResponse && 
+        deal.trumpCard !== undefined &&
+        deal.trumpCard.tier !== "J" &&
+        deal.deckSize > 0) {
 
             // jack-trump card name
             const jackTrumpCardName = `j-${trumpSuit}`;
@@ -822,7 +822,7 @@ function disableForbiddenCards(cardsInHand, validRespondingCards) {
 // Socket.IO client library
 const socket = io();
 
-// Game client
+// Schnaps client
 const gameClient = new GameClient(
     passedUsername, 
     passedUserId, 
@@ -831,39 +831,39 @@ const gameClient = new GameClient(
     passedUserCardFace,
     passedUserCardBack);
 
-// Session, Bummerl, Game objects
+// Session, Bummerl, Deal objects
 let playSession;
 let bummerl;
-let game;
+let deal;
 
 // Initialize socket.io connection
 socket.emit('init', gameClient.socketJwt);
 
-// update client game state
-function updateClientGameState(gameStateDTO) {
-    game.num = gameStateDTO.num;
-    game.playerOnTurn = gameStateDTO.playerOnTurn;
-    game.trumpCard = gameStateDTO.trumpCard;
-    game.trumpSuit = gameStateDTO.trumpSuit;
-    game.trickNum = gameStateDTO.trickNum;
-    game.moveNum = gameStateDTO.moveNum;
-    game.leadOrResponse = gameStateDTO.leadOrResponse;
-    game.leadCardOnTable = gameStateDTO.leadCardOnTable;
-    game.deckClosed = gameStateDTO.deckClosed;
-    game.playerPoints = gameStateDTO.playerPoints;
-    game.cardsInHand = gameStateDTO.cardsInHand;
-    game.isThisPlayerOnTurn = gameStateDTO.isThisPlayerOnTurn;
-    game.deckSize = gameStateDTO.deckSize;
-    game.playerWonCards = gameStateDTO.playerWonCards;
-    game.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;
-    game.opponentTotalWonCardsNumber = gameStateDTO.opponentTotalWonCardsNumber;
-    game.marriagesInHand = gameStateDTO.marriagesInHand;
+// update client deal state
+function updateClientGameState(dealStateDTO) {
+    deal.num = dealStateDTO.num;
+    deal.playerOnTurn = dealStateDTO.playerOnTurn;
+    deal.trumpCard = dealStateDTO.trumpCard;
+    deal.trumpSuit = dealStateDTO.trumpSuit;
+    deal.trickNum = dealStateDTO.trickNum;
+    deal.moveNum = dealStateDTO.moveNum;
+    deal.leadOrResponse = dealStateDTO.leadOrResponse;
+    deal.leadCardOnTable = dealStateDTO.leadCardOnTable;
+    deal.deckClosed = dealStateDTO.deckClosed;
+    deal.playerPoints = dealStateDTO.playerPoints;
+    deal.cardsInHand = dealStateDTO.cardsInHand;
+    deal.isThisPlayerOnTurn = dealStateDTO.isThisPlayerOnTurn;
+    deal.deckSize = dealStateDTO.deckSize;
+    deal.playerWonCards = dealStateDTO.playerWonCards;
+    deal.opponentWonCardsFirstTrick = dealStateDTO.opponentWonCardsFirstTrick;
+    deal.opponentTotalWonCardsNumber = dealStateDTO.opponentTotalWonCardsNumber;
+    deal.marriagesInHand = dealStateDTO.marriagesInHand;
 }
 
 // Move - play card
 function movePlayCard(cardPlace) {
 
-    if (game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+    if (deal.isThisPlayerOnTurn && gameClient.canMakeMove) {
         // get card(name) from selected card place
         const cardName = cardPlace.getAttribute('data-card');
 
@@ -874,8 +874,8 @@ function movePlayCard(cardPlace) {
         throwCardOnTheTable(cardName);
         
         // create PlayerMove object
-        const playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'playCard', 
-                                        game.trickNum, game.leadOrResponse, cardName);
+        const playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, deal.moveNum, 'playCard', 
+                                        deal.trickNum, deal.leadOrResponse, cardName);
         
         // change client state
         gameClient.canMakeMove = false;
@@ -893,10 +893,10 @@ function movePlayCard(cardPlace) {
 
 // Move - exchange trump card with jack
 function moveExchangeTrump() {
-    if (game.isThisPlayerOnTurn && gameClient.canMakeMove) {
+    if (deal.isThisPlayerOnTurn && gameClient.canMakeMove) {
         // create PlayerMove object
-        playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, game.moveNum, 'exchangeTrump', 
-                                        game.trickNum, game.leadOrResponse, null);
+        playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, deal.moveNum, 'exchangeTrump', 
+                                        deal.trickNum, deal.leadOrResponse, null);
 
         // send move to server
         sendMove(playerMove);
@@ -908,8 +908,8 @@ function moveCloseDeck() {
     if (isPlayerAllowedToMakeMove('closeDeck')) {
         // create player move object
         playerMove = new PlayerMove(gameClient.room, gameClient.userId, socket.id, 
-                                    game.moveNum, 'closeDeck', 
-                                    game.trickNum, game.leadOrResponse, null);
+                                    deal.moveNum, 'closeDeck', 
+                                    deal.trickNum, deal.leadOrResponse, null);
         // send to server
         sendMove(playerMove);
     }
@@ -997,7 +997,7 @@ const MARRIAGES_Y_POSITION = 320;
 const MARRIAGES_FONT_SIZE = '24px';
 const MARRIAGES_FONT_COLOR = '#52514e';
 
-// player name; game points(0-7)
+// player name; gamepoints(0-7)
 const PLAYER_NAME_AND_POINTS_FONT_SIZE = '28px';
 
 // card designs
@@ -1440,7 +1440,7 @@ textRoomId.textContent = '';
 // Text alert
 textAlert = document.createElementNS(XMLNS, 'text');
 textAlert.setAttributeNS(null, 'x', 150);
-textAlert.setAttributeNS(null, 'y', 200);
+textAlert.setAttributeNS(null, 'y', 310);
 textAlert.setAttributeNS(null, 'font-size', '72px');
 textAlert.setAttributeNS(null, 'fill', 'black');
 textAlert.textContent = '';
@@ -1634,7 +1634,7 @@ opponentWonCardsOtherTricksCardbacks.forEach(card => {
 // room id
 ALL_GUI_ELEMENTS.push(textRoomId);
 
-// game status
+// text alert
 ALL_GUI_ELEMENTS.push(textAlert);
 
 // points
@@ -1717,8 +1717,8 @@ for(let i = 0; i<5; i++) {
 // modal
 const modal = document.querySelector('.modal');
 const modalCloseButton = document.querySelector('.modal-close-button');
-const modalExitGameButton = document.getElementById('modal-exit-game-btn');
-const modalContinueGameButton = document.getElementById('modal-continue-game-btn');
+const modalExitGameButton = document.getElementById('modal-exit-btn');
+const modalContinueGameButton = document.getElementById('modal-continue-btn');
 
 exitButton.addEventListener('click', toggleModal);
 exitButton.style.cursor = 'pointer';
@@ -1741,7 +1741,7 @@ function windowOnClick(event) {
  * GAMEPLAY - Receive events from server
  * - session 
  * - bummerl
- * - game
+ * - deal
  * - move
  */
 // ***************************************************************************
@@ -1765,7 +1765,7 @@ socket.on('sessionStateUpdate', playSessionDTO => {
 // Session - END
 socket.on('sessionEnd', s => {
     showElement(textAlert);
-    textAlert.textContent = 'Opponent left the game.';
+    textAlert.textContent = 'Opponent left.';
 });
 
 
@@ -1789,102 +1789,102 @@ socket.on('bummerlStateUpdate', bummerlDTO => {
 });
 
 
-// Game state update
-socket.on('gameStateUpdate', gameStateDTO => {
-    updateClientGameState(gameStateDTO);
-    updatePoints(game.playerPoints);
+// Deal state update
+socket.on('dealStateUpdate', dealStateDTO => {
+    updateClientGameState(dealStateDTO);
+    updatePoints(deal.playerPoints);
 
     // refresh client background only if next play is responding
-    if (gameStateDTO.leadOrResponse === false) {
-        refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    if (dealStateDTO.leadOrResponse === false) {
+        refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
     }
     
-    console.log('gameStateUpdate');
+    console.log('dealStateUpdate');
 
-    updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-    updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+    updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
+    updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
     gameClient.canMakeMove = true;
 });
 
-// Game state update - after trick
-socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
+// Deal state update - after trick
+socket.on('dealStateUpdateAfterTrick', dealStateDTO => {
     toggleHideAllTricks();
-    updateClientGameState(gameStateDTO);
+    updateClientGameState(dealStateDTO);
 
     delay(1200).then(
         () => {
-            refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
-            console.log('gameStateUpdateAfterTrick');
+            refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
+            console.log('dealStateUpdateAfterTrick');
 
-            updatePoints(game.playerPoints);
+            updatePoints(deal.playerPoints);
             hideElement(cardPlayedByPlayer);
             hideElement(cardPlayedByOpponent);
             hideElements(forbiddenCardOverlay);
-            updateAllCardsInHand(game.cardsInHand);
-            updateOpponentCards(game.cardsInHand.length);
-            updateCardsStackedInDeck(game.deckSize);
-            updatePlayerTricks(game.playerWonCards); 
-            updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
-            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            updateAllCardsInHand(deal.cardsInHand);
+            updateOpponentCards(deal.cardsInHand.length);
+            updateCardsStackedInDeck(deal.deckSize);
+            updatePlayerTricks(deal.playerWonCards); 
+            updateOpponentTricks(deal.opponentWonCardsFirstTrick, deal.opponentTotalWonCardsNumber);
+            updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
+            updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
             hideElement(marriagesCalledThisTrickByOpponent);
             gameClient.canMakeMove = true;
         }
     );
 });
 
-// Game state update - after client refreshes/reloads game page
-socket.on('gameStateUpdateAfterClientRefresh', gameStateDTO => {
-    game = new Game(gameStateDTO);
-    updateClientGameState(gameStateDTO);
+// Deal state update - after client refreshes/reloads
+socket.on('dealStateUpdateAfterClientRefresh', dealStateDTO => {
+    deal = new Deal(dealStateDTO);
+    updateClientGameState(dealStateDTO);
     updateClientGameScreen();
 });
 
-// Game state update - after exchanging trump
-socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
-    updateClientGameState(gameStateDTO);
+// Deal state update - after exchanging trump
+socket.on('dealStateUpdateAfterTrumpExchange', dealStateDTO => {
+    updateClientGameState(dealStateDTO);
     
     delay(300).then(
         () => {
-            putCardInElement(trumpCard, game.trumpCard.name);
-            updateAllCardsInHand(game.cardsInHand);
-            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            putCardInElement(trumpCard, deal.trumpCard.name);
+            updateAllCardsInHand(deal.cardsInHand);
+            updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
             hideElement(marriagesCalledThisTrickByOpponent);
-            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
             gameClient.canMakeMove = true;
         }
     );
 });
 
-// Game state update - after closing deck
-socket.on('gameStateUpdateAfterClosingDeck', gameStateDTO => {
-    updateClientGameState(gameStateDTO);
+// Deal state update - after closing deck
+socket.on('dealStateUpdateAfterClosingDeck', dealStateDTO => {
+    updateClientGameState(dealStateDTO);
     updateClientGameScreen();
     gameClient.canMakeMove = true;
 });
 
-// Game over
-socket.on('gameOverDTO', gameOverDTO => {
-    // add game points
-    if (gameOverDTO.isWinner) {
-        bummerl.gamePointsPlayer += gameOverDTO.gamePoints;
-        textAlert.textContent = `You won! ( ${gameOverDTO.gamePoints} )`;
-        updatePoints(gameOverDTO.playerPointsAtEndOfGame);
+// Deal over
+socket.on('dealOverDTO', dealOverDTO => {
+    // add points
+    if (dealOverDTO.isWinner) {
+        bummerl.gamePointsPlayer += dealOverDTO.gamePoints;
+        textAlert.textContent = `You won! ( ${dealOverDTO.gamePoints} )`;
+        updatePoints(dealOverDTO.playerPointsAtEndOfGame);
     } else {
-        bummerl.gamePointsOpponent += gameOverDTO.gamePoints;
-        textAlert.textContent = `You lost! ( ${gameOverDTO.gamePoints} )`;
+        bummerl.gamePointsOpponent += dealOverDTO.gamePoints;
+        textAlert.textContent = `You lost! ( ${dealOverDTO.gamePoints} )`;
     }
     showElement(textAlert);
     updatePlayerAndOpponentGamePoints();
 });
 
 
-// Game status
-socket.on('gameStart', gameStateDTO => {
-    game = new Game(gameStateDTO);
+// Deal status
+socket.on('gameStart', dealStateDTO => {
+    deal = new Deal(dealStateDTO);
 
     let delay_ms = 100;
-    if (game.num>1) {delay_ms = 2500;}
+    if (deal.num>1) {delay_ms = 2500;}
 
     delay(delay_ms).then(
         () => {
@@ -1895,12 +1895,12 @@ socket.on('gameStart', gameStateDTO => {
             cardsInDeck.forEach(card => { svg.removeChild(card); });
             cardsInDeck.forEach(card => { svg.appendChild(card); });
 
-            updateClientGameState(gameStateDTO);
+            updateClientGameState(dealStateDTO);
             setupGameScreenStarted();
-            updateAllCardsInHand(game.cardsInHand);
-            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            updateAllCardsInHand(deal.cardsInHand);
+            updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
             hideElement(marriagesCalledThisTrickByOpponent);
-            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
             gameClient.canMakeMove = true;
         }
     );
@@ -1937,7 +1937,7 @@ socket.on('opponentMove', opponentMoveDTO => {
 
     // disable/overlay unavailable(forbidden) response cards
     if (opponentMoveDTO.validRespondingCards !== 'all') {
-        disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
+        disableForbiddenCards(deal.cardsInHand, opponentMoveDTO.validRespondingCards);
     }
 
     // player can make a move

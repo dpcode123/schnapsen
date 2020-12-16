@@ -1,10 +1,10 @@
 import RoomRepository from '../repository/RoomRepository.js';
 import PlayRoom from '../model/PlayRoom.js';
 import { getRandomIntInclusive } from '../utils/util.js';
-import GameSessionService from './PlaySessionService.js';
+import RoomSessionService from './RoomSessionService.js';
 const roomRepository = new RoomRepository();
 const playRooms = roomRepository.getPlayRooms();
-const gameSessionService = new GameSessionService();
+const roomSessionService = new RoomSessionService();
 export default class RoomService {
     // Creates room with random id; Adds first player to room, Returns games session data
     createRoom(firstPlayer) {
@@ -17,7 +17,7 @@ export default class RoomService {
             // create new play room and add first[0] player
             playRooms.set(randomId, new PlayRoom(randomId, firstPlayer));
             // return game session data
-            return gameSessionService.generateGameSessionData(firstPlayer, 0, randomId);
+            return roomSessionService.generateRoomSessionData(firstPlayer, 0, randomId);
         }
     }
     // 
@@ -30,7 +30,7 @@ export default class RoomService {
      *      - 1st and 2nd player are not the same
      * @param roomId
      * @param secondPlayer
-     * @returns GameSessionData | undefined
+     * @returns RoomSessionData | undefined
      */
     joinRoom(roomId, secondPlayer) {
         // get room (or false if room doesnt exist)
@@ -42,7 +42,7 @@ export default class RoomService {
             // add second player to room
             playRoom.players[1] = secondPlayer;
             // return game session data
-            return gameSessionService.generateGameSessionData(secondPlayer, 1, roomId);
+            return roomSessionService.generateRoomSessionData(secondPlayer, 1, roomId);
         }
         return;
     }

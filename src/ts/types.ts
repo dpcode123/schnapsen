@@ -28,7 +28,7 @@ export type GameConnectionObject = {
     roomId: string,
 }
 
-export type GameSessionData = {
+export type RoomSessionData = {
     username: string, 
     userId: number, 
     roomId: string, 

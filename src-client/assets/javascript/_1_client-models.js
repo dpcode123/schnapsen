@@ -49,71 +49,71 @@ class Bummerl {
 
 
 /**
- * Game (CLIENT SIDE)
+ * Deal (CLIENT SIDE)
  */
-class Game {
-    constructor(gameStateDTO) {
+class Deal {
+    constructor(dealStateDTO) {
 
-        // game number in bummerl (1...13)
-        this.num = gameStateDTO.num;
+        //  number in bummerl (1...13)
+        this.num = dealStateDTO.num;
 
         // player on turn: 0/1
-        this.playerOnTurn = gameStateDTO.playerOnTurn;
+        this.playerOnTurn = dealStateDTO.playerOnTurn;
 
         // trump card
-        this.trumpCard = gameStateDTO.trumpCard;
+        this.trumpCard = dealStateDTO.trumpCard;
 
         // trump suit
-        this.trumpSuit = gameStateDTO.trumpSuit;
+        this.trumpSuit = dealStateDTO.trumpSuit;
 
         // trick number: 1-10
-        this.trickNum = gameStateDTO.trickNum;
+        this.trickNum = dealStateDTO.trickNum;
 
         // move number
-        this.moveNum = gameStateDTO.moveNum;
+        this.moveNum = dealStateDTO.moveNum;
 
         // Lead(true) or Response(false)
-        this.leadOrResponse = gameStateDTO.leadOrResponse;
+        this.leadOrResponse = dealStateDTO.leadOrResponse;
 
         // Lead card played (if current state is response, otherwise null)
-        this.leadCardOnTable = gameStateDTO.leadCardOnTable;
+        this.leadCardOnTable = dealStateDTO.leadCardOnTable;
 
         // deck closed or out of cards
-        this.deckClosed = gameStateDTO.deckClosed;
+        this.deckClosed = dealStateDTO.deckClosed;
 
         // points for player: 0-66
-        this.playerPoints = gameStateDTO.playerPoints;
+        this.playerPoints = dealStateDTO.playerPoints;
 
         // cards in player hands
-        this.cardsInHand = gameStateDTO.cardsInHand;
+        this.cardsInHand = dealStateDTO.cardsInHand;
 
         // is this player on turn or not
-        this.isThisPlayerOnTurn = gameStateDTO.isThisPlayerOnTurn;
+        this.isThisPlayerOnTurn = dealStateDTO.isThisPlayerOnTurn;
 
         // number of cards left in deck
-        this.deckSize = gameStateDTO.deckSize;
+        this.deckSize = dealStateDTO.deckSize;
 
         // won tricks(cards) by player
-        this.playerWonCards = gameStateDTO.playerWonCards;
+        this.playerWonCards = dealStateDTO.playerWonCards;
 
         // won 1st trick(2 cards) by opponent
-        this.opponentWonCardsFirstTrick = gameStateDTO.opponentWonCardsFirstTrick;
+        this.opponentWonCardsFirstTrick = dealStateDTO.opponentWonCardsFirstTrick;
 
         // total number of cards in opponent won tricks
-        this.opponentTotalWonCardsNumber = gameStateDTO.opponentTotalWonCardsNumber;
+        this.opponentTotalWonCardsNumber = dealStateDTO.opponentTotalWonCardsNumber;
 
         // marriages
-        this.marriagesInHand = gameStateDTO.marriagesInHand;
+        this.marriagesInHand = dealStateDTO.marriagesInHand;
     }
 }
 
 
 /**
  * PlayerMove (CLIENT SIDE)
- * @param {string} roomId - unique game id (room id)
+ * @param {string} roomId - room id
  * @param {number} userId - user id (from db)
  * @param {string} socketId - socket.io id
- * @param {number} moveNum - total move number in game, for both players (0,1,2...n)
+ * @param {number} moveNum - total move number in , for both players (0,1,2...n)
  * @param {string} moveType - card, exchangeTrumpCard, closeDeck, foldHand
  * @param {number} trickNum - trick number, 1-10
  * @param {boolean} leadOrResponse - TRUE-lead play(1st card played in trick), FALSE-response play(2nd card)

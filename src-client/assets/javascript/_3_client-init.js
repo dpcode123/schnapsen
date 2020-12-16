@@ -1,7 +1,7 @@
 // Socket.IO client library
 const socket = io();
 
-// Game client
+// Schnaps client
 const gameClient = new GameClient(
     passedUsername, 
     passedUserId, 
@@ -10,10 +10,10 @@ const gameClient = new GameClient(
     passedUserCardFace,
     passedUserCardBack);
 
-// Session, Bummerl, Game objects
+// Session, Bummerl, Deal objects
 let playSession;
 let bummerl;
-let game;
+let deal;
 
 // Initialize socket.io connection
 socket.emit('init', gameClient.socketJwt);

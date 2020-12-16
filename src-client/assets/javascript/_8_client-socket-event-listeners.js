@@ -2,7 +2,7 @@
  * GAMEPLAY - Receive events from server
  * - session 
  * - bummerl
- * - game
+ * - deal
  * - move
  */
 // ***************************************************************************
@@ -26,7 +26,7 @@ socket.on('sessionStateUpdate', playSessionDTO => {
 // Session - END
 socket.on('sessionEnd', s => {
     showElement(textAlert);
-    textAlert.textContent = 'Opponent left the game.';
+    textAlert.textContent = 'Opponent left.';
 });
 
 
@@ -50,102 +50,102 @@ socket.on('bummerlStateUpdate', bummerlDTO => {
 });
 
 
-// Game state update
-socket.on('gameStateUpdate', gameStateDTO => {
-    updateClientGameState(gameStateDTO);
-    updatePoints(game.playerPoints);
+// Deal state update
+socket.on('dealStateUpdate', dealStateDTO => {
+    updateClientGameState(dealStateDTO);
+    updatePoints(deal.playerPoints);
 
     // refresh client background only if next play is responding
-    if (gameStateDTO.leadOrResponse === false) {
-        refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
+    if (dealStateDTO.leadOrResponse === false) {
+        refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
     }
     
-    console.log('gameStateUpdate');
+    console.log('dealStateUpdate');
 
-    updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-    updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+    updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
+    updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
     gameClient.canMakeMove = true;
 });
 
-// Game state update - after trick
-socket.on('gameStateUpdateAfterTrick', gameStateDTO => {
+// Deal state update - after trick
+socket.on('dealStateUpdateAfterTrick', dealStateDTO => {
     toggleHideAllTricks();
-    updateClientGameState(gameStateDTO);
+    updateClientGameState(dealStateDTO);
 
     delay(1200).then(
         () => {
-            refreshPlayerOnTurnIndicator(game.isThisPlayerOnTurn);
-            console.log('gameStateUpdateAfterTrick');
+            refreshPlayerOnTurnIndicator(deal.isThisPlayerOnTurn);
+            console.log('dealStateUpdateAfterTrick');
 
-            updatePoints(game.playerPoints);
+            updatePoints(deal.playerPoints);
             hideElement(cardPlayedByPlayer);
             hideElement(cardPlayedByOpponent);
             hideElements(forbiddenCardOverlay);
-            updateAllCardsInHand(game.cardsInHand);
-            updateOpponentCards(game.cardsInHand.length);
-            updateCardsStackedInDeck(game.deckSize);
-            updatePlayerTricks(game.playerWonCards); 
-            updateOpponentTricks(game.opponentWonCardsFirstTrick, game.opponentTotalWonCardsNumber);
-            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
-            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            updateAllCardsInHand(deal.cardsInHand);
+            updateOpponentCards(deal.cardsInHand.length);
+            updateCardsStackedInDeck(deal.deckSize);
+            updatePlayerTricks(deal.playerWonCards); 
+            updateOpponentTricks(deal.opponentWonCardsFirstTrick, deal.opponentTotalWonCardsNumber);
+            updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
+            updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
             hideElement(marriagesCalledThisTrickByOpponent);
             gameClient.canMakeMove = true;
         }
     );
 });
 
-// Game state update - after client refreshes/reloads game page
-socket.on('gameStateUpdateAfterClientRefresh', gameStateDTO => {
-    game = new Game(gameStateDTO);
-    updateClientGameState(gameStateDTO);
+// Deal state update - after client refreshes/reloads
+socket.on('dealStateUpdateAfterClientRefresh', dealStateDTO => {
+    deal = new Deal(dealStateDTO);
+    updateClientGameState(dealStateDTO);
     updateClientGameScreen();
 });
 
-// Game state update - after exchanging trump
-socket.on('gameStateUpdateAfterTrumpExchange', gameStateDTO => {
-    updateClientGameState(gameStateDTO);
+// Deal state update - after exchanging trump
+socket.on('dealStateUpdateAfterTrumpExchange', dealStateDTO => {
+    updateClientGameState(dealStateDTO);
     
     delay(300).then(
         () => {
-            putCardInElement(trumpCard, game.trumpCard.name);
-            updateAllCardsInHand(game.cardsInHand);
-            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            putCardInElement(trumpCard, deal.trumpCard.name);
+            updateAllCardsInHand(deal.cardsInHand);
+            updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
             hideElement(marriagesCalledThisTrickByOpponent);
-            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
             gameClient.canMakeMove = true;
         }
     );
 });
 
-// Game state update - after closing deck
-socket.on('gameStateUpdateAfterClosingDeck', gameStateDTO => {
-    updateClientGameState(gameStateDTO);
+// Deal state update - after closing deck
+socket.on('dealStateUpdateAfterClosingDeck', dealStateDTO => {
+    updateClientGameState(dealStateDTO);
     updateClientGameScreen();
     gameClient.canMakeMove = true;
 });
 
-// Game over
-socket.on('gameOverDTO', gameOverDTO => {
-    // add game points
-    if (gameOverDTO.isWinner) {
-        bummerl.gamePointsPlayer += gameOverDTO.gamePoints;
-        textAlert.textContent = `You won! ( ${gameOverDTO.gamePoints} )`;
-        updatePoints(gameOverDTO.playerPointsAtEndOfGame);
+// Deal over
+socket.on('dealOverDTO', dealOverDTO => {
+    // add points
+    if (dealOverDTO.isWinner) {
+        bummerl.gamePointsPlayer += dealOverDTO.gamePoints;
+        textAlert.textContent = `You won! ( ${dealOverDTO.gamePoints} )`;
+        updatePoints(dealOverDTO.playerPointsAtEndOfGame);
     } else {
-        bummerl.gamePointsOpponent += gameOverDTO.gamePoints;
-        textAlert.textContent = `You lost! ( ${gameOverDTO.gamePoints} )`;
+        bummerl.gamePointsOpponent += dealOverDTO.gamePoints;
+        textAlert.textContent = `You lost! ( ${dealOverDTO.gamePoints} )`;
     }
     showElement(textAlert);
     updatePlayerAndOpponentGamePoints();
 });
 
 
-// Game status
-socket.on('gameStart', gameStateDTO => {
-    game = new Game(gameStateDTO);
+// Deal status
+socket.on('gameStart', dealStateDTO => {
+    deal = new Deal(dealStateDTO);
 
     let delay_ms = 100;
-    if (game.num>1) {delay_ms = 2500;}
+    if (deal.num>1) {delay_ms = 2500;}
 
     delay(delay_ms).then(
         () => {
@@ -156,12 +156,12 @@ socket.on('gameStart', gameStateDTO => {
             cardsInDeck.forEach(card => { svg.removeChild(card); });
             cardsInDeck.forEach(card => { svg.appendChild(card); });
 
-            updateClientGameState(gameStateDTO);
+            updateClientGameState(dealStateDTO);
             setupGameScreenStarted();
-            updateAllCardsInHand(game.cardsInHand);
-            updateMarriageIndicators(game.cardsInHand, game.marriagesInHand);
+            updateAllCardsInHand(deal.cardsInHand);
+            updateMarriageIndicators(deal.cardsInHand, deal.marriagesInHand);
             hideElement(marriagesCalledThisTrickByOpponent);
-            updateExchangeTrumpButton(game.cardsInHand, game.trumpSuit);
+            updateExchangeTrumpButton(deal.cardsInHand, deal.trumpSuit);
             gameClient.canMakeMove = true;
         }
     );
@@ -198,7 +198,7 @@ socket.on('opponentMove', opponentMoveDTO => {
 
     // disable/overlay unavailable(forbidden) response cards
     if (opponentMoveDTO.validRespondingCards !== 'all') {
-        disableForbiddenCards(game.cardsInHand, opponentMoveDTO.validRespondingCards);
+        disableForbiddenCards(deal.cardsInHand, opponentMoveDTO.validRespondingCards);
     }
 
     // player can make a move
