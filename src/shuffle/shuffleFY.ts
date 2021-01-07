@@ -1,5 +1,5 @@
 /**
- * Fisher-Yates shuffle
+ * Fisher-Yates shuffling algorithm
  */
 export function shuffle(array) {
     let m = array.length;

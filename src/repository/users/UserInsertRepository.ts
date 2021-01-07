@@ -1,5 +1,5 @@
-import pool from './db_pool_config.js';
-import { User } from '../ts/interfaces.js';
+import pool from '../db_pool_config.js';
+import { User } from '../../ts/interfaces.js';
 
 
 export default class UserInsertRepository {

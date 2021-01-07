@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import bcrypt from 'bcrypt';
-import UserSelectRepository from '../repository/UserSelectRepository.js';
-import UserInsertRepository from '../repository/UserInsertRepository.js';
+import UserSelectRepository from '../repository/users/UserSelectRepository.js';
+import UserInsertRepository from '../repository/users/UserInsertRepository.js';
 export default class RegisterService {
     constructor() {
         this.addUser = (req, res) => __awaiter(this, void 0, void 0, function* () {

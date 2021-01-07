@@ -24,8 +24,8 @@
 body {
 	font-family: 'Roboto', sans-serif;
 	font-size: 16px;
-	background: $lightColor;
-	//background: rgb(12, 12, 12);
+	//background: $lightColor;
+	background: rgb(12, 12, 12);
 }
 
 hr {
@@ -33,6 +33,10 @@ hr {
 }
 
 .page-container {
+	max-width: 480px;
+	margin: 80px auto;
+	color: #fff;
+	
 	hr {
 		margin: 1rem 0;
 	}
@@ -72,12 +76,6 @@ input[disabled] {
 }
 
 
-
-.page-container {
-	max-width: 480px;
-	margin: 80px auto;
-	color: #fff;
-}
 
 .join-header {
 	text-align: center;

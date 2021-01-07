@@ -1,5 +1,5 @@
 import express from 'express';
-import { isUserAuthenticated, isUserAdmin, userHasRole, isUserPlayer } from '../auth/passport_middleware.js';
+import { isUserAuthenticated, userHasRole, isUserPlayer } from '../auth/passport_middleware.js';
 import { Authority } from '../ts/enums.js';
 const router = express.Router();
 // Index page
@@ -23,10 +23,22 @@ router.get('/play', isUserAuthenticated, isUserPlayer, (req, res) => {
     const roomSessionData = reqSession.roomSessionData;
     res.render('play', roomSessionData);
 });
-// Admin page
-router.get('/admin', isUserAuthenticated, isUserAdmin, (req, res) => {
-    res.render('admin');
-});
+/* // Admin page
+router.get('/admin', isUserAuthenticated, isUserAdmin, (req: CustomRequest, res: CustomResponse): void => {
+    const usersFromDB = [
+        {id: '412', username: 'Johnny', email: 'ssasf@fasas.net'},
+        {id: '234', username: 'Peter', email: 'gasdgds@gasdgsd.com'},
+        {id: '2421', username: 'Dax', email: 'gsdasd@ddg.net'},
+        {id: '4212', username: 'Mike', email: 'ewwegsd@sdgsdgsd.com'}
+    ];
+
+    res.render('admin', {
+        data: {
+            xxx: 'yyy',
+            users: usersFromDB
+        }
+    });
+}); */
 router.get('/logout', isUserAuthenticated, function (req, res) {
     req.logout();
     res.redirect('/');

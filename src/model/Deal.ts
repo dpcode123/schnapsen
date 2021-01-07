@@ -5,7 +5,7 @@ import {
 } from '../schnaps/cards.js';
 
 import { otherPlayer } from '../utils/util.js';
-import { shuffle } from '../schnaps/shuffle.js';
+import { shuffle } from '../shuffle/shuffleFY.js';
 import Card from './Card.js';
 import Trick from './Trick.js';
 

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { CustomRequest, CustomResponse } from '../ts/interfaces.js';
-import UserSelectRepository from '../repository/UserSelectRepository.js';
-import UserInsertRepository from '../repository/UserInsertRepository.js';
+import UserSelectRepository from '../repository/users/UserSelectRepository.js';
+import UserInsertRepository from '../repository/users/UserInsertRepository.js';
 
 
 export default class RegisterService {

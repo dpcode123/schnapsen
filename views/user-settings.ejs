@@ -43,7 +43,7 @@
                     <select name="cardface" id="cardface">
                         <%
                         cardFaceDesigns.forEach(element => {
-                            var selected = ( element.id === userdata.cardface_design_id ) ? "selected" : "";
+                            var selected = ( element.id == userdata.cardface_design_id ) ? "selected" : "";
                             %><option value="<%= element.id %>" <%= selected %>><%= element.name %></option><%
                         }) 
                         %>
@@ -53,7 +53,7 @@
                     <select name="cardback" id="cardback">
                         <%
                         cardBackDesigns.forEach(element => {
-                            var selected = ( element.id === userdata.cardback_design_id ) ? "selected" : "";
+                            var selected = ( element.id == userdata.cardback_design_id ) ? "selected" : "";
                             %><option value="<%= element.id %>" <%= selected %>><%= element.name %></option><%
                         }) 
                         %>

@@ -1,0 +1,48 @@
+<%- include('partials/admin-head') %>
+
+<body>
+
+    <div class="page-container page-container-admin">
+        <header class="join-header">
+            <h1>Schnapsen</h1>
+            <hr>
+            <h2>Admin page</h2>
+        </header>
+
+        <main class="main-container">
+            <h3>Users</h3>
+
+            <% if (data.users) { %>
+            
+            <table id="table-admin">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <% data.users.forEach(function(user){ %>
+                        <tr>
+                            <td><%= user.id %></td>
+                            <td><%= user.username %></td>
+                            <td><%= user.email %></td>
+                        </tr>
+                    <% }); %>
+
+                </tbody>
+            </table>
+
+            <% } else { %>
+                <p>No users found.</p>
+            <% } %>
+                
+            <p><a class="back-link" href="/admin">Back</a></p>
+        </main>
+    </div>
+
+</body>
+
+<%- include('partials/footer') %>

@@ -6,6 +6,9 @@ const roomRepository = new RoomRepository();
 const playRooms = roomRepository.getPlayRooms();
 const roomSessionService = new RoomSessionService();
 export default class RoomService {
+    getRooms() {
+        return playRooms;
+    }
     // Creates room with random id; Adds first player to room, Returns games session data
     createRoom(firstPlayer) {
         const randomId = getRandomIntInclusive(1000, 9999).toString();

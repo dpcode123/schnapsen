@@ -2,7 +2,7 @@ import passportLocal from 'passport-local';
 import bcrypt from 'bcrypt';
 import { PassportStatic } from 'passport';
 import { User } from '../ts/interfaces.js';
-import UserSelectRepository from '../repository/UserSelectRepository.js';
+import UserSelectRepository from '../repository/users/UserSelectRepository.js';
 
 const LocalStrategy = passportLocal.Strategy;
 const userSelectRepository = new UserSelectRepository();

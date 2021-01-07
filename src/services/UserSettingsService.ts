@@ -1,24 +1,39 @@
 import UserDTO from "../dto/UserDTO.js";
-import SettingsRepository from "../repository/SettingsRepository.js";
+import SettingsRepositoryRedis from "../repository/SettingsRepositoryRedis.js";
+import SettingsRepositoryPostgres from "../repository/SettingsRepositoryPostgres.js";
 import { CustomRequest, CustomResponse } from "../ts/interfaces";
 
 
 export default class UserSettingsService {
 
-    settingsRepository: SettingsRepository;
+    settingsRepositoryRedis: SettingsRepositoryRedis;
+    settingsRepositoryPostgres: SettingsRepositoryPostgres;
 
     constructor() {
-        this.settingsRepository = new SettingsRepository();
+        this.settingsRepositoryRedis = new SettingsRepositoryRedis();
+        this.settingsRepositoryPostgres = new SettingsRepositoryPostgres();
     }
 
     
-
     getSettings = async (req: CustomRequest, res: CustomResponse) => {
         
+        // get user data and current design settings/preferences from session
         const userDTO: UserDTO = new UserDTO(req.session.passport.user);
-        const cardFaceDesigns: Promise<any | undefined> = await this.settingsRepository.getCardFaceDesigns();
-        const cardBackDesigns: Promise<any | undefined> = await this.settingsRepository.getCardBackDesigns();
 
+        // first check if there are card design templates cached in redis
+        let cardFaceDesigns: string[] | undefined = await this.settingsRepositoryRedis.getCardFaceDesigns();
+        let cardBackDesigns: string[] | undefined = await this.settingsRepositoryRedis.getCardBackDesigns();
+
+        // if there are no design templates cached - get them from database
+        if (!cardFaceDesigns || cardFaceDesigns.length === 0) {
+            cardFaceDesigns = await this.settingsRepositoryPostgres.getCardFaceDesigns();
+        }
+        if (!cardBackDesigns || cardBackDesigns.length === 0) {
+            cardBackDesigns = await this.settingsRepositoryPostgres.getCardBackDesigns();
+        }
+
+        // render user settings page 
+        // or redirect to homepage if no settings are found in cache or database
         if (cardFaceDesigns && cardBackDesigns) {
             res.render('user-settings', {
                 userdata: userDTO,
@@ -27,13 +42,12 @@ export default class UserSettingsService {
             });
         } else {
             res.redirect('/');
-        }
-
-        
+        }   
     }
 
     updateSettings = async (req: CustomRequest, res: CustomResponse) => {
 
+        // get user id from session
         const userId = req.session.passport.user.id;
 
         // get submitted ids from request body and parse them to integer
@@ -45,7 +59,7 @@ export default class UserSettingsService {
         if(isNaN(cardback)) { cardback = 1; }
 
         // update user in database
-        const queryResult: boolean = await this.settingsRepository.updateCardBackDesigns(cardface, cardback, userId);
+        const queryResult: boolean = await this.settingsRepositoryPostgres.updateCardBackDesigns(cardface, cardback, userId);
         
         if (queryResult) {
             // update user's session

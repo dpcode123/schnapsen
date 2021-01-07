@@ -7,9 +7,9 @@ import { otherPlayer} from '../utils/util.js';
 import { Player } from '../ts/interfaces.js';
 import GameHistoryService from '../services/GameHistoryService.js';
 
-export default class PlayRoom {
+const gameHistoryService = new GameHistoryService();
 
-    gameHistoryService: GameHistoryService;
+export default class PlayRoom {
 
     playSessionUuid: string;
     room: string;
@@ -20,10 +20,7 @@ export default class PlayRoom {
     bummerlsWon: number[] = [0, 0];
     
     
-
     constructor(room: string, player1: Player) {
-
-        this.gameHistoryService = new GameHistoryService();
 
         // unique play session uuid
         this.playSessionUuid = uuidv4();
@@ -76,7 +73,7 @@ export default class PlayRoom {
         }
 
         // save to game history
-        this.gameHistoryService.saveBummerl(this.bummerl, bummerlWinner, bummerlLoser, this.playSessionUuid);
+        gameHistoryService.saveBummerl(this.bummerl, bummerlWinner, bummerlLoser, this.playSessionUuid);
     }
 
 

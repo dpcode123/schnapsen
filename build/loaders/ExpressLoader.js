@@ -2,6 +2,7 @@ import path from 'path';
 import http from 'http';
 import express from 'express';
 import passport from 'passport';
+import helmet from 'helmet';
 import flash from 'express-flash';
 import session from '../config/session_config.js';
 import roomRouter from '../routers/RoomRouter.js';
@@ -9,6 +10,7 @@ import loginRouter from '../routers/LoginRouter.js';
 import registerRouter from '../routers/RegisterRouter.js';
 import userSettingsController from '../routers/UserSettingsRouter.js';
 import mainRouter from '../routers/MainRouter.js';
+import adminRouter from '../routers/AdminRouter.js';
 import initializePassport from '../config/passport_config.js';
 export default class ExpressLoader {
     constructor() {
@@ -17,6 +19,8 @@ export default class ExpressLoader {
         initializePassport(passport);
         // View engine
         this.app.set('view engine', 'ejs');
+        // Helmet
+        this.app.use(helmet());
         // JSON
         this.app.use(express.json());
         // if behind a proxy
@@ -37,6 +41,7 @@ export default class ExpressLoader {
         this.app.use('/login', loginRouter);
         this.app.use('/user-settings', userSettingsController);
         this.app.use('/register', registerRouter);
+        this.app.use('/admin', adminRouter);
         this.app.use('/', mainRouter);
     }
     getServer() {

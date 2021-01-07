@@ -5,12 +5,12 @@ import { checkForMarriagesInHand } from '../schnaps/schnaps.js';
 import DealOverDTO from '../dto/DealOverDTO.js';
 import { otherPlayer } from '../utils/util.js';
 import GameHistoryService from '../services/GameHistoryService.js';
+const gameHistoryService = new GameHistoryService();
 export default class PlayRoom {
     constructor(room, player1) {
         this.bummerl = undefined;
         this.deal = undefined;
         this.bummerlsWon = [0, 0];
-        this.gameHistoryService = new GameHistoryService();
         // unique play session uuid
         this.playSessionUuid = uuidv4();
         // room id (and socket.io room id)
@@ -52,7 +52,7 @@ export default class PlayRoom {
             gamePoints: (_d = this.bummerl) === null || _d === void 0 ? void 0 : _d.gamePoints[otherPlayer(winnerIndex)]
         };
         // save to game history
-        this.gameHistoryService.saveBummerl(this.bummerl, bummerlWinner, bummerlLoser, this.playSessionUuid);
+        gameHistoryService.saveBummerl(this.bummerl, bummerlWinner, bummerlLoser, this.playSessionUuid);
     }
     // Starts new deal
     startDeal() {

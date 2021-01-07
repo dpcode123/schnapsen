@@ -8,13 +8,17 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
-  background: #e9e7e7; }
+  background: #0c0c0c; }
 
 hr {
   color: silver; }
 
-.page-container hr {
-  margin: 1rem 0; }
+.page-container {
+  max-width: 480px;
+  margin: 80px auto;
+  color: #fff; }
+  .page-container hr {
+    margin: 1rem 0; }
 
 .main-link {
   cursor: pointer;
@@ -72,11 +76,6 @@ hr {
 input[disabled] {
   cursor: not-allowed; }
 
-.page-container {
-  max-width: 480px;
-  margin: 80px auto;
-  color: #fff; }
-
 .join-header {
   text-align: center;
   padding: 16px;
@@ -119,6 +118,38 @@ input[disabled] {
     color: #fff; }
   .main-container .server-messages .success {
     color: black; }
+
+.page-container-admin {
+  max-width: 800px; }
+  .page-container-admin .main-container {
+    background: #fff;
+    color: #000; }
+    .page-container-admin .main-container h1 {
+      color: #000; }
+    .page-container-admin .main-container h3 {
+      font-size: 2rem; }
+  .page-container-admin label {
+    font-size: 2rem; }
+  .page-container-admin #table-admin {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 560px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); }
+    .page-container-admin #table-admin thead tr {
+      background-color: #1d1d1d;
+      color: #ffffff;
+      text-align: left; }
+    .page-container-admin #table-admin th {
+      padding: 0.6rem 1rem; }
+    .page-container-admin #table-admin td {
+      padding: 1rem 1rem; }
+    .page-container-admin #table-admin tbody tr {
+      border-bottom: thin solid #dddddd; }
+    .page-container-admin #table-admin tbody tr:nth-of-type(even) {
+      background-color: #f3f3f3; }
+    .page-container-admin #table-admin tbody tr:last-of-type {
+      border-bottom: 2px solid #1d1d1d; }
 
 /* Play page */
 .svg-container {

@@ -1,5 +1,5 @@
-import pool from './db_pool_config.js';
-import { User } from '../ts/interfaces.js';
+import pool from '../db_pool_config.js';
+import { User } from '../../ts/interfaces.js';
 
 
 export default class UserSelectRepository {
@@ -90,7 +90,7 @@ export default class UserSelectRepository {
     }
 
 
-    private async selectAuthorityQuery(dbQuery: string, queryParamsArray: unknown[]): Promise<User> {
+    private async selectAuthorityQuery(dbQuery: string, queryParamsArray: unknown[]): Promise<any> {
         return await pool.query(dbQuery, queryParamsArray)
             .then(results => {
                 if(results.rowCount > 0) {
