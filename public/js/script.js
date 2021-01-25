@@ -705,7 +705,7 @@ function updateClientGameScreen() {
 
 }
 
-// show all won tricks
+// Shows all won tricks
 function toggleShowAllTricks() {
 
     // hide default tricks display
@@ -1034,9 +1034,6 @@ cardSuits.forEach(suit => {
         cardPatterns.push(tier + '-' + suit);
     });  
 });
-
-// add cardback pattern name to array
-//cardPatterns.push('cardback');
 
 // card pattern - defs
 const defs = document.getElementById('defs');

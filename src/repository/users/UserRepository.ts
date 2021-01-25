@@ -6,7 +6,7 @@ export default class UserRepository {
     constructor() { }
 
     async getUsers(): Promise<any> {
-        const dbQuery: string = `SELECT * FROM users`;
+        const dbQuery: string = `SELECT * FROM users ORDER BY id ASC`;
         
         return await pool.query(dbQuery)
             .then(results => {

@@ -120,7 +120,7 @@ input[disabled] {
     color: black; }
 
 .page-container-admin {
-  max-width: 800px; }
+  max-width: 640px; }
   .page-container-admin .main-container {
     background: #fff;
     color: #000; }
