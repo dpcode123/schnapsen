@@ -19,8 +19,10 @@ export default class ExpressLoader {
         initializePassport(passport);
         // View engine
         this.app.set('view engine', 'ejs');
-        // Helmet
-        this.app.use(helmet());
+        // Helmet with `contentSecurityPolicy` disabled
+        this.app.use(helmet({
+            contentSecurityPolicy: false,
+        }));
         // JSON
         this.app.use(express.json());
         // if behind a proxy

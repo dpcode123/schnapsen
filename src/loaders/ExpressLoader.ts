@@ -28,8 +28,12 @@ export default class ExpressLoader {
         // View engine
         this.app.set('view engine', 'ejs');
 
-        // Helmet
-        this.app.use(helmet());
+        // Helmet with `contentSecurityPolicy` disabled
+        this.app.use(
+            helmet({
+                contentSecurityPolicy: false,
+            })
+        );
 
         // JSON
         this.app.use(express.json());

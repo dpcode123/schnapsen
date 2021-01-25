@@ -13,15 +13,15 @@ import { getCardByName } from './cards.js';
  *      - Response NOT trump
  *          - Same suits
  *                  ===> {compare values}
- *          - Diff suits
+ *          - Different suits
  *                  ===> {L win}
- *      - Response TRUMP
+ *      - Response IS trump
  *              ===> {R win}
  * 
- * - Lead TRUMP
+ * - Lead IS trump
  *      - Response NOT trump
  *              ===> {L win}
- *      - Response TRUMP
+ *      - Response IS trump
  *              ===> {compare values}
  * 
  */
@@ -60,26 +60,26 @@ export function calculateTrickWinner(trumpSuit: string, leadingMove: PlayerMove,
                     winnerUserId = respondingMove.userId;
                 }
             }
-            //### Diff suits
+            //### Different suits
             else {
-                //{L win}
+                // {L win}
                 winnerUserId = leadingMove.userId;
             }
         }
-        //### Response TRUMP
+        //### Response IS trump
         else if (isRespondingCardTrump) {
-            //{R win}
+            // {R win}
             winnerUserId = respondingMove.userId;
         }
     }
-    //### Lead TRUMP
+    //### Lead IS trump
     else if (isLeadingCardTrump) {
-        //### Response NOT
+        //### Response NOT trump
         if (!isRespondingCardTrump) {
             // {L win}
             winnerUserId = leadingMove.userId;
         }
-        //### Response TRUMP
+        //### Response IS trump
         else if (isRespondingCardTrump) {
             // {compare values}
             if (leadingCard?.points! > respondingCard?.points!) {

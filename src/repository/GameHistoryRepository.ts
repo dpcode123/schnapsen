@@ -1,5 +1,5 @@
 import Bummerl from "../model/Bummerl.js";
-import pool from '../repository/db_pool_config.js';
+import pool from '../config/db_pool_config.js';
 
 export default class GameHistoryRepository {
     constructor() { }

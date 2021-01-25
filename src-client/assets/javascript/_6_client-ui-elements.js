@@ -89,9 +89,6 @@ cardSuits.forEach(suit => {
     });  
 });
 
-// add cardback pattern name to array
-//cardPatterns.push('cardback');
-
 // card pattern - defs
 const defs = document.getElementById('defs');
 

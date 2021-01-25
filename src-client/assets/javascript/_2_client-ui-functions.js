@@ -566,7 +566,7 @@ function updateClientGameScreen() {
 
 }
 
-// show all won tricks
+// Shows all won tricks
 function toggleShowAllTricks() {
 
     // hide default tricks display

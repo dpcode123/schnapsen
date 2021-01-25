@@ -1,4 +1,4 @@
-import pool from '../db_pool_config.js';
+import pool from '../../config/db_pool_config.js';
 import { User } from '../../ts/interfaces.js';
 
 
