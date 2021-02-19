@@ -5,6 +5,6 @@ Schnapsen online multiplayer game
 TypeScript/JavaScript
 
 ## Frontend
-HTML/CSS
-SVG
-Javascript
+- HTML/CSS
+- SVG
+- Javascript
